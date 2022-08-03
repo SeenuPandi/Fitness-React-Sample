@@ -32,6 +32,7 @@ function Profile(props) {
         )
     }
     return (
+       
         <div id="activity-profile-panel-id" className="e-panel e-activity-profile-panel">
             <div className="e-panel-container">
                 <div>
@@ -94,7 +95,6 @@ function Profile(props) {
                 </div>
             </div>
         </div>
-
     );
 }
 
