@@ -9,10 +9,10 @@ function Profile(props) {
     let profileStats = props.profileStats;
     let maxDate = props.maxDate;
 
-    function getFullDetails(activity) {
+    function getFullDetails(activity,index) {
         let distance = activity.distance;
         return (
-            <div tabIndex={0} className="e-card e-diet-card" >
+            <div key={index} tabIndex={0} className="e-card e-diet-card" >
                 <div className="e-card-header" style={{ width: "100%" }}>
                     <div className="e-card-header-caption">
                         <div className="e-card-header-title">{activity.activity}</div>

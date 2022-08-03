@@ -164,7 +164,7 @@ function Activities(props) {
                                 <ChartComponent
                                     className="e-activity-chart"
                                     chartArea={chartArea}
-                                    width="100%"
+                                    width={'100%'}
                                     primaryXAxis={primaryXAxis}
                                     primaryYAxis={primaryYAxis}
                                     height={activityChartHeight}
