@@ -208,7 +208,7 @@ function Tab() {
     function getChartData( action, value) {
         let count = (value && value === 'Monthly') ? 30 : 7;
         let sampleData = [];
-        if ((value && value === 'Monthly' && activityChartMonthData[action] && state.activityChartMonthData[action].length > 0) || (value && value === 'Weekly' && state.activityChartWeekData[action] && state.activityChartWeekData[action].length > 0)) {
+        if ((value && value === 'Monthly' && state.activityChartMonthData[action] && state.activityChartMonthData[action].length > 0) || (value && value === 'Weekly' && state.activityChartWeekData[action] && state.activityChartWeekData[action].length > 0)) {
             if (value === 'Monthly') {
               sampleData = state.activityChartMonthData[action];
             } else {
