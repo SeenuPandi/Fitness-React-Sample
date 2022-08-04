@@ -66,6 +66,11 @@ function Activities(props) {
     let dropDownInstance;
     let chartInstance;
     
+    function dataBound(){
+        if(chartInstance){
+            chartInstance.refresh();
+        }
+    }
     // let innerWidth = window.innerWidth;
     // let isSmallDevice = false;
     // if (innerWidth <= 820) {
@@ -116,7 +121,7 @@ function Activities(props) {
                                             <div className="e-card-header-title e-steps-card-title"> Steps</div>
                                         </div>
                                     </div>
-                                    <div className="e-card-content">
+                                    <div className="e-card-content" >
                                         <div className="e-activity-actual">{props.steps}</div>
                                         <div className="e-activity-goal">6000</div>
                                     </div>
@@ -222,11 +227,11 @@ function Activities(props) {
                 <div className="col-md-12 col-sm-12">
                     <div id="workout-panel-id" className="e-panel e-workout-panel" data-row="2" data-col="0">
                         <div className="e-panel-container">
-                            <div className="e-panel-header" >
+                            <div className="e-panel-header">
                                 <div>Recent Workout</div>
                             </div>
                             <div>
-                                <GridComponent dataSource={props.gridData} gridLines='None' rowHeight={60} queryCellInfo={props.customiseCell} width={'100%'} height={'100%'} ref={(gridIns) => { gridInstance = gridIns }}>
+                                <GridComponent dataSource={props.gridData} gridLines='None' rowHeight={60} queryCellInfo={props.customiseCell} dataBound={dataBound} width={'100%'} height={'100%'} ref={(gridIns) => { gridInstance = gridIns }}>
                                     <ColumnsDirective>
                                         <ColumnDirective field='Workout' headerText='Workout' textAlign='Left' width="200" />
                                         <ColumnDirective field='Distance' headerText='Distance (kms)' textAlign='Left' width="200" format="###.# km" />
