@@ -65,19 +65,6 @@ function Activities(props) {
     let gridInstance;
     let dropDownInstance;
     let chartInstance;
-    
-    function dataBound(){
-        if(chartInstance){
-            chartInstance.refresh();
-        }
-    }
-    // let innerWidth = window.innerWidth;
-    // let isSmallDevice = false;
-    // if (innerWidth <= 820) {
-    //     isSmallDevice = true;
-    // }
-    
-    //props.dropDownInstance = dropDownInst;
 
     return (
         <div>
@@ -88,6 +75,7 @@ function Activities(props) {
         </div>
         <div className="e-tab-title">GO<span>FIT</span></div>
         </div>}
+        {props.isSmallDevice && <div className="separator-div"></div>}
         <div className="e-dashboardlayout-container  e-activity-dashboardlayout-container">
             <div className="col-md-9 e-dashboard-content">
                 <div className="col-md-12 col-sm-12">
@@ -191,7 +179,7 @@ function Activities(props) {
                                             yName="y"
                                             name='Diet'
                                             marker={marker}
-                                            width={4} >
+                                            width={'4'} >
                                         </SeriesDirective>
                                         <SeriesDirective
                                             dataSource={props.chartData}
@@ -202,7 +190,7 @@ function Activities(props) {
                                             yName="y"
                                             name='Workout'
                                             marker={marker}
-                                            width={4} >
+                                            width={'4'} >
                                         </SeriesDirective>
                                         <SeriesDirective
                                             dataSource={props.chartDietData}
@@ -231,7 +219,7 @@ function Activities(props) {
                                 <div>Recent Workout</div>
                             </div>
                             <div>
-                                <GridComponent dataSource={props.gridData} gridLines='None' rowHeight={60} queryCellInfo={props.customiseCell} dataBound={dataBound} width={'100%'} height={'100%'} ref={(gridIns) => { gridInstance = gridIns }}>
+                                <GridComponent dataSource={props.gridData} gridLines='None' rowHeight={60} queryCellInfo={props.customiseCell} width={'100%'} height={'100%'} ref={(gridIns) => { gridInstance = gridIns }}>
                                     <ColumnsDirective>
                                         <ColumnDirective field='Workout' headerText='Workout' textAlign='Left' width="200" />
                                         <ColumnDirective field='Distance' headerText='Distance (kms)' textAlign='Left' width="200" format="###.# km" />
