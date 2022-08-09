@@ -1336,6 +1336,10 @@ function Tab() {
             isDinnerMenuAdded = false;
             getInitialData();
             pieData = getPieChartData();
+            countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
+            countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
+            clearInterval(x);
+            x = setInterval(intervalFn(), 1000);
         }
     }
 

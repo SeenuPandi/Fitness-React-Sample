@@ -1,6 +1,6 @@
 import React from "react";
 import { Browser } from '@syncfusion/ej2-base';
-import { CircularGaugeComponent, AxesDirective, AxisDirective, Inject, Annotations } from '@syncfusion/ej2-react-circulargauge';
+import { CircularGaugeComponent, AxesDirective, Gradient, AxisDirective, Inject, Annotations } from '@syncfusion/ej2-react-circulargauge';
 
 function CircularGuage(props) {
     let isDevice = Browser.isDevice;
@@ -129,7 +129,7 @@ function CircularGuage(props) {
             centerX='50%'
             centerY='50%'
         >
-            <Inject services={[Annotations]} />
+            <Inject services={[Annotations, Gradient]} />
             <AxesDirective>
                 <AxisDirective
                     minimum='0'
