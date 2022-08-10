@@ -141,6 +141,7 @@ function CircularGuage(props) {
                     labelStyle={gaugeLabelStyle}
                     lineStyle={lineStyle}
                     minorTicks={minorTicks}
+                    pointers={[]}
                     ranges={props.circularGuage[0].ranges}
                     annotations={props.circularGuage[0].annotations}></AxisDirective>
             </AxesDirective>
