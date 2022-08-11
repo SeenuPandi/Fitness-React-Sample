@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Browser } from '@syncfusion/ej2-base';
 import { DialogComponent } from '@syncfusion/ej2-react-popups';
-import FastingDialog from "./FastingDialog";
 import { TabComponent, TabItemDirective, TabItemsDirective } from '@syncfusion/ej2-react-navigations';
 
 const Activities = React.lazy(() =>
@@ -29,22 +28,12 @@ let activityChartMonthData = {};
 let pieData = [];
 function Tab() {
     let innerWidth = window.innerWidth;
-    let x;
-    let countStartDate;
-    let countDownDate;
-    let fastStartTime;
-    let fastEndTime;
-    let changeTimeBtnText = "CHANGE TIME";
-    let sliderValue = "Completed";
     var sleepInMinutes = Math.round(Math.random() * (480 - 300) + 300);
     let breakFastRecom = 440;
     let snack1Recom = 165;
     let lunchRecom = 440;
     let snack2Recom = 165;
     let dinnerRecom = 440;
-    let fastingStartValue;
-    let fastingEndValue;
-    let hidden = false;
     let currentMenuHeader;
     let currentMenu;
     let currentRecom = 0;
@@ -60,8 +49,8 @@ function Tab() {
     var todaysWorkoutPercent = 80;
     var theme = 'Tailwind';
     let gauge;
-    let minimumDate = new Date(new Date().setHours(0, 0, 0));
-    let maximumDate = new Date(new Date(new Date().setDate(minimumDate.getDate() + 1)).setHours(24, 0, 0));
+    // let minimumDate = new Date(new Date().setHours(0, 0, 0));
+    // let maximumDate = new Date(new Date(new Date().setDate(minimumDate.getDate() + 1)).setHours(24, 0, 0));
     var profileStats = { name: 'John Watson', age: 24, location: 'India', weight: 70, height: 165, goal: 65, email: 'john.watson@gmail.com', weightMes: 'kg', goalMes: 'kg', heightMes: 'cm' };
     var breakfastMenu = [
         { item: 'Banana', cal: 105, fat: 0.4, carbs: 27, proteins: 1.3, sodium: 0.0012, iron: 0.00031, calcium: 0.005 },
@@ -485,12 +474,12 @@ function Tab() {
         weightChartData: getWeightChartData(),
         waterGaugeAnnotation: waterGaugeAnnotation,
         waterGaugeAxes: waterGaugeAxes,
-        fastStartTime: fastStartTime,
-        fastEndTime: fastEndTime,
-        countStartDate: countStartDate,
-        countDownDate: countDownDate,
-        circulargauge: circulargauge,
-        changeTimeBtnText : changeTimeBtnText
+        // fastStartTime: fastStartTime,
+        // fastEndTime: fastEndTime,
+        // countStartDate: countStartDate,
+        // countDownDate: countDownDate,
+        // circulargauge: circulargauge,
+        // changeTimeBtnText : changeTimeBtnText
     });
 
     // var [difference, setDifference] = useState({
@@ -517,13 +506,13 @@ function Tab() {
         isLunchMenuAdded = true;
         updateConsumedCalories();
         pieData = getPieChartData();
-        countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
-        countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
-        console.log(countStartDate);
-        console.log(countDownDate);
-        x = setInterval(intervalFn(), 1000);
+        // countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
+        // countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
+        // console.log(countStartDate);
+        // console.log(countDownDate);
+        // x = setInterval(intervalFn(), 1000);
         getInitialData();
-        console.log(dialogInstance);
+       
     }
 
     // function onResize() {
@@ -734,10 +723,10 @@ function Tab() {
                 fasting: {
                     consumedWaterCount: consumedCount,
                     consumedWaterAmount: consumedAmount,
-                    fastStartTime: fastStartTime,
-                    fastEndTime: fastEndTime,
-                    countStartDate: countStartDate,
-                    countDownDate: countDownDate,
+                    // fastStartTime: fastStartTime,
+                    // fastEndTime: fastEndTime,
+                    // countStartDate: countStartDate,
+                    // countDownDate: countDownDate,
                     weightChartData: state.weightChartData
                 }
             };
@@ -994,11 +983,11 @@ function Tab() {
                 consumedWaterAmount: data.fasting.consumedWaterAmount,
                 weightChartData: data.fasting.weightChartData,
                 waterGaugeAxes: waterCalculatedGaugeAxes,
-                fastStartTime: data.fasting.fastStartTime,
-                fastEndTime: data.fasting.fastEndTime,
-                countStartDate: data.fasting.countStartDate,
-                countDownDate: data.fasting.countDownDate,
-                circulargauge: circulargauge,
+                // fastStartTime: data.fasting.fastStartTime,
+                // fastEndTime: data.fasting.fastEndTime,
+                // countStartDate: data.fasting.countStartDate,
+                // countDownDate: data.fasting.countDownDate,
+                // circulargauge: circulargauge,
                 waterGaugeAnnotation: waterGaugeAnnotation
             }
         })
@@ -1057,13 +1046,13 @@ function Tab() {
                 let sleepInMinutes = Math.round(Math.random() * (480 - 300) + 300);
                 consumedWaterCount = breakfastWaterTaken + lunchWaterTaken + eveningWaterTaken;
                 consumedWaterAmount = consumedWaterCount * 150;
-                countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
-                countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
-                let now = new Date();
-                let isToday = countStartDate.toDateString() == now.toDateString();
-                fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-                isToday = countDownDate.toDateString() == now.toDateString();
-                fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                // countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
+                // countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
+                // let now = new Date();
+                // let isToday = countStartDate.toDateString() == now.toDateString();
+                // fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                // isToday = countDownDate.toDateString() == now.toDateString();
+                // fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
                 data = {
                     date: currentDate.toLocaleDateString(),
                     activity: {
@@ -1119,10 +1108,10 @@ function Tab() {
                     fasting: {
                         consumedWaterCount: consumedWaterCount,
                         consumedWaterAmount: consumedWaterAmount,
-                        countStartDate: countStartDate,
-                        countDownDate: countDownDate,
-                        fastStartTime: fastStartTime,
-                        fastEndTime: fastEndTime,
+                        // countStartDate: countStartDate,
+                        // countDownDate: countDownDate,
+                        // fastStartTime: fastStartTime,
+                        // fastEndTime: fastEndTime,
                         weightChartData: getWeightChartData()
                     }
                 };
@@ -1135,7 +1124,7 @@ function Tab() {
             // fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             // isToday = countDownDate.toDateString() == now.toDateString();
             // fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-            endFasting();
+            //endFasting();
             let smallDevice = false;
             if (innerWidth <= 820) {
                 smallDevice = true;
@@ -1358,11 +1347,11 @@ function Tab() {
                     consumedWaterAmount: data.fasting.consumedWaterAmount,
                     weightChartData: data.fasting.weightChartData,
                     waterGaugeAxes: waterCalculatedGaugeAxes,
-                    fastStartTime: data.fasting.fastStartTime,
-                    fastEndTime: data.fasting.fastEndTime,
-                    circulargauge: circulargauge,
-                    countStartDate: data.fasting.countStartDate,
-                    countDownDate: data.fasting.countDownDate,
+                    // fastStartTime: data.fasting.fastStartTime,
+                    // fastEndTime: data.fasting.fastEndTime,
+                    // circulargauge: circulargauge,
+                    // countStartDate: data.fasting.countStartDate,
+                    // countDownDate: data.fasting.countDownDate,
                     waterGaugeAnnotation: waterGaugeAnnotation
                 }
             })
@@ -1375,10 +1364,10 @@ function Tab() {
             isDinnerMenuAdded = false;
             getInitialData();
             pieData = getPieChartData();
-            countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
-            countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
-            clearInterval(x);
-            x = setInterval(intervalFn(), 1000);
+            // countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
+            // countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
+            // clearInterval(x);
+            // x = setInterval(intervalFn(), 1000);
         }
     }
 
@@ -1407,52 +1396,52 @@ function Tab() {
         pieData = getPieChartData();
     }
 
-    function intervalFn() {
-        let now = new Date();
-        let isToday = countStartDate.toDateString() == now.toDateString();
-        fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        isToday = countDownDate.toDateString() == now.toDateString();
-        fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        let percent = Math.round(((now - countStartDate) / (countDownDate - countStartDate)) * 100);
-        percent = percent > 100 ? 100 : percent;
-        let left = countDownDate.getTime() - now.getTime();
-        let leftHours = Math.floor((left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        leftHours = leftHours < 0 ? 0 : leftHours;
-        let leftMinutes = Math.floor((left % (1000 * 60 * 60)) / (1000 * 60));
-        leftMinutes = leftMinutes < 0 ? 0 : leftMinutes;
-        let distance = now.getTime() - countStartDate.getTime();
-        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        sliderValue = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-        if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0) {
-            endFasting();
-        } else if (circulargauge) {
-            circulargauge[0].ranges[1].end = percent;
-            circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
-            if (percent > 80) {
-                circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
-            } else {
-                circulargauge[0].annotations[1].content = '';
-            }
-            circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (' + percent + '%)</div><div class="e-fast-completed">' +
-                sliderValue.toString() + '</div><div class="e-fast-left">Left ' + leftHours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'h ' + leftMinutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'm</div>';
-        }
-    }
+    // function intervalFn() {
+    //     let now = new Date();
+    //     let isToday = countStartDate.toDateString() == now.toDateString();
+    //     fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    //     isToday = countDownDate.toDateString() == now.toDateString();
+    //     fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    //     let percent = Math.round(((now - countStartDate) / (countDownDate - countStartDate)) * 100);
+    //     percent = percent > 100 ? 100 : percent;
+    //     let left = countDownDate.getTime() - now.getTime();
+    //     let leftHours = Math.floor((left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    //     leftHours = leftHours < 0 ? 0 : leftHours;
+    //     let leftMinutes = Math.floor((left % (1000 * 60 * 60)) / (1000 * 60));
+    //     leftMinutes = leftMinutes < 0 ? 0 : leftMinutes;
+    //     let distance = now.getTime() - countStartDate.getTime();
+    //     let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    //     let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    //     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    //     sliderValue = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+    //     if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0) {
+    //         endFasting();
+    //     } else if (circulargauge) {
+    //         circulargauge[0].ranges[1].end = percent;
+    //         circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
+    //         if (percent > 80) {
+    //             circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
+    //         } else {
+    //             circulargauge[0].annotations[1].content = '';
+    //         }
+    //         circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (' + percent + '%)</div><div class="e-fast-completed">' +
+    //             sliderValue.toString() + '</div><div class="e-fast-left">Left ' + leftHours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'h ' + leftMinutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'm</div>';
+    //     }
+    // }
 
-    function endFasting() {
-        clearInterval(x);
-        sliderValue = "Completed";
-        // annotaions[0].content  = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
-        // sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
-        if (circulargauge) {
-            let percent = 100;
-            circulargauge[0].ranges[1].end = percent;
-            circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
-            circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
-            circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
-        }
-    }
+    // function endFasting() {
+    //     clearInterval(x);
+    //     sliderValue = "Completed";
+    //     // annotaions[0].content  = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
+    //     // sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
+    //     if (circulargauge) {
+    //         let percent = 100;
+    //         circulargauge[0].ranges[1].end = percent;
+    //         circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
+    //         circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
+    //         circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
+    //     }
+    // }
 
 
     function customiseCell(args) {
@@ -1998,95 +1987,95 @@ function Tab() {
         }
     }
 
-    function modifyFasting() {
-        document.getElementsByClassName('e-dialog')[0].ej2_instances[0].show();
-    }
+    // function modifyFasting() {
+    //     document.getElementsByClassName('e-dialog')[0].ej2_instances[0].show();
+    // }
 
 
-    function fastingCancelBtnClick(args) {
-        document.getElementsByClassName('e-dialog')[0].ej2_instances[0].hide();
-    }
-    let fasStartValue;
-    let fasEndValue;
-    function onFastStartDateChange() {
-        fasStartValue = this.value;
-        // fastingStartValue = this.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        // fastingStartValue = fastingStartValue.getHours()
-        // fastingEndValue = state.countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        // let diffValue =  Math.floor(((fastingEndValue) - (fastingStartValue)) / (1000 * 60 * 60));
-        // document.getElementsByClassName('e-fast-total-value').innerHtml = diffValue;
-    }
-    function onFastEndDateChange() {
-        fasEndValue = this.value;
-        fastingEndValue = this.value;
-    }
+    // function fastingCancelBtnClick(args) {
+    //     document.getElementsByClassName('e-dialog')[0].ej2_instances[0].hide();
+    // }
+    // let fasStartValue;
+    // let fasEndValue;
+    // function onFastStartDateChange() {
+    //     fasStartValue = this.value;
+    //     // fastingStartValue = this.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    //     // fastingStartValue = fastingStartValue.getHours()
+    //     // fastingEndValue = state.countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    //     // let diffValue =  Math.floor(((fastingEndValue) - (fastingStartValue)) / (1000 * 60 * 60));
+    //     // document.getElementsByClassName('e-fast-total-value').innerHtml = diffValue;
+    // }
+    // function onFastEndDateChange() {
+    //     fasEndValue = this.value;
+    //     fastingEndValue = this.value;
+    // }
 
-    function fastingDlgBtnClick(args) {
-        countStartDate = fasStartValue ? fasStartValue : state.countStartDate;
-        countDownDate = fasEndValue ? fasEndValue : state.countDownDate;
-        clearInterval(x);
-        x = setInterval(intervalFn(), 1000);
-        document.getElementsByClassName('e-dialog')[0].ej2_instances[0].hide();
-        changeTimeBtnText = "CHANGE TIME";
-        if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
-            document.querySelector('.e-fast-time-btn').classList.remove('e-fast-reset');
-        }
-        if (document.querySelector('.e-fast-end-btn') && document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
-            document.querySelector('.e-fast-end-btn').classList.remove('e-fast-reset');
-        }
-        setState(prevState => {
-            return {
-                ...prevState,
-                fastStartTime : fastStartTime,
-                fastEndTime : fastEndTime,
-                countStartDate: countStartDate,
-                countDownDate: countDownDate,
-                circulargauge: circulargauge,
-                changeTimeBtnText : changeTimeBtnText
-            }
-        })
-        // this.countDownDate = this.fastingEndDateInstance.value;
-        // this.diff = Math.floor((this.countDownDate - this.countStartDate) / (1000 * 60 * 60));
-        // clearInterval(this.x);
-        // this.x = setInterval(this.intervalFn.bind(this), 1000);
-        // this.fastingDialog.hide();
-        // this.changeTimeBtnText = "CHANGE TIME";
-        // if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
-        //   document.querySelector('.e-fast-time-btn').classList.remove('e-fast-reset');
-        // }
-        // if (document.querySelector('.e-fast-end-btn') && document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
-        //   document.querySelector('.e-fast-end-btn').classList.remove('e-fast-reset');
-        // }
-    }
+    // function fastingDlgBtnClick(args) {
+    //     countStartDate = fasStartValue ? fasStartValue : state.countStartDate;
+    //     countDownDate = fasEndValue ? fasEndValue : state.countDownDate;
+    //     clearInterval(x);
+    //     x = setInterval(intervalFn(), 1000);
+    //     document.getElementsByClassName('e-dialog')[0].ej2_instances[0].hide();
+    //     changeTimeBtnText = "CHANGE TIME";
+    //     if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
+    //         document.querySelector('.e-fast-time-btn').classList.remove('e-fast-reset');
+    //     }
+    //     if (document.querySelector('.e-fast-end-btn') && document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
+    //         document.querySelector('.e-fast-end-btn').classList.remove('e-fast-reset');
+    //     }
+    //     setState(prevState => {
+    //         return {
+    //             ...prevState,
+    //             fastStartTime : fastStartTime,
+    //             fastEndTime : fastEndTime,
+    //             countStartDate: countStartDate,
+    //             countDownDate: countDownDate,
+    //             circulargauge: circulargauge,
+    //             changeTimeBtnText : changeTimeBtnText
+    //         }
+    //     })
+    //     // this.countDownDate = this.fastingEndDateInstance.value;
+    //     // this.diff = Math.floor((this.countDownDate - this.countStartDate) / (1000 * 60 * 60));
+    //     // clearInterval(this.x);
+    //     // this.x = setInterval(this.intervalFn.bind(this), 1000);
+    //     // this.fastingDialog.hide();
+    //     // this.changeTimeBtnText = "CHANGE TIME";
+    //     // if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
+    //     //   document.querySelector('.e-fast-time-btn').classList.remove('e-fast-reset');
+    //     // }
+    //     // if (document.querySelector('.e-fast-end-btn') && document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
+    //     //   document.querySelector('.e-fast-end-btn').classList.remove('e-fast-reset');
+    //     // }
+    // }
 
-    function clearFasting() {
-        clearInterval(x);
-        sliderValue = "Completed";
-        // this.annotaions[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
-        //   this.sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
-        // if (circulargauge) {
-        //     circulargauge[0].ranges[1].end = 0;
-        //     circulargauge[0].annotations[1].angle = 0;
-        //     circulargauge[0].annotations[1].content = '';
-        //     circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
-        // }
-        endFasting();
-        changeTimeBtnText = "START FASTING";
-        if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
-            document.querySelector('.e-fast-time-btn').classList.add('e-fast-reset');
-        }
-        if (document.querySelector('.e-fast-end-btn') && !document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
-            document.querySelector('.e-fast-end-btn').classList.add('e-fast-reset');
-        }
-        setState(prevState => {
-            return {
-                ...prevState,
-                circulargauge: circulargauge,
-                changeTimeBtnText: changeTimeBtnText
-            }
-        })
+    // function clearFasting() {
+    //     clearInterval(x);
+    //     sliderValue = "Completed";
+    //     // this.annotaions[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
+    //     //   this.sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
+    //     // if (circulargauge) {
+    //     //     circulargauge[0].ranges[1].end = 0;
+    //     //     circulargauge[0].annotations[1].angle = 0;
+    //     //     circulargauge[0].annotations[1].content = '';
+    //     //     circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
+    //     // }
+    //     endFasting();
+    //     changeTimeBtnText = "START FASTING";
+    //     if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
+    //         document.querySelector('.e-fast-time-btn').classList.add('e-fast-reset');
+    //     }
+    //     if (document.querySelector('.e-fast-end-btn') && !document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
+    //         document.querySelector('.e-fast-end-btn').classList.add('e-fast-reset');
+    //     }
+    //     setState(prevState => {
+    //         return {
+    //             ...prevState,
+    //             circulargauge: circulargauge,
+    //             changeTimeBtnText: changeTimeBtnText
+    //         }
+    //     })
 
-    }
+    // }
 
     function editMenu(args) {
 
@@ -2216,37 +2205,27 @@ function Tab() {
     function fastingTab() {
         return (
             <React.Suspense fallback="Loading">
-                <FastingDialog hidden={hidden}
-                    countStartDate={state.countStartDate}
-                    countDownDate={state.countDownDate}
-                    minimumDate={minimumDate}
-                    maximumDate={maximumDate}
-                    fastingDlgBtnClick={fastingDlgBtnClick}
-                    fastingCancelBtnClick={fastingCancelBtnClick}
-                    onFastStartDateChange={onFastStartDateChange}
-                    onFastEndDateChange={onFastEndDateChange}
-                    >
-                </FastingDialog>
                 <Fasting isSmallDevice={state.isSmallDevice}
                     consumedWaterCount={state.consumedWaterCount}
                     consumedWaterAmount={state.consumedWaterAmount}
                     expectedWaterAmount={state.expectedWaterAmount}
                     weightChartData={state.weightChartData}
                     datePickerDate={state.datePickerDate}
-                    fastStartTime={state.fastStartTime}
-                    fastEndTime={state.fastEndTime}
+                    // fastStartTime={state.fastStartTime}
+                    // fastEndTime={state.fastEndTime}
                     minusClick={minusClick}
                     plusClick={plusClick}
-                    modifyFasting={modifyFasting}
-                    changeTimeBtnText={state.changeTimeBtnText}
+                    // modifyFasting={modifyFasting}
+                    // changeTimeBtnText={state.changeTimeBtnText}
                     maxDate={maxDate}
-                    circularGuage={state.circulargauge}
+                    // circularGuage={state.circulargauge}
                     waterGaugeAnnotation={state.waterGaugeAnnotation}
                     waterGaugeAxes={state.waterGaugeAxes}
                     todayActivities={state.todayActivities}
                     profileStats={profileStats}
                     onProfileDateChange={onProfileDateChange}
-                    clearFasting={clearFasting}>
+                    //clearFasting={clearFasting}
+                    >
                     
                 </Fasting>
 
