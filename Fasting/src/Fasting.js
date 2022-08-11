@@ -34,7 +34,7 @@ function Fasting(props) {
                                         <div> {props.fastEndTime} </div>
                                     </div>
                                     <div className="e-fasting-button-container">
-                                        <button className="e-fast-time-btn" onClick={props.modifyFasting} width="100%">{changeTimeBtnText}</button>
+                                        <button className="e-fast-time-btn" onClick={props.modifyFasting} width="100%">{props.changeTimeBtnText}</button>
                                         <button className="e-fast-end-btn" width="100%" onClick={props.clearFasting}>END FASTING</button>
                                     </div>
                                 </div>

@@ -6,94 +6,94 @@ import { DateTimePickerComponent } from '@syncfusion/ej2-react-calendars';
 function FastingDialog(props) {
 
     var diff=16;
-    // var [difference, setDifference] = useState({
-    //         diff: diff
-    //     })
+    var [difference, setDifference] = useState({
+            diff: diff
+        })
 
-        let circulargauge = [{
-            ranges: [
-                {
-                    start: 0,
-                    end: 100,
-                    radius: '100%',
-                    startWidth: 30,
-                    endWidth: 30,
-                    color: '#E1E9ED',
-                    roundedCornerRadius: 15,
-                },
-                {
-                    start: 0,
-                    end: 100,
-                    radius: '100%',
-                    startWidth: 30,
-                    endWidth: 30,
-                    color: '#CDD9E0',
-                    roundedCornerRadius: 15,
-                    linearGradient: {
-                        startValue: '0%',
-                        endValue: '100%',
-                        colorStop: [
-                            { color: '#FB5F64', offset: '0%', opacity: 0.9 },
-                            { color: '#FC9662', offset: '70%', opacity: 0.9 }]
-                    }
-                },
-                {
-                    start: 2,
-                    end: 98,
-                    radius: '91%',
-                    startWidth: 5,
-                    endWidth: 5,
-                    roundedCornerRadius: 2,
-                    color: '#FFFFFF',
-                    opacity: 0.35
-                },
-            ],
-            annotations: isDevice ? [{
-                angle: 0,
-                zIndex: '1',
-                radius: '0%'
-            },
-            {
-                zIndex: '1',
-                radius: '91%',
-                angle: 350,
-                content: '<div class="e-gauge-percent-img icon-Calories"></div>'
-            },
-            {
-                zIndex: '1',
-                radius: '91%',
-                angle: 60,
-                content: '<div class="e-gauge-status-img icon-Diet"></div>'
-            },
-            {
-                zIndex: '1',
-                radius: '91%',
-                angle: 280,
-                content: '<div class="e-gauge-status-img icon-Thunder"></div>'
-            }] : [{
-                angle: 0,
-                zIndex: '1',
-                radius: '0%'
-            },
-            {
-                zIndex: '1',
-                radius: '90%',
-                angle: 350,
-                content: '<div class="e-gauge-percent-img icon-Calories"></div>'
-            },
-            {
-                zIndex: '1',
-                radius: '89%',
-                angle: 60,
-                content: '<div class="e-gauge-status-img icon-Diet"></div>'
-            },
-            {
-                zIndex: '1',
-                radius: '89%',
-                angle: 280,
-                content: '<div class="e-gauge-status-img icon-Thunder"></div>'
-            }]
-        }];
+        // let circulargauge = [{
+        //     ranges: [
+        //         {
+        //             start: 0,
+        //             end: 100,
+        //             radius: '100%',
+        //             startWidth: 30,
+        //             endWidth: 30,
+        //             color: '#E1E9ED',
+        //             roundedCornerRadius: 15,
+        //         },
+        //         {
+        //             start: 0,
+        //             end: 100,
+        //             radius: '100%',
+        //             startWidth: 30,
+        //             endWidth: 30,
+        //             color: '#CDD9E0',
+        //             roundedCornerRadius: 15,
+        //             linearGradient: {
+        //                 startValue: '0%',
+        //                 endValue: '100%',
+        //                 colorStop: [
+        //                     { color: '#FB5F64', offset: '0%', opacity: 0.9 },
+        //                     { color: '#FC9662', offset: '70%', opacity: 0.9 }]
+        //             }
+        //         },
+        //         {
+        //             start: 2,
+        //             end: 98,
+        //             radius: '91%',
+        //             startWidth: 5,
+        //             endWidth: 5,
+        //             roundedCornerRadius: 2,
+        //             color: '#FFFFFF',
+        //             opacity: 0.35
+        //         },
+        //     ],
+        //     annotations: isDevice ? [{
+        //         angle: 0,
+        //         zIndex: '1',
+        //         radius: '0%'
+        //     },
+        //     {
+        //         zIndex: '1',
+        //         radius: '91%',
+        //         angle: 350,
+        //         content: '<div class="e-gauge-percent-img icon-Calories"></div>'
+        //     },
+        //     {
+        //         zIndex: '1',
+        //         radius: '91%',
+        //         angle: 60,
+        //         content: '<div class="e-gauge-status-img icon-Diet"></div>'
+        //     },
+        //     {
+        //         zIndex: '1',
+        //         radius: '91%',
+        //         angle: 280,
+        //         content: '<div class="e-gauge-status-img icon-Thunder"></div>'
+        //     }] : [{
+        //         angle: 0,
+        //         zIndex: '1',
+        //         radius: '0%'
+        //     },
+        //     {
+        //         zIndex: '1',
+        //         radius: '90%',
+        //         angle: 350,
+        //         content: '<div class="e-gauge-percent-img icon-Calories"></div>'
+        //     },
+        //     {
+        //         zIndex: '1',
+        //         radius: '89%',
+        //         angle: 60,
+        //         content: '<div class="e-gauge-status-img icon-Diet"></div>'
+        //     },
+        //     {
+        //         zIndex: '1',
+        //         radius: '89%',
+        //         angle: 280,
+        //         content: '<div class="e-gauge-status-img icon-Thunder"></div>'
+        //     }]
+        // }];
     let dialogInstance;
     let dateStartInstance;
     let dateEndInstance;
@@ -115,14 +115,23 @@ function FastingDialog(props) {
     //     })
     // }
 
-    // function onFastStartDateChange() {
-    //     diff = Math.floor(((dateEndInstance.value) - (dateStartInstance.value)) / (1000 * 60 * 60));
-    //     setDifference(() => {
-    //         return {
-    //            diff : diff
-    //         }
-    //     })
+    // function onfastChange() {
+        // diff = Math.floor(((dateEndInstance.value) - (dateStartInstance.value)) / (1000 * 60 * 60));
+        // setDifference(() => {
+        //     return {
+        //        diff : diff
+        //     }
+        // })
     // }
+
+    function onfastChange() {
+        diff = Math.floor(((dateEndInstance.value) - (dateStartInstance.value)) / (1000 * 60 * 60));
+        setDifference(() => {
+            return {
+               diff : diff
+            }
+        })
+    }
 
     function fastingCancelBtnClick() {
 
@@ -154,16 +163,18 @@ function FastingDialog(props) {
             overlayClick={fastingOverlayClick}>
             <div className="e-fast-start-label">Start Time</div>
             <div className="e-fast-start-date">
-                <DateTimePickerComponent value={props.countStartDate} min={props.minimumDate} max={props.maximumDate} change={props.onFastStartDateChange} ref={datetime => dateStartInstance = datetime}></DateTimePickerComponent>
+                <DateTimePickerComponent value={props.countStartDate} min={props.minimumDate} max={props.maximumDate} change={props.onFastStartDateChange} ref={datetime => dateStartInstance = datetime} onChange={onfastChange}></DateTimePickerComponent>
             </div>
             <div className="e-fast-end-label">End Time</div>
             <div className="e-fast-end-date">
-                <DateTimePickerComponent value={props.countDownDate} min={props.minimumDate} max={props.maximumDate} change={props.onFastEndDateChange} ref={ datetime => dateEndInstance = datetime}></DateTimePickerComponent>
+                <DateTimePickerComponent value={props.countDownDate} min={props.minimumDate} max={props.maximumDate} change={props.onFastEndDateChange} ref={ datetime => dateEndInstance = datetime} onChange={onfastChange}></DateTimePickerComponent>
             </div>
             <div className="e-fast-total-label">Total Hours</div>
-            <div className="e-fast-total-value">{diff} h</div>
+            <div className="e-fast-total-value">{difference.diff} h</div>
         </DialogComponent>
     )
 }
 
 export default FastingDialog;
+
+9843524454

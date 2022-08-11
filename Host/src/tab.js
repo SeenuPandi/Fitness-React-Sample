@@ -34,6 +34,7 @@ function Tab() {
     let countDownDate;
     let fastStartTime;
     let fastEndTime;
+    let changeTimeBtnText = "CHANGE TIME";
     let sliderValue = "Completed";
     var sleepInMinutes = Math.round(Math.random() * (480 - 300) + 300);
     let breakFastRecom = 440;
@@ -489,7 +490,7 @@ function Tab() {
         countStartDate: countStartDate,
         countDownDate: countDownDate,
         circulargauge: circulargauge,
-
+        changeTimeBtnText : changeTimeBtnText
     });
 
     // var [difference, setDifference] = useState({
@@ -2021,17 +2022,12 @@ function Tab() {
     }
 
     function fastingDlgBtnClick(args) {
-        console.log("Started fasting");
-        console.log(args);
         countStartDate = fasStartValue ? fasStartValue : state.countStartDate;
         countDownDate = fasEndValue ? fasEndValue : state.countDownDate;
-        console.log("Before");
-        console.log(circulargauge);
         clearInterval(x);
         x = setInterval(intervalFn(), 1000);
-        console.log("After");
-        console.log(circulargauge);
         document.getElementsByClassName('e-dialog')[0].ej2_instances[0].hide();
+        changeTimeBtnText = "CHANGE TIME";
         if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
             document.querySelector('.e-fast-time-btn').classList.remove('e-fast-reset');
         }
@@ -2041,9 +2037,12 @@ function Tab() {
         setState(prevState => {
             return {
                 ...prevState,
+                fastStartTime : fastStartTime,
+                fastEndTime : fastEndTime,
                 countStartDate: countStartDate,
                 countDownDate: countDownDate,
-                circulargauge: circulargauge
+                circulargauge: circulargauge,
+                changeTimeBtnText : changeTimeBtnText
             }
         })
         // this.countDownDate = this.fastingEndDateInstance.value;
@@ -2072,7 +2071,7 @@ function Tab() {
         //     circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
         // }
         endFasting();
-
+        changeTimeBtnText = "START FASTING";
         if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
             document.querySelector('.e-fast-time-btn').classList.add('e-fast-reset');
         }
@@ -2082,7 +2081,8 @@ function Tab() {
         setState(prevState => {
             return {
                 ...prevState,
-                circulargauge: circulargauge
+                circulargauge: circulargauge,
+                changeTimeBtnText: changeTimeBtnText
             }
         })
 
@@ -2219,7 +2219,6 @@ function Tab() {
                 <FastingDialog hidden={hidden}
                     countStartDate={state.countStartDate}
                     countDownDate={state.countDownDate}
-                    // diff={difference.diff}
                     minimumDate={minimumDate}
                     maximumDate={maximumDate}
                     fastingDlgBtnClick={fastingDlgBtnClick}
@@ -2239,6 +2238,7 @@ function Tab() {
                     minusClick={minusClick}
                     plusClick={plusClick}
                     modifyFasting={modifyFasting}
+                    changeTimeBtnText={state.changeTimeBtnText}
                     maxDate={maxDate}
                     circularGuage={state.circulargauge}
                     waterGaugeAnnotation={state.waterGaugeAnnotation}
