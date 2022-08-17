@@ -25,7 +25,7 @@ function Fasting(props) {
                                 </div>
                                 <div className="e-panel-content">
                                     <CircularGuage circularGuage={props.circularGuage}></CircularGuage>
-                                    {/* <div className="e-fasting-label-container">
+                                    <div className="e-fasting-label-container">
                                         <div>Started Fasting</div>
                                         <div>End Fasting</div>
                                     </div>
@@ -36,7 +36,7 @@ function Fasting(props) {
                                     <div className="e-fasting-button-container">
                                         <button className="e-fast-time-btn" onClick={props.modifyFasting} width="100%">{props.changeTimeBtnText}</button>
                                         <button className="e-fast-end-btn" width="100%" onClick={props.clearFasting}>END FASTING</button>
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                         </div>

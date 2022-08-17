@@ -149,7 +149,9 @@ function FastingDialog(props) {
 
     }
     return (
-        <DialogComponent header={fastingDialogeader}
+        <DialogComponent 
+            className="e-add-fasting-dialog"
+            header={fastingDialogeader}
             visible={props.hidden}
             animationSettings={animationSettings}
             showCloseIcon={showCloseIcon}
