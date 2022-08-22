@@ -36,6 +36,7 @@
     "@syncfusion/ej2-react-calendars": "^20.2.43",
     "@syncfusion/ej2-react-circulargauge": "^20.2.38",
     "@syncfusion/ej2-react-grids": "^20.2.39",
+    "@syncfusion/ej2-react-inputs": "^20.2.44",
     "@syncfusion/ej2-react-lineargauge": "^20.2.38",
     "@syncfusion/ej2-react-navigations": "^20.2.39",
     "@syncfusion/ej2-react-popups": "^20.2.43",

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
 import { Browser } from '@syncfusion/ej2-base';
-import { DialogComponent } from '@syncfusion/ej2-react-popups';
 import FastingDialog from "./FastingDialog";
 import DietDialog from "./DietDialog";
 import { TabComponent, TabItemDirective, TabItemsDirective } from '@syncfusion/ej2-react-navigations';
@@ -43,8 +41,6 @@ function Tab() {
     let lunchRecom = 440;
     let snack2Recom = 165;
     let dinnerRecom = 440;
-    let fastingStartValue;
-    let fastingEndValue;
     let hidden = false;
     let currentMenuHeader;
     let currentMenu;
@@ -55,10 +51,6 @@ function Tab() {
     var today = new Date();
     var currentDate = today;
     var maxDate = new Date();
-    let dropDownInstance;
-    let chartInstance;
-    let gridInstance;
-    let dialogInstance;
     var burnedCalories = 0;
     var todaysWorkoutPercent = 80;
     var theme = 'Tailwind';
@@ -440,6 +432,87 @@ function Tab() {
             ],
         },
     ];
+    let weightGaugePointers = [{
+        animation: { enable: false }, value: profileStats.weight, radius: '85%', color: '#F43F5E',
+        pointerWidth: 12,
+        cap: { radius: 12, color: '#F0D9BC' }
+    }];
+
+    let rangeLinearGradient = {
+        startValue: '0%',
+        endValue: '100%',
+        colorStop: [
+            { color: '#4075F2', offset: '0%' },
+            { color: '#FB9906', offset: '35%' },
+            { color: '#F9623A', offset: '70%' },
+            { color: '#C24287', offset: '100%' },
+        ]
+    };
+    let weightGaugeRanges = [{
+        start: 0, end: profileStats.weight, startWidth: 18, endWidth: 18, color: '#F43F5E',
+        linearGradient: rangeLinearGradient,
+        roundedCornerRadius: 10
+    }];
+
+    let heightGaugePointerLinearGradient = {
+        startValue: '0%',
+        endValue: '100%',
+        colorStop: [
+            { color: '#B2CFE0', offset: '0%', opacity: 0.5 },
+        ],
+    };
+
+    let heightGaugeAxes = [
+        {
+            minimum: 0,
+            maximum: 230,
+            line: {
+                offset: -60,
+                color: '#7D96A6'
+            },
+            opposedPosition: true,
+            majorTicks: {
+                interval: 20,
+                color: '#7D96A6'
+            },
+            minorTicks: {
+                interval: 5,
+                color: '#7D96A6'
+            },
+            pointers: [
+                {
+                    type: 'Bar',
+                    value: profileStats.height,
+                    width: 80,
+                    linearGradient: heightGaugePointerLinearGradient,
+                },
+                {
+                    type: 'Bar',
+                    height: 390,
+                    width: 5,
+                    value: 230,
+                    color: '#7D96A6',
+                    offset: -25,
+                    roundedCornerRadius: 0
+                }
+            ],
+        },
+    ];
+
+    let heightGaugeAnnotation = [{
+        content: '<div class="e-height-gauge-annotation">' + profileStats.height + profileStats.heightMes + '</div>',
+        axisIndex: 0,
+        axisValue: profileStats.height,
+        x: -50,
+        y: 0, zIndex: '1'
+    }
+    ];
+
+    let weightGaugeAnnotaions = [{
+        content: '<div class="e-weight-gauge-annotation">' +
+            profileStats.weight + profileStats.weightMes + '</div>',
+        radius: '85%', angle: 180, zIndex: '1'
+    }];
     var [state, setState] = useState({
         heartRate: Math.round(Math.random() * (100 - 70) + 70),
         steps: Math.round(Math.random() * (3000 - 1000) + 1000),
@@ -461,6 +534,7 @@ function Tab() {
         expectedCalories: 3000,
         todayActivities: [],
         datePickerDate: currentDate,
+        currentDate : currentDate,
         isSmallDevice: false,
         pieData: pieData,
         currentBreakFastMenuText: currentBreakFastMenuText,
@@ -486,6 +560,7 @@ function Tab() {
         isDinnerMenuAdded: isDinnerMenuAdded,
         consumedWaterCount: consumedWaterCount,
         consumedWaterAmount: consumedWaterAmount,
+        burnedCalories: burnedCalories,
         weightChartData: getWeightChartData(),
         waterGaugeAnnotation: waterGaugeAnnotation,
         waterGaugeAxes: waterGaugeAxes,
@@ -494,23 +569,29 @@ function Tab() {
         countStartDate: countStartDate,
         countDownDate: countDownDate,
         circulargauge: circulargauge,
-        changeTimeBtnText : changeTimeBtnText,
-        currentMenuHeader:currentMenuHeader,
+        changeTimeBtnText: changeTimeBtnText,
+        currentMenuHeader: currentMenuHeader,
         currentMenu: currentMenu,
-        currentRecom : currentRecom,
-        currentAddedMenu : currentAddedMenu,
-        currentQuantity :currentQuantity,
-        currentTotalCal : currentTotalCal,
-        hidden :hidden
+        currentRecom: currentRecom,
+        currentAddedMenu: currentAddedMenu,
+        currentQuantity: currentQuantity,
+        currentTotalCal: currentTotalCal,
+        currentBreakFastMenu : currentBreakFastMenu,
+        currentSnack1Menu  : currentSnack1Menu ,
+        currentSnack2Menu : currentSnack2Menu,
+        currentLunchMenu : currentLunchMenu,
+        currentDinnerMenu : currentDinnerMenu,
+        hidden: false
     });
 
     // var [difference, setDifference] = useState({
     //     diff: diff
     // })
     var isToday = true;
-    // useEffect(()=>{
-    //     //window.addEventListener('resize', onResize);
-    // },[]);
+    useEffect(()=>{
+        console.log("Use Effect");
+        //window.addEventListener('resize', onResize);
+    },[]);
 
     if (getInitial) {
         getInitial = false;
@@ -530,11 +611,8 @@ function Tab() {
         pieData = getPieChartData();
         countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
         countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
-        console.log(countStartDate);
-        console.log(countDownDate);
-        x = setInterval(intervalFn(), 1000);
+        x = setInterval(intervalFn, 1000);
         getInitialData();
-        console.log(dialogInstance);
     }
 
     // function onResize() {
@@ -560,6 +638,7 @@ function Tab() {
     function getWeightChartData() {
         let count = 12;
         let sampleData = [];
+        // currentDate = currentDate ? currentDate : state.currentDate;
         for (let i = count - 1; i >= 0; i--) {
             let date = (currentDate) ? new Date(currentDate) : new Date();
             let data = {
@@ -574,13 +653,15 @@ function Tab() {
     function getChartData(action, value) {
         let count = (value && value === 'Monthly') ? 30 : 7;
         let sampleData = [];
-        if ((value && value === 'Monthly' && activityChartMonthData[action] && activityChartMonthData[action].length > 0) || (value && value === 'Weekly' && activityChartWeekData[action] && activityChartWeekData[action].length > 0)) {
-            if (value === 'Monthly') {
-                sampleData = activityChartMonthData[action];
-            } else {
-                sampleData = activityChartWeekData[action];
-            }
-        } else {
+        // if ((value && value === 'Monthly' && activityChartMonthData[action] && activityChartMonthData[action].length > 0) || (value && value === 'Weekly' && activityChartWeekData[action] && activityChartWeekData[action].length > 0)) {
+        //     if (value === 'Monthly') {
+        //         sampleData = activityChartMonthData[action];
+        //     } else {
+        //         sampleData = activityChartWeekData[action];
+        //     }
+        // } 
+        // else {
+            // currentDate = currentDate ? currentDate : state.currentDate;
             for (let i = count - 1; i >= 0; i--) {
                 let date = (currentDate) ? new Date(currentDate) : new Date();
                 let data = {
@@ -597,7 +678,7 @@ function Tab() {
                     activityChartWeekData[action] = sampleData;
                 }
             }
-        }
+        // }
         return sampleData;
     }
 
@@ -685,13 +766,19 @@ function Tab() {
 
     function getInitialData() {
         let data;
+        calculatingFastingStartEndTime();
+        // let now = new Date();
+        // let isToday = countStartDate.toDateString() == now.toDateString();
+        // fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        // isToday = countDownDate.toDateString() == now.toDateString();
+        // fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
         if (masterData.length === 0) {
             let breakWater = Math.round(Math.random() * (5 - 2) + 2);
             let lunchWater = Math.round(Math.random() * (5 - 2) + 2);
             let consumedCount = breakWater + lunchWater;
             let consumedAmount = consumedCount * 150;
             data = {
-                date: currentDate.toLocaleDateString(),
+                date: state.currentDate.toLocaleDateString(),
                 activity: {
                     heartRate: state.heartRate,
                     steps: state.steps,
@@ -730,7 +817,7 @@ function Tab() {
                     snack2Text: currentSnack2MenuText,
                     isSnack2MenuAdded: isSnack2MenuAdded,
                     consumedCalories: state.consumedCalories,
-                    burnedCalories: burnedCalories,
+                    burnedCalories: state.burnedCalories,
                     breakfastWaterTaken: state.breakfastWaterTaken,
                     expectedWaterAmount: state.expectedWaterAmount,
                     lunchWaterTaken: state.lunchWaterTaken,
@@ -977,8 +1064,10 @@ function Tab() {
                 expectedWaterAmount: data.diet.expectedWaterAmount,
                 pieData: data.diet.pieData,
                 expectedCalories: data.diet.expectedCalories,
+                burnedCalories : data.diet.burnedCalories,
                 todayActivities: activities,
                 datePickerDate: currentDate,
+                currentDate : currentDate,
                 isSmallDevice: SmallDevice,
                 currentBreakFastMenuText: data.diet.breakFastText,
                 currentBreakFastCalories: data.diet.breakFastCalories,
@@ -1010,7 +1099,13 @@ function Tab() {
                 countStartDate: data.fasting.countStartDate,
                 countDownDate: data.fasting.countDownDate,
                 circulargauge: circulargauge,
-                waterGaugeAnnotation: waterGaugeAnnotation
+                waterGaugeAnnotation: waterGaugeAnnotation,
+                currentBreakFastMenu : currentBreakFastMenu,
+                currentSnack1Menu : currentSnack1Menu,
+                currentSnack2Menu  : currentSnack2Menu,
+                currentLunchMenu : currentLunchMenu,
+                currentDinnerMenu : currentDinnerMenu,
+                hidden: false
             }
         })
     }
@@ -1342,6 +1437,7 @@ function Tab() {
                     expectedWaterAmount: data.diet.expectedWaterAmount,
                     todayActivities: updateActivities,
                     datePickerDate: currentDate,
+                    currentDate : currentDate,
                     expectedCalories: data.diet.expectedCalories,
                     isSmallDevice: smallDevice,
                     currentBreakFastMenuText: data.diet.breakFastText,
@@ -1360,6 +1456,7 @@ function Tab() {
                     currentTotalCalcium: data.diet.calcium,
                     currentTotalSodium: data.diet.sodium,
                     currentTotalIron: data.diet.iron,
+                    burnedCalories: data.diet.burnedCalories,
                     isBreakFastMenuAdded: data.diet.isBreakFastMenuAdded,
                     isSnack1MenuAdded: data.diet.isSnack1Added,
                     isLunchMenuAdded: data.diet.isLunchAdded,
@@ -1374,7 +1471,13 @@ function Tab() {
                     circulargauge: circulargauge,
                     countStartDate: data.fasting.countStartDate,
                     countDownDate: data.fasting.countDownDate,
-                    waterGaugeAnnotation: waterGaugeAnnotation
+                    currentBreakFastMenu : currentBreakFastMenu,
+                    currentSnack1Menu : currentSnack1Menu,
+                    currentSnack2Menu : currentSnack2Menu,
+                    currentLunchMenu : currentLunchMenu,
+                    currentDinnerMenu : currentDinnerMenu,
+                    waterGaugeAnnotation: waterGaugeAnnotation,
+                    hidden: false
                 }
             })
         } else {
@@ -1389,9 +1492,43 @@ function Tab() {
             countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
             countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
             clearInterval(x);
-            x = setInterval(intervalFn(), 1000);
+            x = setInterval(intervalFn, 1000);
         }
+        disableElements();
     }
+
+    function disableElements() {
+        if (!isToday) {
+          if (document.querySelector('.e-fast-time-btn')) {
+            (document.querySelector('.e-fast-time-btn')).style.pointerEvents = 'none';
+          }
+          if (document.querySelector('.e-fast-end-btn')) {
+            (document.querySelector('.e-fast-end-btn')).style.pointerEvents = 'none';
+          }
+          if (document.querySelector('.e-water-minus')) {
+            (document.querySelector('.e-water-minus')).style.pointerEvents = 'none';
+          }
+          if (document.querySelector('.e-water-plus')) {
+            (document.querySelector('.e-water-plus')).style.pointerEvents = 'none';
+          }
+          if (document.getElementsByClassName('e-circulargauge')[0]) {
+            endFasting();
+          }
+        } else {
+          if (document.querySelector('.e-fast-time-btn')) {
+            (document.querySelector('.e-fast-time-btn')).style.pointerEvents = '';
+          }
+          if (document.querySelector('.e-fast-end-btn')) {
+            (document.querySelector('.e-fast-end-btn')).style.pointerEvents = 'auto';
+          }
+          if (document.querySelector('.e-water-minus')) {
+            (document.querySelector('.e-water-minus')).style.pointerEvents = 'auto';
+          }
+          if (document.querySelector('.e-water-plus')) {
+            (document.querySelector('.e-water-plus')).style.pointerEvents = 'auto';
+          }
+        }
+      }
 
     function updateMenu() {
         currentBreakFastMenu = [];
@@ -1424,6 +1561,7 @@ function Tab() {
         fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
         isToday = countDownDate.toDateString() == now.toDateString();
         fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        //calculatingFastingStartEndTime();
         let percent = Math.round(((now - countStartDate) / (countDownDate - countStartDate)) * 100);
         percent = percent > 100 ? 100 : percent;
         let left = countDownDate.getTime() - now.getTime();
@@ -1436,34 +1574,99 @@ function Tab() {
         let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
         sliderValue = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+        let fastingGauge = document.getElementById('range-container') ? document.getElementById('range-container').ej2_instances[0] : undefined;
         if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0) {
             endFasting();
-        } else if (circulargauge) {
-            circulargauge[0].ranges[1].end = percent;
-            circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
+        } else if (fastingGauge) {
+            fastingGauge.axes[0].ranges[1].end = percent;
+            fastingGauge.axes[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
             if (percent > 80) {
-                circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
+                circfastingGauge.axesulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
             } else {
-                circulargauge[0].annotations[1].content = '';
+                fastingGauge.axes[0].annotations[1].content = '';
             }
-            circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (' + percent + '%)</div><div class="e-fast-completed">' +
+            fastingGauge.axes[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (' + percent + '%)</div><div class="e-fast-completed">' +
                 sliderValue.toString() + '</div><div class="e-fast-left">Left ' + leftHours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'h ' + leftMinutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'm</div>';
-        }
+            circulargauge = fastingGauge.axes;
+            }
     }
-
     function endFasting() {
         clearInterval(x);
         sliderValue = "Completed";
         // annotaions[0].content  = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
         // sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
-        if (circulargauge) {
+        let fastingGauge = document.getElementById('range-container') ? document.getElementById('range-container').ej2_instances[0] : undefined;
+        if (fastingGauge) {
+            let percent = 100;
+            fastingGauge.axes[0].ranges[1].end = percent;
+            fastingGauge.axes[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
+            fastingGauge.axes[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
+            fastingGauge.axes[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
+            circulargauge = fastingGauge.axes;
+        }
+        else {
             let percent = 100;
             circulargauge[0].ranges[1].end = percent;
             circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
             circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
-            circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
+            circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
         }
     }
+
+    function calculatingFastingStartEndTime() {
+        let now = new Date();
+        let isToday = countStartDate.toDateString() == now.toDateString();
+        fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        isToday = countDownDate.toDateString() == now.toDateString();
+        fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    }
+
+    // function intervalFn() {
+    //     let now = new Date();
+    //     let isToday = countStartDate.toDateString() == now.toDateString();
+    //     fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    //     isToday = countDownDate.toDateString() == now.toDateString();
+    //     fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    //     let percent = Math.round(((now - countStartDate) / (countDownDate - countStartDate)) * 100);
+    //     percent = percent > 100 ? 100 : percent;
+    //     let left = countDownDate.getTime() - now.getTime();
+    //     let leftHours = Math.floor((left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    //     leftHours = leftHours < 0 ? 0 : leftHours;
+    //     let leftMinutes = Math.floor((left % (1000 * 60 * 60)) / (1000 * 60));
+    //     leftMinutes = leftMinutes < 0 ? 0 : leftMinutes;
+    //     let distance = now.getTime() - countStartDate.getTime();
+    //     let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    //     let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    //     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    //     sliderValue = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+    //     if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0) {
+    //         endFasting();
+    //     } else if (circulargauge) {
+    //         circulargauge[0].ranges[1].end = percent;
+    //         circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
+    //         if (percent > 80) {
+    //             circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
+    //         } else {
+    //             circulargauge[0].annotations[1].content = '';
+    //         }
+    //         circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (' + percent + '%)</div><div class="e-fast-completed">' +
+    //             sliderValue.toString() + '</div><div class="e-fast-left">Left ' + leftHours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'h ' + leftMinutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'm</div>';
+    //     }
+    // }
+
+    // function endFasting() {
+    //     clearInterval(x);
+    //     sliderValue = "Completed";
+    //     // annotaions[0].content  = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
+    //     // sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
+    //     if (circulargauge) {
+            // let percent = 100;
+            // circulargauge[0].ranges[1].end = percent;
+            // circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
+            // circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
+            // circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
+    //     }
+    // }
 
 
     function customiseCell(args) {
@@ -1507,6 +1710,7 @@ function Tab() {
     }
 
     function onDropDownChange(args) {
+        currentDate = state.currentDate;
         let dropvalue = [];
         if (args.value == 'Monthly') {
             dropvalue = ['Monthly', 'Weekly'];
@@ -1519,7 +1723,8 @@ function Tab() {
                 ...prevState,
                 chartDietData: getChartData('Diet', this.value),
                 chartData: getChartData('Workout', this.value),
-                currentDropDownData: dropvalue
+                currentDropDownData: dropvalue,
+                hidden: false
             }
         })
     }
@@ -1544,7 +1749,6 @@ function Tab() {
     }
 
     function minusClick() {
-        document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].show();
         let time = new Date().getHours();
         let period = (time > 0 && time < 8) ? 'Breakfast Water' : (time > 8 && time < 16) ? 'Lunch Water' : 'Evening Water';
         let ind;
@@ -1721,7 +1925,8 @@ function Tab() {
                 consumedWaterCount: consWaterCount,
                 consumedWaterAmount: consWaterAmount,
                 waterGaugeAnnotation: waterAnnotation,
-                waterGaugeAxes: waterAxes
+                waterGaugeAxes: waterAxes,
+                hidden: false
             }
         })
     }
@@ -1938,7 +2143,8 @@ function Tab() {
                     consumedWaterCount: consWaterCount,
                     consumedWaterAmount: consWaterAmount,
                     waterGaugeAnnotation: waterAnnotation,
-                    waterGaugeAxes: waterAxes
+                    waterGaugeAxes: waterAxes,
+                    hidden: false
                 }
             })
             //updateWaterGauge();
@@ -2001,13 +2207,28 @@ function Tab() {
             e.cancel = true;
         }
     }
+    function chartCreated() {
+        isToday = state.currentDate.getDate() === new Date().getDate() && state.currentDate.getMonth() === new Date().getMonth() && state.currentDate.getFullYear() === new Date().getFullYear();
+        disableElements();
+    }
     function tabSelected(e) {
+        
         if (document.getElementsByClassName('e-chart')[0]) {
             document.getElementsByClassName('e-chart')[0].ej2_instances[0].refresh();
         }
         if (document.getElementsByClassName('e-accumulationchart')[0]) {
             document.getElementsByClassName('e-accumulationchart')[0].ej2_instances[0].refresh();
         }
+        if (document.getElementsByClassName('e-circulargauge')[0]) {
+            document.getElementsByClassName('e-circulargauge')[0].ej2_instances[0].refresh();
+        }
+        if (document.getElementsByClassName('e-lineargauge')[0]) {
+            document.getElementsByClassName('e-lineargauge')[0].ej2_instances[0].refresh();
+        }
+        if (document.getElementsByClassName('e-fasting-chart')[0]) {
+            document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
+        }
+       
     }
 
     function modifyFasting() {
@@ -2022,22 +2243,22 @@ function Tab() {
     let fasEndValue;
     function onFastStartDateChange() {
         fasStartValue = this.value;
-        // fastingStartValue = this.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        // fastingStartValue = fastingStartValue.getHours()
-        // fastingEndValue = state.countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        // let diffValue =  Math.floor(((fastingEndValue) - (fastingStartValue)) / (1000 * 60 * 60));
-        // document.getElementsByClassName('e-fast-total-value').innerHtml = diffValue;
     }
     function onFastEndDateChange() {
         fasEndValue = this.value;
-        fastingEndValue = this.value;
     }
 
     function fastingDlgBtnClick(args) {
         countStartDate = fasStartValue ? fasStartValue : state.countStartDate;
         countDownDate = fasEndValue ? fasEndValue : state.countDownDate;
         clearInterval(x);
-        x = setInterval(intervalFn(), 1000);
+        x = setInterval(intervalFn, 1000);
+        calculatingFastingStartEndTime();
+        // let now = new Date();
+        // let isToday = countStartDate.toDateString() == now.toDateString();
+        // fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        // isToday = countDownDate.toDateString() == now.toDateString();
+        // fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
         document.getElementsByClassName('e-add-fasting-dialog')[0].ej2_instances[0].hide();
         changeTimeBtnText = "CHANGE TIME";
         if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
@@ -2049,39 +2270,20 @@ function Tab() {
         setState(prevState => {
             return {
                 ...prevState,
-                fastStartTime : fastStartTime,
-                fastEndTime : fastEndTime,
+                fastStartTime: fastStartTime,
+                fastEndTime: fastEndTime,
                 countStartDate: countStartDate,
                 countDownDate: countDownDate,
                 circulargauge: circulargauge,
-                changeTimeBtnText : changeTimeBtnText
+                changeTimeBtnText: changeTimeBtnText,
+                hidden: false
             }
         })
-        // this.countDownDate = this.fastingEndDateInstance.value;
-        // this.diff = Math.floor((this.countDownDate - this.countStartDate) / (1000 * 60 * 60));
-        // clearInterval(this.x);
-        // this.x = setInterval(this.intervalFn.bind(this), 1000);
-        // this.fastingDialog.hide();
-        // this.changeTimeBtnText = "CHANGE TIME";
-        // if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
-        //   document.querySelector('.e-fast-time-btn').classList.remove('e-fast-reset');
-        // }
-        // if (document.querySelector('.e-fast-end-btn') && document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
-        //   document.querySelector('.e-fast-end-btn').classList.remove('e-fast-reset');
-        // }
     }
 
     function clearFasting() {
         clearInterval(x);
         sliderValue = "Completed";
-        // this.annotaions[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
-        //   this.sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
-        // if (circulargauge) {
-        //     circulargauge[0].ranges[1].end = 0;
-        //     circulargauge[0].annotations[1].angle = 0;
-        //     circulargauge[0].annotations[1].content = '';
-        //     circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
-        // }
         endFasting();
         changeTimeBtnText = "START FASTING";
         if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
@@ -2094,7 +2296,8 @@ function Tab() {
             return {
                 ...prevState,
                 circulargauge: circulargauge,
-                changeTimeBtnText: changeTimeBtnText
+                changeTimeBtnText: changeTimeBtnText,
+                hidden: false
             }
         })
 
@@ -2107,31 +2310,32 @@ function Tab() {
     function menuDlgBtnClick() {
 
     }
-    
+
     function addBtnClick(args) {
-        hidden = true;
+        // hidden = true;
         // document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].refresh();
+        currentTotalCal = 0;
         if (args.currentTarget.classList.contains('e-breakfast-add-btn')) {
             currentMenuHeader = " Add Breakfast Menu";
             currentMenu = JSON.parse(JSON.stringify(breakfastMenu));
             currentRecom = breakFastRecom;
             currentAddedMenu = 'Breakfast';
-          } else if (args.currentTarget.classList.contains('e-snack1-add-btn') || args.currentTarget.classList.contains('e-snack2-add-btn')) {
+        } else if (args.currentTarget.classList.contains('e-snack1-add-btn') || args.currentTarget.classList.contains('e-snack2-add-btn')) {
             currentMenuHeader = "Add Snack Menu";
             currentMenu = JSON.parse(JSON.stringify(snackMenu));
             if (args.currentTarget.classList.contains('e-snack1-add-btn')) {
-              currentRecom = snack1Recom;
-              currentAddedMenu = 'Snack 1';
+                currentRecom = snack1Recom;
+                currentAddedMenu = 'Snack 1';
             } else {
-              currentRecom = snack2Recom;
-              currentAddedMenu = 'Snack 2';
+                currentRecom = snack2Recom;
+                currentAddedMenu = 'Snack 2';
             }
-          } else if (args.currentTarget.classList.contains('e-lunch-add-btn')) {
+        } else if (args.currentTarget.classList.contains('e-lunch-add-btn')) {
             currentMenuHeader = "Add Lunch Menu";
             currentMenu = JSON.parse(JSON.stringify(lunchMenu));
             currentRecom = lunchRecom;
             currentAddedMenu = 'Lunch';
-          } else if (args.currentTarget.classList.contains('e-dinner-add-btn')) {
+        } else if (args.currentTarget.classList.contains('e-dinner-add-btn')) {
             currentMenuHeader = "Add Dinner Menu";
             currentMenu = JSON.parse(JSON.stringify(lunchMenu));
             currentRecom = dinnerRecom;
@@ -2140,57 +2344,58 @@ function Tab() {
         setState(prevState => {
             return {
                 ...prevState,
-                hidden : hidden,
-                currentMenuHeader : currentMenuHeader,
-                currentMenu : currentMenu,
-                currentRecom : currentRecom,
-                currentAddedMenu : currentAddedMenu
+                hidden: true,
+                currentMenuHeader: currentMenuHeader,
+                currentTotalCal: currentTotalCal,
+                currentMenu: currentMenu,
+                currentRecom: currentRecom,
+                currentAddedMenu: currentAddedMenu
             }
         })
-        // document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].refresh();
-        // document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].refresh();
-        // document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].show();
-        
-        // document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].refresh();
+    }
+
+    function onProfileEdit() {
+        document.getElementsByClassName('e-profile-edit-dialog')[0].ej2_instances[0].show();
     }
 
     function onMenuCardSelect() {
-    currentQuantity = 1;
-    args.currentTarget.classList.toggle('e-card-select');
-    if (args.currentTarget.classList.contains('e-card-select')) {
-      lastSelectItem = args.currentTarget.innerText;
-    } else {
-      lastSelectItem = '';
-    }
-    for (var i = 0; i < currentMenu.length; i++) {
-      if (currentMenu[i].item === args.currentTarget.innerText) {
+        currentQuantity = 1;
+        args.currentTarget.classList.toggle('e-card-select');
         if (args.currentTarget.classList.contains('e-card-select')) {
-          currentMenu[i].isAdded = true;
-          currentMenu[i].quantity = currentQuantity;
+            lastSelectItem = args.currentTarget.innerText;
         } else {
-          currentMenu[i].isAdded = false;
-          currentMenu[i].quantity = 0;
+            lastSelectItem = '';
         }
-      }
-    }
-    updateTotalCal();
-    setState(prevState => {
-        return {
-            ...prevState,
-            currentQuantity :currentQuantity,
-            currentMenu : currentMenu,
-            currentTotalCal : currentTotalCal
+        for (var i = 0; i < currentMenu.length; i++) {
+            if (currentMenu[i].item === args.currentTarget.innerText) {
+                if (args.currentTarget.classList.contains('e-card-select')) {
+                    currentMenu[i].isAdded = true;
+                    currentMenu[i].quantity = currentQuantity;
+                } else {
+                    currentMenu[i].isAdded = false;
+                    currentMenu[i].quantity = 0;
+                }
+            }
         }
-    })
-    document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].refresh();
+        updateTotalCal();
+        setState(prevState => {
+            return {
+                ...prevState,
+                currentQuantity: currentQuantity,
+                currentMenu: currentMenu,
+                currentTotalCal: currentTotalCal,
+                hidden: false
+            }
+        })
+        document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].refresh();
     }
 
     function updateTotalCal() {
         currentTotalCal = 0;
         for (var i = 0; i < currentMenu.length; i++) {
-          if (currentMenu[i].isAdded) {
-            currentTotalCal += (currentMenu[i].cal * currentMenu[i].quantity);
-          }
+            if (currentMenu[i].isAdded) {
+                currentTotalCal += (currentMenu[i].cal * currentMenu[i].quantity);
+            }
         }
     }
 
@@ -2203,51 +2408,152 @@ function Tab() {
     }
 
     function editMenu(args) {
-
-        console.log("Edit menu called");
-        // if (args.currentTarget.classList.contains('e-breakfast-edit')) {
-        //   currentMenuHeader = " Add Breakfast Menu";
-        //   currentMenu = JSON.parse(JSON.stringify(breakfastMenu));
-        //   //updateCurrentMenu(this.currentBreakFastMenu);
-        //   currentRecom = breakFastRecom;
-        //   currentAddedMenu = 'Breakfast';
-        // } else if (args.currentTarget.classList.contains('e-snack1-edit') || args.currentTarget.classList.contains('e-snack2-edit')) {
-        //   currentMenuHeader = "Add Snack Menu";
-        //   currentMenu = JSON.parse(JSON.stringify(snackMenu));
-        //   if (args.currentTarget.classList.contains('e-snack1-edit')) {
-        //     currentRecom = snack1Recom;
-        //     currentAddedMenu = 'Snack 1';
-        //     //updateCurrentMenu(currentSnack1Menu);
-        //   } else {
-        //     currentRecom = snack2Recom;
-        //     currentAddedMenu = 'Snack 2';
-        //     //updateCurrentMenu(this.currentSnack2Menu);
-        //   }
-        // } else if (args.currentTarget.classList.contains('e-lunch-edit')) {
-        //   currentMenuHeader = "Add Lunch Menu";
-        //   currentMenu = JSON.parse(JSON.stringify(lunchMenu));
-        //   //this.updateCurrentMenu(this.currentLunchMenu);
-        //   currentRecom = lunchRecom;
-        //   currentAddedMenu = 'Lunch';
-        // } else if (args.currentTarget.classList.contains('e-dinner-edit')) {
-        //   currentMenuHeader = "Add Dinner Menu";
-        //   this.currentMenu = JSON.parse(JSON.stringify(this.lunchMenu));
-        //   this.updateCurrentMenu(this.currentDinnerMenu);
-        //   this.currentRecom = this.dinnerRecom;
-        //   this.currentAddedMenu = 'Dinner';
-        // }
-        // this.updateTotalCal();
-        // this.menuDialog.show();
+        if (args.currentTarget.classList.contains('e-breakfast-edit')) {
+            currentMenuHeader = " Add Breakfast Menu";
+            currentMenu = JSON.parse(JSON.stringify(breakfastMenu));
+            updateCurrentMenu(state.currentBreakFastMenu);
+            currentRecom = breakFastRecom;
+            currentAddedMenu = 'Breakfast';
+        } else if (args.currentTarget.classList.contains('e-snack1-edit') || args.currentTarget.classList.contains('e-snack2-edit')) {
+            currentMenuHeader = "Add Snack Menu";
+            currentMenu = JSON.parse(JSON.stringify(snackMenu));
+            if (args.currentTarget.classList.contains('e-snack1-edit')) {
+                currentRecom = snack1Recom;
+                currentAddedMenu = 'Snack 1';
+                updateCurrentMenu(state.currentSnack1Menu);
+            } else {
+                currentRecom = snack2Recom;
+                currentAddedMenu = 'Snack 2';
+                updateCurrentMenu(state.currentSnack2Menu);
+            }
+        } else if (args.currentTarget.classList.contains('e-lunch-edit')) {
+            currentMenuHeader = "Add Lunch Menu";
+            currentMenu = JSON.parse(JSON.stringify(lunchMenu));
+            updateCurrentMenu(state.currentLunchMenu);
+            currentRecom = lunchRecom;
+            currentAddedMenu = 'Lunch';
+        } else if (args.currentTarget.classList.contains('e-dinner-edit')) {
+            currentMenuHeader = "Add Dinner Menu";
+            currentMenu = JSON.parse(JSON.stringify(lunchMenu));
+            updateCurrentMenu(state.currentDinnerMenu);
+            currentRecom = dinnerRecom;
+            currentAddedMenu = 'Dinner';
+        }
+        updateTotalCal();
+        setState(prevState => {
+            return {
+                ...prevState,
+                hidden: true,
+                currentMenuHeader: currentMenuHeader,
+                currentMenu: currentMenu,
+                currentRecom: currentRecom,
+                currentTotalCal: currentTotalCal,
+                currentAddedMenu: currentAddedMenu
+            }
+        })
     }
+
+    function updateCurrentMenu(menu) {
+        for (let i = 0; i < menu.length; i++) {
+            for (let j = 0; j < currentMenu.length; j++) {
+                if (menu[i].item === currentMenu[j].item) {
+                    currentMenu[j].isAdded = true;
+                    currentMenu[j].quantity = menu[i].quantity ? menu[i].quantity : 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    function updateTotalCal() {
+        currentTotalCal = 0;
+        for (var i = 0; i < currentMenu.length; i++) {
+            if (currentMenu[i].isAdded) {
+                currentTotalCal += (currentMenu[i].cal * currentMenu[i].quantity);
+            }
+        }
+    }
+
+    function onNameChange() {
+
+    }
+
+    function ageMinusClick() {
+
+    }
+
+    function agePlusClick() {
+
+    }
+
+    function changeWeight() {
+
+    }
+
+    function changeGoal() {
+
+    }
+
+    function changeHeight() {
+
+    }
+
+    function onLocationChange() {
+
+    }
+
+    function onEmailChange() {
+
+    }
+
+    function changeHandler() {
+
+    }
+
+    function updateHeight() {
+
+    }
+
+    function cancelHeight() {
+
+    }
+
+    function updateWeight() {
+
+    }
+
+    function cancelWeight() {
+
+    }
+
+    function handleChange() {
+
+    }
+
+    function sliderChange() {
+
+    }
+
+    function dialogOpen() {
+
+    }
+
+    function componentDidMount() {
+        console.log("componentDidMount");
+     }
+
     function profileTab() {
         return (
             <div className="e-dashboardlayout-container e-profile-dashboardlayout-container">
+
                 <React.Suspense fallback="Loading">
                     <Profile currentDate={state.datePickerDate}
                         maxDate={maxDate}
                         activities={state.todayActivities}
                         profileStats={profileStats}
+                        onProfileEdit={onProfileEdit}
                         onProfileDateChange={onProfileDateChange}></Profile>
+
                 </React.Suspense>
             </div>
         )
@@ -2255,6 +2561,30 @@ function Tab() {
     function contentActivities() {
         return (
             <React.Suspense fallback="Loading">
+                {/* <ProfileDialog hidden={true}
+                    profileStats={profileStats}
+                    name={profileStats.name}
+                    onNameChange={onNameChange}
+                    ageMinusClick={ageMinusClick}
+                    agePlusClick={agePlusClick}
+                    changeWeight={changeWeight}
+                    changeGoal={changeGoal}
+                    changeHeight={changeHeight}
+                    onLocationChange={onLocationChange}
+                    onEmailChange={onEmailChange}
+                    changeHandler={changeHandler}
+                    updateHeight={updateHeight}
+                    cancelHeight={cancelHeight}
+                    updateWeight={updateWeight}
+                    cancelWeight={cancelWeight}
+                    handleChange={handleChange}
+                    weightGaugeRanges={weightGaugeRanges}
+                    weightGaugePointers={weightGaugePointers}
+                    weightGaugeAnnotaions={weightGaugeAnnotaions}
+                    sliderChange={sliderChange}
+                    heightGaugeAxes={heightGaugeAxes}
+                    heightGaugeAnnotation={heightGaugeAnnotation}>
+                    </ProfileDialog> */}
                 <Activities isSmallDevice={state.isSmallDevice}
                     maxDate={maxDate}
                     datePickerDate={state.datePickerDate}
@@ -2283,16 +2613,17 @@ function Tab() {
         return (
             <React.Suspense fallback="Loading">
                 <DietDialog currentMenuHeader={state.currentMenuHeader}
-                    currentMenu ={state.currentMenu}
+                    currentMenu={state.currentMenu}
                     dlgButtons={dlgButtons}
-                    hidden = {state.hidden}
-                    currentRecom ={state.currentRecom}
-                    currentAddedMenu ={state.currentAddedMenu}
+                    hidden={state.hidden}
+                    currentRecom={state.currentRecom}
+                    currentAddedMenu={state.currentAddedMenu}
                     currentQuantity={state.currentQuantity}
                     currentTotalCal={state.currentTotalCal}
                     quantityPlusClick={quantityPlusClick}
                     quantityMinusClick={quantityMinusClick}
-                    onMenuCardSelect={onMenuCardSelect}>
+                    onMenuCardSelect={onMenuCardSelect}
+                    dialogOpen={dialogOpen}>
                 </DietDialog>
                 <Diet isSmallDevice={state.isSmallDevice}
                     pieData={state.pieData}
@@ -2320,7 +2651,7 @@ function Tab() {
                     dinnerRecom={dinnerRecom}
                     consumedCalories={state.consumedCalories}
                     expectedCalories={state.expectedCalories}
-                    burnedCalories={burnedCalories}
+                    burnedCalories={state.burnedCalories}
                     innerWidth={innerWidth}
                     currentTotalProteins={state.currentTotalProteins}
                     currentTotalFat={state.currentTotalFat}
@@ -2352,7 +2683,7 @@ function Tab() {
                     fastingCancelBtnClick={fastingCancelBtnClick}
                     onFastStartDateChange={onFastStartDateChange}
                     onFastEndDateChange={onFastEndDateChange}
-                    >
+                >
                 </FastingDialog>
                 <Fasting isSmallDevice={state.isSmallDevice}
                     consumedWaterCount={state.consumedWaterCount}
@@ -2373,16 +2704,18 @@ function Tab() {
                     todayActivities={state.todayActivities}
                     profileStats={profileStats}
                     onProfileDateChange={onProfileDateChange}
-                    clearFasting={clearFasting}>
-                    
+                    clearFasting={clearFasting}
+                    quantityPlusClick={quantityPlusClick}
+                    quantityMinusClick={quantityMinusClick}
+                    onMenuCardSelect={onMenuCardSelect}
+                    chartCreated={chartCreated}>
                 </Fasting>
-
             </React.Suspense>
         )
     }
 
     return (
-        <TabComponent created={created} iconPosition='top' headerPlacement="headerPlacement" selecting={tabSelecting} selected={tabSelected} >
+        <TabComponent created={created} iconPosition='top' headerPlacement="headerPlacement" selecting={tabSelecting} selected={tabSelected}>
             <TabItemsDirective>
                 <TabItemDirective header={headerText[0]} content={contentActivities}></TabItemDirective>
                 <TabItemDirective header={headerText[1]} content={dietTab}></TabItemDirective>
@@ -2390,7 +2723,6 @@ function Tab() {
                 {state.isSmallDevice && <TabItemDirective header={headerText[3]} content={profileTab}></TabItemDirective>}
             </TabItemsDirective>
         </TabComponent>
-
     );
 }
 

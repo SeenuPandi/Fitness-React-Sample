@@ -30,6 +30,10 @@ function FastingDialog(props) {
         })
     }
 
+    function changeClick() {
+        console.log("changing click")
+    }
+
     function fastingCancelBtnClick() {
 
     }
