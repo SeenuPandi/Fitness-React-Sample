@@ -234,7 +234,7 @@ function Activities(props) {
             {!props.isSmallDevice &&
                   <div className="col-md-3">
                   <React.Suspense fallback="Loading">
-                      <Profile currentDate={props.datePickerDate} maxDate={props.maxDate} activities = {props.todayActivities} profileStats = {props.profileStats} onProfileDateChange={props.onProfileDateChange}></Profile>
+                      <Profile currentDate={props.datePickerDate} maxDate={props.maxDate} activities = {props.todayActivities} profileStats = {props.profileStats} onProfileDateChange={props.onProfileDateChange} onProfileEdit={props.onProfileEdit}></Profile>
                   </React.Suspense>
               </div>
             }

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { Browser } from '@syncfusion/ej2-base';
 import FastingDialog from "./FastingDialog";
 import DietDialog from "./DietDialog";
+import ProfileDialog from "./ProfileDialog";
 import { TabComponent, TabItemDirective, TabItemsDirective } from '@syncfusion/ej2-react-navigations';
 
 const Activities = React.lazy(() =>
@@ -507,6 +508,8 @@ function Tab() {
             profileStats.weight + profileStats.weightMes + '</div>',
         radius: '85%', angle: 180, zIndex: '1'
     }];
+
+    let modifyHeaderTitle = "Change Your Weight";
     var [state, setState] = useState({
         heartRate: Math.round(Math.random() * (100 - 70) + 70),
         steps: Math.round(Math.random() * (3000 - 1000) + 1000),
@@ -575,7 +578,8 @@ function Tab() {
         currentSnack2Menu: currentSnack2Menu,
         currentLunchMenu: currentLunchMenu,
         currentDinnerMenu: currentDinnerMenu,
-        hidden: false
+        hidden: false,
+        profileHidden: false,
     });
     var isToday = true;
     if (getInitial) {
@@ -678,6 +682,20 @@ function Tab() {
         currentTotalIron = 0;
         currentTotalSodium = 0;
         consumedCalories = 0;
+        currentBreakFastMenu = currentBreakFastMenu.length > 0 ? currentBreakFastMenu : state.currentBreakFastMenu;
+        currentSnack1Menu = currentSnack1Menu.length > 0 ? currentSnack1Menu: state.currentSnack1Menu;
+        currentLunchMenu = currentLunchMenu.length > 0 ? currentLunchMenu: state.currentLunchMenu;
+        isBreakFastMenuAdded = state.isBreakFastMenuAdded;
+        isSnack1MenuAdded =  state.isSnack1MenuAdded;
+        isLunchMenuAdded = state.isLunchMenuAdded;
+        if(state.isSnack2MenuAdded) {
+            currentSnack2Menu = currentSnack2Menu.length > 0 ? currentSnack2Menu : state.currentSnack2Menu;
+            isSnack2MenuAdded = state.isSnack2MenuAdded;
+        }
+        if(state.isDinnerMenuAdded) {
+            currentDinnerMenu = currentDinnerMenu.length > 0 ? currentDinnerMenu : state.currentDinnerMenu;
+            isDinnerMenuAdded = state.isDinnerMenuAdded;
+        }
         if (isBreakFastMenuAdded) {
             currentBreakFastMenuText = currentBreakFastMenu.map(function (elem) {
                 return elem.item;
@@ -688,7 +706,16 @@ function Tab() {
             currentTotalCalcium = Number((currentTotalCalcium + currentBreakFastMenu.reduce((a, b) => +a + +b.calcium, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalIron = Number((currentTotalIron + currentBreakFastMenu.reduce((a, b) => +a + +b.iron, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalSodium = Number((currentTotalSodium + currentBreakFastMenu.reduce((a, b) => +a + +b.sodium, 0)).toFixed(2).replace(/[.,]00$/, ""));
-            currentBreakFastCalories = currentBreakFastMenu.reduce((a, b) => +a + +b.cal, 0);
+            //currentBreakFastCalories = currentBreakFastMenu.reduce((a, b) => +a + +b.cal, 0);
+            currentBreakFastCalories = 0;
+            for (var i = 0; i < currentBreakFastMenu.length; i++) {
+                if(currentBreakFastMenu[i].quantity) {
+                    currentBreakFastCalories += (currentBreakFastMenu[i].cal * currentBreakFastMenu[i].quantity);
+                }
+                else {
+                    currentBreakFastCalories += (currentBreakFastMenu[i].cal * 1);
+                }
+            }
             consumedCalories += currentBreakFastCalories;
         }
         if (isSnack1MenuAdded) {
@@ -701,7 +728,16 @@ function Tab() {
             currentTotalCalcium = Number((currentTotalCalcium + currentSnack1Menu.reduce((a, b) => +a + +b.calcium, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalIron = Number((currentTotalIron + currentSnack1Menu.reduce((a, b) => +a + +b.iron, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalSodium = Number((currentTotalSodium + currentSnack1Menu.reduce((a, b) => +a + +b.sodium, 0)).toFixed(2).replace(/[.,]00$/, ""));
-            currentSnack1Calories = currentSnack1Menu.reduce((a, b) => +a + +b.cal, 0);
+            //currentSnack1Calories = currentSnack1Menu.reduce((a, b) => +a + +b.cal, 0);
+            currentSnack1Calories = 0;
+            for (var i = 0; i < currentSnack1Menu.length; i++) {
+                if(currentSnack1Menu[i].quantity) {
+                    currentSnack1Calories += (currentSnack1Menu[i].cal * currentSnack1Menu[i].quantity);
+                }
+                else {
+                    currentSnack1Calories += (currentSnack1Menu[i].cal * 1);
+                }
+            }
             consumedCalories += currentSnack1Calories;
         }
         if (isLunchMenuAdded) {
@@ -714,7 +750,16 @@ function Tab() {
             currentTotalCalcium = Number((currentTotalCalcium + currentLunchMenu.reduce((a, b) => +a + +b.calcium, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalIron = Number((currentTotalIron + currentLunchMenu.reduce((a, b) => +a + +b.iron, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalSodium = Number((currentTotalSodium + currentLunchMenu.reduce((a, b) => +a + +b.sodium, 0)).toFixed(2).replace(/[.,]00$/, ""));
-            currentLunchCalories = currentLunchMenu.reduce((a, b) => +a + +b.cal, 0);
+            //currentLunchCalories = currentLunchMenu.reduce((a, b) => +a + +b.cal, 0);
+            currentLunchCalories = 0;
+            for (var i = 0; i < currentLunchMenu.length; i++) {
+                if(currentLunchMenu[i].quantity) {
+                    currentLunchCalories += (currentLunchMenu[i].cal * currentLunchMenu[i].quantity);
+                }
+                else {
+                    currentLunchCalories += (currentLunchMenu[i].cal * 1);
+                }
+            }
             consumedCalories += currentLunchCalories;
         }
         if (isSnack2MenuAdded) {
@@ -727,7 +772,16 @@ function Tab() {
             currentTotalCalcium = Number((currentTotalCalcium + currentSnack2Menu.reduce((a, b) => +a + +b.calcium, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalIron = Number((currentTotalIron + currentSnack2Menu.reduce((a, b) => +a + +b.iron, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalSodium = Number((currentTotalSodium + currentSnack2Menu.reduce((a, b) => +a + +b.sodium, 0)).toFixed(2).replace(/[.,]00$/, ""));
-            currentSnack2Calories = currentSnack2Menu.reduce((a, b) => +a + +b.cal, 0);
+            //currentSnack2Calories = currentSnack2Menu.reduce((a, b) => +a + +b.cal, 0);
+            currentSnack2Calories = 0;
+            for (var i = 0; i < currentSnack2Menu.length; i++) {
+                if(currentSnack2Menu[i].quantity) {
+                    currentSnack2Calories += (currentSnack2Menu[i].cal * currentSnack2Menu[i].quantity);
+                }
+                else {
+                    currentSnack2Calories += (currentSnack2Menu[i].cal * 1);
+                }
+            }
             consumedCalories += currentSnack2Calories;
         }
         if (isDinnerMenuAdded) {
@@ -740,7 +794,16 @@ function Tab() {
             currentTotalCalcium = Number((currentTotalCalcium + currentDinnerMenu.reduce((a, b) => +a + +b.calcium, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalIron = Number((currentTotalIron + currentDinnerMenu.reduce((a, b) => +a + +b.iron, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalSodium = Number((currentTotalSodium + currentDinnerMenu.reduce((a, b) => +a + +b.sodium, 0)).toFixed(2).replace(/[.,]00$/, ""));
-            currentDinnerCalories = currentDinnerMenu.reduce((a, b) => +a + +b.cal, 0);
+            //currentDinnerCalories = currentDinnerMenu.reduce((a, b) => +a + +b.cal, 0);
+            currentDinnerCalories = 0;
+            for (var i = 0; i < currentDinnerMenu.length; i++) {
+                if(currentDinnerMenu[i].quantity) {
+                    currentDinnerCalories += (currentDinnerMenu[i].cal * currentDinnerMenu[i].quantity);
+                }
+                else {
+                    currentDinnerCalories += (currentDinnerMenu[i].cal * 1);
+                }
+            }
             consumedCalories += currentDinnerCalories;
         }
     }
@@ -2123,6 +2186,7 @@ function Tab() {
 
     function menuDlgBtnClick() {
         let isExist = false;
+        let menuTimePicker = document.getElementById('quantity-datepicker').ej2_instances[0];
         let todayActivities = state.todayActivities;
         if (state.currentAddedMenu === 'Breakfast') {
             currentBreakFastMenu = [];
@@ -2139,7 +2203,7 @@ function Tab() {
             } else {
                 isBreakFastMenuAdded = false;
             }
-            let activity = { name: 'Breakfast', activity: 'Breakfast', amount: currentBreakFastMenuText, percentage: ((currentBreakFastCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            let activity = { name: 'Breakfast', activity: 'Breakfast', amount: currentBreakFastMenuText, percentage: ((currentBreakFastCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) };
             for (let i = 0; i < todayActivities.length; i++) {
                 if (todayActivities[i].name === 'Breakfast') {
                     if (currentBreakFastMenuText !== '') {
@@ -2191,7 +2255,7 @@ function Tab() {
             } else {
                 isSnack1MenuAdded = false;
             }
-            let activity = { name: 'Snack1', activity: 'Snack', amount: currentSnack1MenuText, percentage: ((currentSnack1Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            let activity = { name: 'Snack1', activity: 'Snack', amount: currentSnack1MenuText, percentage: ((currentSnack1Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })};
             for (let i = 0; i < todayActivities.length; i++) {
                 if (todayActivities[i].name === 'Snack1') {
                     if (currentSnack1MenuText !== '') {
@@ -2243,7 +2307,7 @@ function Tab() {
             } else {
                 isLunchMenuAdded = false;
             }
-            let activity = { name: 'Lunch', activity: 'Lunch', amount: currentLunchMenuText, percentage: ((currentLunchCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            let activity = { name: 'Lunch', activity: 'Lunch', amount: currentLunchMenuText, percentage: ((currentLunchCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) };
             for (let i = 0; i < todayActivities.length; i++) {
                 if (todayActivities[i].name === 'Lunch') {
                     if (currentLunchMenuText !== '') {
@@ -2295,7 +2359,7 @@ function Tab() {
             } else {
                 isSnack2MenuAdded = false;
             }
-            let activity = { name: 'Snack2', activity: 'Snack', amount: currentSnack2MenuText, percentage: ((currentSnack2Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            let activity = { name: 'Snack2', activity: 'Snack', amount: currentSnack2MenuText, percentage: ((currentSnack2Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })};
             for (let i = 0; i < todayActivities.length; i++) {
                 if (todayActivities[i].name === 'Snack2') {
                     if (currentSnack2MenuText !== '') {
@@ -2310,11 +2374,7 @@ function Tab() {
             if (!isExist) {
                 todayActivities.push(activity);
             }
-            console.log("Before updateConsumedCalories");
-            console.log(currentSnack2Calories);
             updateConsumedCalories();
-            console.log("after updateConsumedCalories");
-            console.log(currentSnack2Calories);
             pieData = getPieChartData();
             menuCancelBtnClick();
             setState(prevState => {
@@ -2351,7 +2411,7 @@ function Tab() {
             } else {
                 isDinnerMenuAdded = false;
             }
-            let activity = { name: 'Dinner', activity: 'Dinner', amount: currentDinnerMenuText, percentage: ((currentDinnerCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            let activity = { name: 'Dinner', activity: 'Dinner', amount: currentDinnerMenuText, percentage: ((currentDinnerCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) };
             for (let i = 0; i < todayActivities.length; i++) {
                 if (todayActivities[i].name === 'Dinner') {
                     if (currentDinnerMenuText !== '') {
@@ -2433,6 +2493,14 @@ function Tab() {
     }
 
     function onProfileEdit() {
+        
+        // setState(prevState => {
+        //     return {
+        //         ...prevState,
+        //         profileHidden: true,
+            
+        //     }
+        // })
         document.getElementsByClassName('e-profile-edit-dialog')[0].ej2_instances[0].show();
     }
 
@@ -2540,7 +2608,7 @@ function Tab() {
                 currentAddedMenu: currentAddedMenu
             }
         })
-    }
+    }updateTotalCal
 
     function updateCurrentMenu(menu) {
         for (let i = 0; i < menu.length; i++) {
@@ -2671,7 +2739,7 @@ function Tab() {
     function contentActivities() {
         return (
             <React.Suspense fallback="Loading">
-                {/* <ProfileDialog hidden={true}
+                <ProfileDialog hidden={state.profileHidden}
                     profileStats={profileStats}
                     name={profileStats.name}
                     onNameChange={onNameChange}
@@ -2693,8 +2761,10 @@ function Tab() {
                     weightGaugeAnnotaions={weightGaugeAnnotaions}
                     sliderChange={sliderChange}
                     heightGaugeAxes={heightGaugeAxes}
-                    heightGaugeAnnotation={heightGaugeAnnotation}>
-                    </ProfileDialog> */}
+                    heightGaugeAnnotation={heightGaugeAnnotation}
+                    modifyHeaderTitle={modifyHeaderTitle}
+                   >
+                </ProfileDialog>
                 <Activities isSmallDevice={state.isSmallDevice}
                     maxDate={maxDate}
                     datePickerDate={state.datePickerDate}
@@ -2715,6 +2785,7 @@ function Tab() {
                     customiseCell={customiseCell}
                     todayActivities={state.todayActivities}
                     profileStats={profileStats}
+                    onProfileEdit={onProfileEdit}
                     onProfileDateChange={onProfileDateChange}></Activities>
             </React.Suspense>
         )
@@ -2775,6 +2846,7 @@ function Tab() {
                     todayActivities={state.todayActivities}
                     profileStats={profileStats}
                     onProfileDateChange={onProfileDateChange}
+                    onProfileEdit={onProfileEdit}
                     addBtnClick={addBtnClick}>
                 </Diet>
             </React.Suspense>
@@ -2814,6 +2886,7 @@ function Tab() {
                     todayActivities={state.todayActivities}
                     profileStats={profileStats}
                     onProfileDateChange={onProfileDateChange}
+                    onProfileEdit={onProfileEdit}
                     clearFasting={clearFasting}
                     quantityPlusClick={quantityPlusClick}
                     quantityMinusClick={quantityMinusClick}
