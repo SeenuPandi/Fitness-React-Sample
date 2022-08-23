@@ -2,8 +2,6 @@ import * as React from "react";
 import { ChartComponent, SeriesCollectionDirective, SeriesDirective, Inject, DateTime, Legend, SplineAreaSeries, SplineSeries, Tooltip } from '@syncfusion/ej2-react-charts';
 
 function ChartData(props) {
-  let today = new Date();
-  let currentDate = today;
   let chartArea = {
     border: {
       width: 0

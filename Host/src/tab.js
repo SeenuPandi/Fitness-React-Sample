@@ -159,13 +159,14 @@ function Tab() {
     var consumedWaterCount = 4;
     var expectedWaterAmount = 2400;
     var consumedWaterAmount = 600;
+    var lastSelectItem = '';
     var currentDinnerMenu = [];
     var currentDinnerCalories = 0;
     var currentSnack2Menu = [];
     var currentSnack2Calories = 0;
-    var isBreakFastMenuAdded = false;
-    var isSnack1MenuAdded = false;
-    var isLunchMenuAdded = false;
+    var isBreakFastMenuAdded = true;
+    var isSnack1MenuAdded = true;
+    var isLunchMenuAdded = true;
     var isSnack2MenuAdded = false;
     var isDinnerMenuAdded = false;
     var currentBreakFastMenuText;
@@ -189,13 +190,6 @@ function Tab() {
     let datePickerWidth = '100%';
     let dropDownData = ['Weekly', 'Monthly'];
     let diff = 16;
-    let pointerRadialGradient = {
-        startValue: '0%',
-        endValue: '100%',
-        colorStop: [
-            { color: '#FB5F64', offset: '0%', opacity: 0.9 },
-            { color: '#FC9662', offset: '70%', opacity: 0.9 }]
-    };
     let circulargauge = [{
         ranges: [
             {
@@ -534,7 +528,7 @@ function Tab() {
         expectedCalories: 3000,
         todayActivities: [],
         datePickerDate: currentDate,
-        currentDate : currentDate,
+        currentDate: currentDate,
         isSmallDevice: false,
         pieData: pieData,
         currentBreakFastMenuText: currentBreakFastMenuText,
@@ -576,23 +570,14 @@ function Tab() {
         currentAddedMenu: currentAddedMenu,
         currentQuantity: currentQuantity,
         currentTotalCal: currentTotalCal,
-        currentBreakFastMenu : currentBreakFastMenu,
-        currentSnack1Menu  : currentSnack1Menu ,
-        currentSnack2Menu : currentSnack2Menu,
-        currentLunchMenu : currentLunchMenu,
-        currentDinnerMenu : currentDinnerMenu,
+        currentBreakFastMenu: currentBreakFastMenu,
+        currentSnack1Menu: currentSnack1Menu,
+        currentSnack2Menu: currentSnack2Menu,
+        currentLunchMenu: currentLunchMenu,
+        currentDinnerMenu: currentDinnerMenu,
         hidden: false
     });
-
-    // var [difference, setDifference] = useState({
-    //     diff: diff
-    // })
     var isToday = true;
-    useEffect(()=>{
-        console.log("Use Effect");
-        //window.addEventListener('resize', onResize);
-    },[]);
-
     if (getInitial) {
         getInitial = false;
         currentBreakFastMenu = [];
@@ -638,7 +623,6 @@ function Tab() {
     function getWeightChartData() {
         let count = 12;
         let sampleData = [];
-        // currentDate = currentDate ? currentDate : state.currentDate;
         for (let i = count - 1; i >= 0; i--) {
             let date = (currentDate) ? new Date(currentDate) : new Date();
             let data = {
@@ -653,32 +637,22 @@ function Tab() {
     function getChartData(action, value) {
         let count = (value && value === 'Monthly') ? 30 : 7;
         let sampleData = [];
-        // if ((value && value === 'Monthly' && activityChartMonthData[action] && activityChartMonthData[action].length > 0) || (value && value === 'Weekly' && activityChartWeekData[action] && activityChartWeekData[action].length > 0)) {
-        //     if (value === 'Monthly') {
-        //         sampleData = activityChartMonthData[action];
-        //     } else {
-        //         sampleData = activityChartWeekData[action];
-        //     }
-        // } 
-        // else {
-            // currentDate = currentDate ? currentDate : state.currentDate;
-            for (let i = count - 1; i >= 0; i--) {
-                let date = (currentDate) ? new Date(currentDate) : new Date();
-                let data = {
-                    x: new Date(new Date(date.setDate(date.getDate() - i)).setHours(0, 0, 0, 0)),
-                    y: Number((Math.random() * (90 - 50) + 50).toFixed(2).replace(/[.,]00$/, ""))
-                };
-                sampleData.push(data);
-                if (i == 0) {
-                    todaysWorkoutPercent = data['y'];
-                }
-                if (value && value === 'Monthly') {
-                    activityChartMonthData[action] = sampleData;
-                } else {
-                    activityChartWeekData[action] = sampleData;
-                }
+        for (let i = count - 1; i >= 0; i--) {
+            let date = (currentDate) ? new Date(currentDate) : new Date();
+            let data = {
+                x: new Date(new Date(date.setDate(date.getDate() - i)).setHours(0, 0, 0, 0)),
+                y: Number((Math.random() * (90 - 50) + 50).toFixed(2).replace(/[.,]00$/, ""))
+            };
+            sampleData.push(data);
+            if (i == 0) {
+                todaysWorkoutPercent = data['y'];
             }
-        // }
+            if (value && value === 'Monthly') {
+                activityChartMonthData[action] = sampleData;
+            } else {
+                activityChartWeekData[action] = sampleData;
+            }
+        }
         return sampleData;
     }
 
@@ -697,6 +671,13 @@ function Tab() {
     }
 
     function updateConsumedCalories() {
+        currentTotalProteins = 0;
+        currentTotalFat = 0;
+        currentTotalCarbs = 0;
+        currentTotalCalcium = 0;
+        currentTotalIron = 0;
+        currentTotalSodium = 0;
+        consumedCalories = 0;
         if (isBreakFastMenuAdded) {
             currentBreakFastMenuText = currentBreakFastMenu.map(function (elem) {
                 return elem.item;
@@ -767,11 +748,6 @@ function Tab() {
     function getInitialData() {
         let data;
         calculatingFastingStartEndTime();
-        // let now = new Date();
-        // let isToday = countStartDate.toDateString() == now.toDateString();
-        // fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        // isToday = countDownDate.toDateString() == now.toDateString();
-        // fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
         if (masterData.length === 0) {
             let breakWater = Math.round(Math.random() * (5 - 2) + 2);
             let lunchWater = Math.round(Math.random() * (5 - 2) + 2);
@@ -816,11 +792,11 @@ function Tab() {
                     snack2Calories: currentSnack2Calories,
                     snack2Text: currentSnack2MenuText,
                     isSnack2MenuAdded: isSnack2MenuAdded,
-                    consumedCalories: state.consumedCalories,
+                    consumedCalories: consumedCalories,
                     burnedCalories: state.burnedCalories,
-                    breakfastWaterTaken: state.breakfastWaterTaken,
+                    breakfastWaterTaken: breakWater,
                     expectedWaterAmount: state.expectedWaterAmount,
-                    lunchWaterTaken: state.lunchWaterTaken,
+                    lunchWaterTaken: lunchWater,
                     eveningWaterTaken: state.eveningWaterTaken,
                     proteins: currentTotalProteins,
                     fat: currentTotalFat,
@@ -842,38 +818,7 @@ function Tab() {
             masterData.push(data);
         } else {
             data = masterData[0];
-            // activityChartMonthData = data.activity.activityChartMonthData;
-            // activityChartWeekData = data.activity.activityChartWeekData;
-            // burnedCalories = data.diet.burnedCalories;
-            // currentBreakFastMenu = data.diet.breakFastMenu;
-            // currentBreakFastCalories = data.diet.breakFastCalories;
-            // currentBreakFastMenuText = data.diet.breakFastText;
-            // isBreakFastMenuAdded = data.diet.isBreakFastMenuAdded;
-            // currentSnack1Menu = data.diet.snack1Menu;
-            // currentSnack1Calories = data.diet.snack1Calories;
-            // currentSnack1MenuText = data.diet.snack1Text;
-            // isSnack1MenuAdded = data.diet.isSnack1Added;
-            // currentLunchMenu = data.diet.lunchMenu;
-            // currentLunchCalories = data.diet.lunchCalories;
-            // currentLunchMenuText = data.diet.lunchText;
-            // isLunchMenuAdded = data.diet.isLunchAdded;
-            // currentDinnerMenu = data.diet.dinnerMenu;
-            // currentDinnerCalories = data.diet.dinnerCalories;
-            // currentDinnerMenuText = data.diet.dinnerText;
-            // isDinnerMenuAdded = data.diet.isDinnerMenuAdded;
-            // currentSnack2Menu = data.diet.snack2Menu;
-            // currentSnack2Calories = data.diet.snack2Calories;
-            // currentSnack2MenuText = data.diet.snack2Text;
-            // isSnack2MenuAdded = data.diet.isSnack2MenuAdded;
-            // currentTotalProteins = data.diet.proteins;
-            // currentTotalFat = data.diet.fat;
-            // currentTotalCarbs = data.diet.carbs;
-            // currentTotalCalcium = data.diet.calcium;
-            // currentTotalSodium = data.diet.sodium;
-            // currentTotalIron = data.diet.iron;
         }
-
-
         let SmallDevice = false;
         if (innerWidth <= 820) {
             SmallDevice = true;
@@ -1064,10 +1009,10 @@ function Tab() {
                 expectedWaterAmount: data.diet.expectedWaterAmount,
                 pieData: data.diet.pieData,
                 expectedCalories: data.diet.expectedCalories,
-                burnedCalories : data.diet.burnedCalories,
+                burnedCalories: data.diet.burnedCalories,
                 todayActivities: activities,
                 datePickerDate: currentDate,
-                currentDate : currentDate,
+                currentDate: currentDate,
                 isSmallDevice: SmallDevice,
                 currentBreakFastMenuText: data.diet.breakFastText,
                 currentBreakFastCalories: data.diet.breakFastCalories,
@@ -1100,11 +1045,11 @@ function Tab() {
                 countDownDate: data.fasting.countDownDate,
                 circulargauge: circulargauge,
                 waterGaugeAnnotation: waterGaugeAnnotation,
-                currentBreakFastMenu : currentBreakFastMenu,
-                currentSnack1Menu : currentSnack1Menu,
-                currentSnack2Menu  : currentSnack2Menu,
-                currentLunchMenu : currentLunchMenu,
-                currentDinnerMenu : currentDinnerMenu,
+                currentBreakFastMenu: currentBreakFastMenu,
+                currentSnack1Menu: currentSnack1Menu,
+                currentSnack2Menu: currentSnack2Menu,
+                currentLunchMenu: currentLunchMenu,
+                currentDinnerMenu: currentDinnerMenu,
                 hidden: false
             }
         })
@@ -1125,34 +1070,6 @@ function Tab() {
             }
             if (isExist) {
                 data = masterData[index];
-                // activityChartMonthData = data.activity.activityChartMonthData;
-                // activityChartWeekData = data.activityChartWeekData;
-                // currentBreakFastMenu = data.diet.breakFastMenu;
-                // currentBreakFastCalories = data.diet.breakFastCalories;
-                // currentBreakFastMenuText = data.diet.breakFastText;
-                // isBreakFastMenuAdded = data.diet.isBreakFastMenuAdded;
-                // currentSnack1Menu = data.diet.snack1Menu;
-                // currentSnack1Calories = data.diet.snack1Calories;
-                // currentSnack1MenuText = data.diet.snack1Text;
-                // isSnack1MenuAdded = data.diet.isSnack1Added;
-                // currentSnack2Menu = data.diet.snack2Menu;
-                // currentSnack2Calories = data.diet.snack2Calories;
-                // currentSnack2MenuText = data.diet.snack2Text;
-                // isSnack2MenuAdded = data.diet.isSnack2MenuAdded;
-                // currentLunchMenu = data.diet.lunchMenu;
-                // currentLunchCalories = data.diet.lunchCalories;
-                // currentLunchMenuText = data.diet.lunchText;
-                // isLunchMenuAdded = data.diet.isLunchAdded;
-                // currentDinnerMenu = data.diet.dinnerMenu;
-                // currentDinnerCalories = data.diet.dinnerCalories;
-                // currentDinnerMenuText = data.diet.dinnerText;
-                // isDinnerMenuAdded = data.diet.isDinnerMenuAdded;
-                // currentTotalProteins = data.diet.proteins;
-                // currentTotalFat = data.diet.fat;
-                // currentTotalCarbs = data.diet.carbs;
-                // currentTotalCalcium = data.diet.calcium;
-                // currentTotalSodium = data.diet.sodium;
-                // currentTotalIron = data.diet.iron;
             } else {
                 updateMenu();
                 let breakfastWaterTaken = Math.round(Math.random() * (5 - 2) + 2);
@@ -1209,7 +1126,7 @@ function Tab() {
                         dinnerCalories: currentDinnerCalories,
                         dinnerText: currentDinnerMenuText,
                         isDinnerAdded: isDinnerMenuAdded,
-                        consumedCalories: Math.round(Math.random() * (3000 - 1000) + 1000),
+                        consumedCalories: consumedCalories,
                         burnedCalories: burnedCalories,
                         breakfastWaterTaken: breakfastWaterTaken,
                         expectedWaterAmount: 2400,
@@ -1234,13 +1151,6 @@ function Tab() {
                 };
                 masterData.push(data);
             }
-            // countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
-            // countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
-            // let now = new Date();
-            // let isToday =countStartDate.toDateString() == now.toDateString();
-            // fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-            // isToday = countDownDate.toDateString() == now.toDateString();
-            // fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             endFasting();
             let smallDevice = false;
             if (innerWidth <= 820) {
@@ -1437,7 +1347,7 @@ function Tab() {
                     expectedWaterAmount: data.diet.expectedWaterAmount,
                     todayActivities: updateActivities,
                     datePickerDate: currentDate,
-                    currentDate : currentDate,
+                    currentDate: currentDate,
                     expectedCalories: data.diet.expectedCalories,
                     isSmallDevice: smallDevice,
                     currentBreakFastMenuText: data.diet.breakFastText,
@@ -1471,11 +1381,11 @@ function Tab() {
                     circulargauge: circulargauge,
                     countStartDate: data.fasting.countStartDate,
                     countDownDate: data.fasting.countDownDate,
-                    currentBreakFastMenu : currentBreakFastMenu,
-                    currentSnack1Menu : currentSnack1Menu,
-                    currentSnack2Menu : currentSnack2Menu,
-                    currentLunchMenu : currentLunchMenu,
-                    currentDinnerMenu : currentDinnerMenu,
+                    currentBreakFastMenu: currentBreakFastMenu,
+                    currentSnack1Menu: currentSnack1Menu,
+                    currentSnack2Menu: currentSnack2Menu,
+                    currentLunchMenu: currentLunchMenu,
+                    currentDinnerMenu: currentDinnerMenu,
                     waterGaugeAnnotation: waterGaugeAnnotation,
                     hidden: false
                 }
@@ -1487,48 +1397,48 @@ function Tab() {
             isLunchMenuAdded = false;
             isSnack2MenuAdded = false;
             isDinnerMenuAdded = false;
-            getInitialData();
             pieData = getPieChartData();
             countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
             countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
             clearInterval(x);
             x = setInterval(intervalFn, 1000);
+            getInitialData();
         }
         disableElements();
     }
 
     function disableElements() {
         if (!isToday) {
-          if (document.querySelector('.e-fast-time-btn')) {
-            (document.querySelector('.e-fast-time-btn')).style.pointerEvents = 'none';
-          }
-          if (document.querySelector('.e-fast-end-btn')) {
-            (document.querySelector('.e-fast-end-btn')).style.pointerEvents = 'none';
-          }
-          if (document.querySelector('.e-water-minus')) {
-            (document.querySelector('.e-water-minus')).style.pointerEvents = 'none';
-          }
-          if (document.querySelector('.e-water-plus')) {
-            (document.querySelector('.e-water-plus')).style.pointerEvents = 'none';
-          }
-          if (document.getElementsByClassName('e-circulargauge')[0]) {
-            endFasting();
-          }
+            if (document.querySelector('.e-fast-time-btn')) {
+                (document.querySelector('.e-fast-time-btn')).style.pointerEvents = 'none';
+            }
+            if (document.querySelector('.e-fast-end-btn')) {
+                (document.querySelector('.e-fast-end-btn')).style.pointerEvents = 'none';
+            }
+            if (document.querySelector('.e-water-minus')) {
+                (document.querySelector('.e-water-minus')).style.pointerEvents = 'none';
+            }
+            if (document.querySelector('.e-water-plus')) {
+                (document.querySelector('.e-water-plus')).style.pointerEvents = 'none';
+            }
+            if (document.getElementsByClassName('e-circulargauge')[0]) {
+                endFasting();
+            }
         } else {
-          if (document.querySelector('.e-fast-time-btn')) {
-            (document.querySelector('.e-fast-time-btn')).style.pointerEvents = '';
-          }
-          if (document.querySelector('.e-fast-end-btn')) {
-            (document.querySelector('.e-fast-end-btn')).style.pointerEvents = 'auto';
-          }
-          if (document.querySelector('.e-water-minus')) {
-            (document.querySelector('.e-water-minus')).style.pointerEvents = 'auto';
-          }
-          if (document.querySelector('.e-water-plus')) {
-            (document.querySelector('.e-water-plus')).style.pointerEvents = 'auto';
-          }
+            if (document.querySelector('.e-fast-time-btn')) {
+                (document.querySelector('.e-fast-time-btn')).style.pointerEvents = '';
+            }
+            if (document.querySelector('.e-fast-end-btn')) {
+                (document.querySelector('.e-fast-end-btn')).style.pointerEvents = 'auto';
+            }
+            if (document.querySelector('.e-water-minus')) {
+                (document.querySelector('.e-water-minus')).style.pointerEvents = 'auto';
+            }
+            if (document.querySelector('.e-water-plus')) {
+                (document.querySelector('.e-water-plus')).style.pointerEvents = 'auto';
+            }
         }
-      }
+    }
 
     function updateMenu() {
         currentBreakFastMenu = [];
@@ -1581,20 +1491,19 @@ function Tab() {
             fastingGauge.axes[0].ranges[1].end = percent;
             fastingGauge.axes[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
             if (percent > 80) {
-                circfastingGauge.axesulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
+                fastingGauge.axes[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
             } else {
                 fastingGauge.axes[0].annotations[1].content = '';
             }
             fastingGauge.axes[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (' + percent + '%)</div><div class="e-fast-completed">' +
                 sliderValue.toString() + '</div><div class="e-fast-left">Left ' + leftHours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'h ' + leftMinutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'm</div>';
             circulargauge = fastingGauge.axes;
-            }
+        }
     }
     function endFasting() {
         clearInterval(x);
         sliderValue = "Completed";
-        // annotaions[0].content  = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
-        // sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
+        changeTimeBtnText = "START FASTING";
         let fastingGauge = document.getElementById('range-container') ? document.getElementById('range-container').ej2_instances[0] : undefined;
         if (fastingGauge) {
             let percent = 100;
@@ -1620,54 +1529,6 @@ function Tab() {
         isToday = countDownDate.toDateString() == now.toDateString();
         fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
     }
-
-    // function intervalFn() {
-    //     let now = new Date();
-    //     let isToday = countStartDate.toDateString() == now.toDateString();
-    //     fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-    //     isToday = countDownDate.toDateString() == now.toDateString();
-    //     fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-    //     let percent = Math.round(((now - countStartDate) / (countDownDate - countStartDate)) * 100);
-    //     percent = percent > 100 ? 100 : percent;
-    //     let left = countDownDate.getTime() - now.getTime();
-    //     let leftHours = Math.floor((left % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    //     leftHours = leftHours < 0 ? 0 : leftHours;
-    //     let leftMinutes = Math.floor((left % (1000 * 60 * 60)) / (1000 * 60));
-    //     leftMinutes = leftMinutes < 0 ? 0 : leftMinutes;
-    //     let distance = now.getTime() - countStartDate.getTime();
-    //     let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    //     let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    //     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    //     sliderValue = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
-    //     if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0) {
-    //         endFasting();
-    //     } else if (circulargauge) {
-    //         circulargauge[0].ranges[1].end = percent;
-    //         circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
-    //         if (percent > 80) {
-    //             circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
-    //         } else {
-    //             circulargauge[0].annotations[1].content = '';
-    //         }
-    //         circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (' + percent + '%)</div><div class="e-fast-completed">' +
-    //             sliderValue.toString() + '</div><div class="e-fast-left">Left ' + leftHours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'h ' + leftMinutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + 'm</div>';
-    //     }
-    // }
-
-    // function endFasting() {
-    //     clearInterval(x);
-    //     sliderValue = "Completed";
-    //     // annotaions[0].content  = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
-    //     // sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
-    //     if (circulargauge) {
-            // let percent = 100;
-            // circulargauge[0].ranges[1].end = percent;
-            // circulargauge[0].annotations[1].angle = Math.round((percent / 100) * 340) + 10;
-            // circulargauge[0].annotations[1].content = '<div class="e-gauge-percent-img icon-Calories"></div>';
-            // circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
-    //     }
-    // }
-
 
     function customiseCell(args) {
         if (args.column.field === 'Completion') {
@@ -1728,6 +1589,7 @@ function Tab() {
             }
         })
     }
+
     function legendClick(args) {
         if (args.legendText === 'Diet') {
             this.series[2].visible = !this.series[2].visible;
@@ -1735,6 +1597,7 @@ function Tab() {
             this.series[3].visible = !this.series[3].visible;
         }
     }
+
     function chartTooltipRender(args) {
         args.text.splice(2, 2);
     }
@@ -1754,7 +1617,7 @@ function Tab() {
         let ind;
         let activity;
         let todActivity = state.todayActivities;
-        let consWaterCount = state.consumedWaterCount > 0 ? state.consumedWaterCount - 1 : 0;
+        let consWaterCount = state.consumedWaterCount;
         let consWaterAmount = consWaterCount * 150;
         let expectWaterAmount = state.expectedWaterAmount;
         let minuspercent = Math.round((consWaterAmount / expectWaterAmount) * 100);
@@ -1762,23 +1625,21 @@ function Tab() {
         let content = ['Poor', 'Good', 'Almost', 'Perfect!'];
         let waterAnnotation = state.waterGaugeAnnotation;
         let waterAxes = state.waterGaugeAxes;
-        // let todActivity = state.todayActivities;
-        // let consWaterCount = state.consumedWaterCount;
-        // let expectWaterAmount = state.expectedWaterAmount;
-        // let calConsWaterCount = consWaterCount > 0 ? (consWaterCount - 1) : 0;
-        // let calConsWaterAmount = calConsWaterCount * 150;
-        // let percent = Math.round((calConsWaterAmount / expectWaterAmount) * 100);
-        // let closetIndex = closestIndex(percent);
-        // let content = ['Poor', 'Good', 'Almost', 'Perfect!'];
-        // let waterAnnotation = state.waterGaugeAnnotation;
-        // let waterAxes = state.waterGaugeAxes;
         for (let i = 0; i < todActivity.length; i++) {
             if (todActivity[i].name === period) {
                 ind = i;
                 break;
             }
         }
-        if (ind) {
+        if (ind && state.consumedWaterCount > 0) {
+            consWaterCount = state.consumedWaterCount > 0 ? state.consumedWaterCount - 1 : 0;
+            consWaterAmount = consWaterCount * 150;
+            expectWaterAmount = state.expectedWaterAmount;
+            minuspercent = Math.round((consWaterAmount / expectWaterAmount) * 100);
+            minusclosetIndex = closestIndex(minuspercent);
+            content = ['Poor', 'Good', 'Almost', 'Perfect!'];
+            waterAnnotation = state.waterGaugeAnnotation;
+            waterAxes = state.waterGaugeAxes;
             if (todActivity[ind].count > 1) {
                 activity = { name: period, activity: 'Water Taken', count: (todActivity[ind].count - 1), amount: (todActivity[ind].count - 1) + ' Glasses', percentage: ((((todActivity[ind].count - 1) * 150) / expectWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: todActivity[ind].time };
                 todActivity[ind] = activity;
@@ -1917,62 +1778,19 @@ function Tab() {
                 },
             ];
             waterAxes[0].pointers = pointers;
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    todayActivities: todActivity,
+                    consumedWaterCount: consWaterCount,
+                    consumedWaterAmount: consWaterAmount,
+                    waterGaugeAnnotation: waterAnnotation,
+                    waterGaugeAxes: waterAxes,
+                    hidden: false
+                }
+            })
         }
-        setState(prevState => {
-            return {
-                ...prevState,
-                todayActivities: todActivity,
-                consumedWaterCount: consWaterCount,
-                consumedWaterAmount: consWaterAmount,
-                waterGaugeAnnotation: waterAnnotation,
-                waterGaugeAxes: waterAxes,
-                hidden: false
-            }
-        })
     }
-
-    // function clearFasting() {
-    //     clearInterval(x);
-    //     sliderValue = "Completed";
-    //     // this.annotaions[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
-    //     //   this.sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
-    //     if (circulargauge) {
-    //         circulargauge[0].ranges[1].end = 0;
-    //         circulargauge[0].annotations[1].angle = 0;
-    //         circulargauge[0].annotations[1].content = '';
-    //         circulargauge[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
-    //     }
-
-    //     if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
-    //         document.querySelector('.e-fast-time-btn').classList.add('e-fast-reset');
-    //     }
-    //     if (document.querySelector('.e-fast-end-btn') && !document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
-    //         document.querySelector('.e-fast-end-btn').classList.add('e-fast-reset');
-    //     }
-
-    // }
-
-    // function clearFasting() {
-
-    //         clearInterval(x);
-    //         sliderValue = "Completed";
-    //         // this.annotaions[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' +
-    //         //   this.sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';
-    //         if (circulargauge) {
-    //             circulargauge.axes[0].ranges[1].end = 0;
-    //             circulargauge.axes[0].annotations[1].angle = 0;
-    //             circulargauge.axes[0].annotations[1].content = '';
-    //             circulargauge.axes[0].annotations[0].content = '<div class="e-fast-ellapsed">Elapsed Time (100%)</div><div class="e-fast-completed">' + sliderValue.toString() + '</div><div class="e-fast-left">Left 00h 00m</div>';;
-    //         }
-    //         this.changeTimeBtnText = "START FASTING";
-    //         if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
-    //             document.querySelector('.e-fast-time-btn').classList.add('e-fast-reset');
-    //         }
-    //         if (document.querySelector('.e-fast-end-btn') && !document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
-    //             document.querySelector('.e-fast-end-btn').classList.add('e-fast-reset');
-    //         }
-
-    // }
 
     function plusClick() {
         let time = new Date().getHours();
@@ -2147,26 +1965,8 @@ function Tab() {
                     hidden: false
                 }
             })
-            //updateWaterGauge();
-
         }
     }
-
-    // function updateWaterGauge() {
-    //     let percent = Math.round((state.consumedWaterAmount / state.expectedWaterAmount) * 100);
-    //     let index = closestIndex(percent);
-    //     let content = ['Poor', 'Good', 'Almost', 'Perfect!'];
-    //     (this.waterGaugeAnnotation[index]).content = '<div class="e-water-annotation-text e-highlight-text">' + content[index] + '</div>';
-    //     for (let i = 0; i < content.length; i++) {
-    //       if (i !== index) {
-    //         (this.waterGaugeAnnotation[i]).content = '<div class="e-water-annotation-text">' + content[i] + '</div>';
-    //       }
-    //     }
-    //     if (this.gauge) {
-    //       this.gauge.annotations = this.waterGaugeAnnotation;
-    //     }
-    //    // this.updateWaterGaugePointer();
-    // }
 
     function closestIndex(num) {
         let counts = [5, 40, 70, 95];
@@ -2212,7 +2012,7 @@ function Tab() {
         disableElements();
     }
     function tabSelected(e) {
-        
+
         if (document.getElementsByClassName('e-chart')[0]) {
             document.getElementsByClassName('e-chart')[0].ej2_instances[0].refresh();
         }
@@ -2228,7 +2028,7 @@ function Tab() {
         if (document.getElementsByClassName('e-fasting-chart')[0]) {
             document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
         }
-       
+
     }
 
     function modifyFasting() {
@@ -2254,19 +2054,8 @@ function Tab() {
         clearInterval(x);
         x = setInterval(intervalFn, 1000);
         calculatingFastingStartEndTime();
-        // let now = new Date();
-        // let isToday = countStartDate.toDateString() == now.toDateString();
-        // fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        // isToday = countDownDate.toDateString() == now.toDateString();
-        // fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
         document.getElementsByClassName('e-add-fasting-dialog')[0].ej2_instances[0].hide();
         changeTimeBtnText = "CHANGE TIME";
-        if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
-            document.querySelector('.e-fast-time-btn').classList.remove('e-fast-reset');
-        }
-        if (document.querySelector('.e-fast-end-btn') && document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
-            document.querySelector('.e-fast-end-btn').classList.remove('e-fast-reset');
-        }
         setState(prevState => {
             return {
                 ...prevState,
@@ -2282,38 +2071,327 @@ function Tab() {
     }
 
     function clearFasting() {
-        clearInterval(x);
-        sliderValue = "Completed";
-        endFasting();
-        changeTimeBtnText = "START FASTING";
-        if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
-            document.querySelector('.e-fast-time-btn').classList.add('e-fast-reset');
+        if (document.querySelector('.e-fast-completed').innerText !== 'Completed') {
+            clearInterval(x);
+            sliderValue = "Completed";
+            endFasting();
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    isFastEnd: true,
+                    circulargauge: circulargauge,
+                    changeTimeBtnText: changeTimeBtnText,
+                    hidden: false
+                }
+            })
         }
-        if (document.querySelector('.e-fast-end-btn') && !document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
-            document.querySelector('.e-fast-end-btn').classList.add('e-fast-reset');
-        }
-        setState(prevState => {
-            return {
-                ...prevState,
-                circulargauge: circulargauge,
-                changeTimeBtnText: changeTimeBtnText,
-                hidden: false
+    }
+    function fastingGaugeLoaded() {
+        let now = new Date();
+        countStartDate = state.countStartDate;
+        countDownDate = state.countDownDate;
+        let distance = now.getTime() - countStartDate.getTime();
+        if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0 || (document.querySelector('.e-fast-completed') && document.querySelector('.e-fast-completed').innerText === 'Completed')) {
+            if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
+                document.querySelector('.e-fast-time-btn').classList.add('e-fast-reset');
             }
-        })
-
+            if (document.querySelector('.e-fast-end-btn') && !document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
+                document.querySelector('.e-fast-end-btn').classList.add('e-fast-reset');
+            }
+            if (document.querySelector('.e-fast-time-btn')) {
+                document.querySelector('.e-fast-time-btn').innerText = "START FASTING";
+            }
+        } else {
+            if (document.querySelector('.e-fast-time-btn') && document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
+                document.querySelector('.e-fast-time-btn').classList.remove('e-fast-reset');
+            }
+            if (document.querySelector('.e-fast-end-btn') && document.querySelector('.e-fast-end-btn').classList.contains('e-fast-reset')) {
+                document.querySelector('.e-fast-end-btn').classList.remove('e-fast-reset');
+            }
+            if (document.querySelector('.e-fast-time-btn')) {
+                document.querySelector('.e-fast-time-btn').innerText = "CHANGE TIME";
+            }
+        }
     }
 
     function menuCancelBtnClick() {
-
+        menudialogInstance.hide();
+        currentTotalCal = 0;
+        lastSelectItem = '';
+        currentQuantity = 1;
     }
 
     function menuDlgBtnClick() {
-
+        let isExist = false;
+        let todayActivities = state.todayActivities;
+        if (state.currentAddedMenu === 'Breakfast') {
+            currentBreakFastMenu = [];
+            currentBreakFastCalories = 0;
+            currentBreakFastMenu = currentMenu.filter(function (item) {
+                return item.isAdded;
+            });
+            currentBreakFastMenuText = currentBreakFastMenu.map(function (elem) {
+                return elem.item;
+            }).join(", ");
+            currentBreakFastCalories = currentTotalCal;
+            if (currentBreakFastMenuText !== '') {
+                isBreakFastMenuAdded = true;
+            } else {
+                isBreakFastMenuAdded = false;
+            }
+            let activity = { name: 'Breakfast', activity: 'Breakfast', amount: currentBreakFastMenuText, percentage: ((currentBreakFastCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            for (let i = 0; i < todayActivities.length; i++) {
+                if (todayActivities[i].name === 'Breakfast') {
+                    if (currentBreakFastMenuText !== '') {
+                        todayActivities[i] = activity;
+                    } else {
+                        todayActivities.splice(i, 1);
+                    }
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                todayActivities.push(activity);
+            }
+            updateConsumedCalories();
+            pieData = getPieChartData();
+            menuCancelBtnClick();
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    hidden: false,
+                    currentBreakFastMenu: currentBreakFastMenu,
+                    currentBreakFastMenuText: currentBreakFastMenuText,
+                    currentBreakFastCalories: currentBreakFastCalories,
+                    isBreakFastMenuAdded: isBreakFastMenuAdded,
+                    todayActivities: todayActivities,
+                    currentTotalProteins: currentTotalProteins,
+                    currentTotalFat: currentTotalFat,
+                    currentTotalCarbs: currentTotalCarbs,
+                    currentTotalCalcium: currentTotalCalcium,
+                    currentTotalIron: currentTotalIron,
+                    currentTotalSodium: currentTotalSodium,
+                    consumedCalories: consumedCalories,
+                    pieData: pieData
+                }
+            })
+        } else if (state.currentAddedMenu === 'Snack 1') {
+            currentSnack1Menu = [];
+            currentSnack1Calories = 0;
+            currentSnack1Menu = currentMenu.filter(function (item) {
+                return item.isAdded;
+            });
+            currentSnack1MenuText = currentSnack1Menu.map(function (elem) {
+                return elem.item;
+            }).join(", ");
+            currentSnack1Calories = currentTotalCal;
+            if (currentSnack1MenuText !== '') {
+                isSnack1MenuAdded = true;
+            } else {
+                isSnack1MenuAdded = false;
+            }
+            let activity = { name: 'Snack1', activity: 'Snack', amount: currentSnack1MenuText, percentage: ((currentSnack1Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            for (let i = 0; i < todayActivities.length; i++) {
+                if (todayActivities[i].name === 'Snack1') {
+                    if (currentSnack1MenuText !== '') {
+                        todayActivities[i] = activity;
+                    } else {
+                        todayActivities.splice(i, 1);
+                    }
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                todayActivities.push(activity);
+            }
+            updateConsumedCalories();
+            pieData = getPieChartData();
+            menuCancelBtnClick();
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    hidden: false,
+                    currentSnack1Menu: currentSnack1Menu,
+                    currentSnack1Calories: currentSnack1Calories,
+                    currentSnack1MenuText: currentSnack1MenuText,
+                    isSnack1MenuAdded: isSnack1MenuAdded,
+                    todayActivities: todayActivities,
+                    currentTotalProteins: currentTotalProteins,
+                    currentTotalFat: currentTotalFat,
+                    currentTotalCarbs: currentTotalCarbs,
+                    currentTotalCalcium: currentTotalCalcium,
+                    currentTotalIron: currentTotalIron,
+                    currentTotalSodium: currentTotalSodium,
+                    consumedCalories: consumedCalories,
+                    pieData: pieData
+                }
+            })
+        } else if (state.currentAddedMenu === 'Lunch') {
+            currentLunchMenu = [];
+            currentLunchCalories = 0;
+            currentLunchMenu = currentMenu.filter(function (item) {
+                return item.isAdded;
+            });
+            currentLunchMenuText = currentLunchMenu.map(function (elem) {
+                return elem.item;
+            }).join(", ");
+            currentLunchCalories = currentTotalCal;
+            if (currentLunchMenuText !== '') {
+                isLunchMenuAdded = true;
+            } else {
+                isLunchMenuAdded = false;
+            }
+            let activity = { name: 'Lunch', activity: 'Lunch', amount: currentLunchMenuText, percentage: ((currentLunchCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            for (let i = 0; i < todayActivities.length; i++) {
+                if (todayActivities[i].name === 'Lunch') {
+                    if (currentLunchMenuText !== '') {
+                        todayActivities[i] = activity;
+                    } else {
+                        todayActivities.splice(i, 1);
+                    }
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                todayActivities.push(activity);
+            }
+            updateConsumedCalories();
+            pieData = getPieChartData();
+            menuCancelBtnClick();
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    hidden: false,
+                    currentLunchMenu: currentLunchMenu,
+                    currentLunchCalories: currentLunchCalories,
+                    currentLunchMenuText: currentLunchMenuText,
+                    isLunchMenuAdded: isLunchMenuAdded,
+                    todayActivities: todayActivities,
+                    currentTotalProteins: currentTotalProteins,
+                    currentTotalFat: currentTotalFat,
+                    currentTotalCarbs: currentTotalCarbs,
+                    currentTotalCalcium: currentTotalCalcium,
+                    currentTotalIron: currentTotalIron,
+                    currentTotalSodium: currentTotalSodium,
+                    consumedCalories: consumedCalories,
+                    pieData: pieData
+                }
+            })
+        } else if (state.currentAddedMenu === 'Snack 2') {
+            currentSnack2Menu = [];
+            currentSnack2Calories = 0;
+            currentSnack2Menu = currentMenu.filter(function (item) {
+                return item.isAdded;
+            });
+            currentSnack2MenuText = currentSnack2Menu.map(function (elem) {
+                return elem.item;
+            }).join(", ");
+            currentSnack2Calories = currentTotalCal;
+            if (currentSnack2MenuText !== '') {
+                isSnack2MenuAdded = true;
+            } else {
+                isSnack2MenuAdded = false;
+            }
+            let activity = { name: 'Snack2', activity: 'Snack', amount: currentSnack2MenuText, percentage: ((currentSnack2Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            for (let i = 0; i < todayActivities.length; i++) {
+                if (todayActivities[i].name === 'Snack2') {
+                    if (currentSnack2MenuText !== '') {
+                        todayActivities[i] = activity;
+                    } else {
+                        todayActivities.splice(i, 1);
+                    }
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                todayActivities.push(activity);
+            }
+            console.log("Before updateConsumedCalories");
+            console.log(currentSnack2Calories);
+            updateConsumedCalories();
+            console.log("after updateConsumedCalories");
+            console.log(currentSnack2Calories);
+            pieData = getPieChartData();
+            menuCancelBtnClick();
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    hidden: false,
+                    currentSnack2Menu: currentSnack2Menu,
+                    currentSnack2Calories: currentSnack2Calories,
+                    currentSnack2MenuText: currentSnack2MenuText,
+                    isSnack2MenuAdded: isSnack2MenuAdded,
+                    todayActivities: todayActivities,
+                    currentTotalProteins: currentTotalProteins,
+                    currentTotalFat: currentTotalFat,
+                    currentTotalCarbs: currentTotalCarbs,
+                    currentTotalCalcium: currentTotalCalcium,
+                    currentTotalIron: currentTotalIron,
+                    currentTotalSodium: currentTotalSodium,
+                    consumedCalories: consumedCalories,
+                    pieData: pieData
+                }
+            })
+        } else if (state.currentAddedMenu === 'Dinner') {
+            currentDinnerMenu = [];
+            currentDinnerCalories = 0;
+            currentDinnerMenu = currentMenu.filter(function (item) {
+                return item.isAdded;
+            });
+            currentDinnerMenuText = currentDinnerMenu.map(function (elem) {
+                return elem.item;
+            }).join(", ");
+            currentDinnerCalories = currentTotalCal;
+            if (currentDinnerMenuText !== '') {
+                isDinnerMenuAdded = true;
+            } else {
+                isDinnerMenuAdded = false;
+            }
+            let activity = { name: 'Dinner', activity: 'Dinner', amount: currentDinnerMenuText, percentage: ((currentDinnerCalories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%' };
+            for (let i = 0; i < todayActivities.length; i++) {
+                if (todayActivities[i].name === 'Dinner') {
+                    if (currentDinnerMenuText !== '') {
+                        todayActivities[i] = activity;
+                    } else {
+                        todayActivities.splice(i, 1);
+                    }
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                todayActivities.push(activity);
+            }
+            updateConsumedCalories();
+            pieData = getPieChartData();
+            menuCancelBtnClick();
+            setState(prevState => {
+                return {
+                    ...prevState,
+                    hidden: false,
+                    currentDinnerMenu: currentDinnerMenu,
+                    currentDinnerCalories: currentDinnerCalories,
+                    currentDinnerMenuText: currentDinnerMenuText,
+                    isDinnerMenuAdded: isDinnerMenuAdded,
+                    todayActivities: todayActivities,
+                    currentTotalProteins: currentTotalProteins,
+                    currentTotalFat: currentTotalFat,
+                    currentTotalCarbs: currentTotalCarbs,
+                    currentTotalCalcium: currentTotalCalcium,
+                    currentTotalIron: currentTotalIron,
+                    currentTotalSodium: currentTotalSodium,
+                    consumedCalories: consumedCalories,
+                    pieData: pieData
+                }
+            })
+        }
     }
 
     function addBtnClick(args) {
-        // hidden = true;
-        // document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].refresh();
         currentTotalCal = 0;
         if (args.currentTarget.classList.contains('e-breakfast-add-btn')) {
             currentMenuHeader = " Add Breakfast Menu";
@@ -2358,8 +2436,9 @@ function Tab() {
         document.getElementsByClassName('e-profile-edit-dialog')[0].ej2_instances[0].show();
     }
 
-    function onMenuCardSelect() {
+    function onMenuCardSelect(args) {
         currentQuantity = 1;
+        currentMenu = state.currentMenu;
         args.currentTarget.classList.toggle('e-card-select');
         if (args.currentTarget.classList.contains('e-card-select')) {
             lastSelectItem = args.currentTarget.innerText;
@@ -2378,16 +2457,7 @@ function Tab() {
             }
         }
         updateTotalCal();
-        setState(prevState => {
-            return {
-                ...prevState,
-                currentQuantity: currentQuantity,
-                currentMenu: currentMenu,
-                currentTotalCal: currentTotalCal,
-                hidden: false
-            }
-        })
-        document.getElementsByClassName('e-add-menu-dialog')[0].ej2_instances[0].refresh();
+        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal;
     }
 
     function updateTotalCal() {
@@ -2397,14 +2467,33 @@ function Tab() {
                 currentTotalCal += (currentMenu[i].cal * currentMenu[i].quantity);
             }
         }
+
     }
 
     function quantityPlusClick() {
-        console.log("quantityPlusClick");
+        currentMenu = currentMenu ? currentMenu : state.currentMenu;
+        currentQuantity += 1;
+        for (var i = 0; i < currentMenu.length; i++) {
+            if (currentMenu[i].item === lastSelectItem) {
+                currentMenu[i].quantity = currentQuantity;
+            }
+        }
+        updateTotalCal();
+        menudialogInstance.element.getElementsByClassName('e-quantity-count')[0].innerText = currentQuantity;
+        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal;
     }
 
     function quantityMinusClick() {
-        console.log("quantityMinusClicked");
+        currentMenu = currentMenu ? currentMenu : state.currentMenu;
+        currentQuantity = currentQuantity > 1 ? (currentQuantity - 1) : 1;
+        for (var i = 0; i < currentMenu.length; i++) {
+            if (currentMenu[i].item === lastSelectItem) {
+                currentMenu[i].quantity = currentQuantity;
+            }
+        }
+        updateTotalCal();
+        menudialogInstance.element.getElementsByClassName('e-quantity-count')[0].innerText = currentQuantity;
+        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal;
     }
 
     function editMenu(args) {
@@ -2533,19 +2622,41 @@ function Tab() {
     function sliderChange() {
 
     }
-
+    let menudialogInstance;
     function dialogOpen() {
-
+        menudialogInstance = this;
+        let btns = document.getElementsByClassName("e-card e-menu-card");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", onMenuCardSelect);
+        }
+        let minusbtns = document.getElementsByClassName("e-quantity-minus icon-minus");
+        for (var i = 0; i < minusbtns.length; i++) {
+            minusbtns[i].addEventListener("click", quantityMinusClick);
+        }
+        let plusbtns = document.getElementsByClassName("e-quantity-plus icon-plus");
+        for (var i = 0; i < plusbtns.length; i++) {
+            plusbtns[i].addEventListener("click", quantityPlusClick);
+        }
     }
 
-    function componentDidMount() {
-        console.log("componentDidMount");
-     }
+    function dialogClose() {
+        let btns = document.getElementsByClassName("e-card e-menu-card");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].removeEventListener("click", onMenuCardSelect);
+        }
+        let minusbtns = document.getElementsByClassName("e-quantity-minus icon-minus");
+        for (var i = 0; i < minusbtns.length; i++) {
+            minusbtns[i].removeEventListener("click", quantityMinusClick);
+        }
+        let plusbtns = document.getElementsByClassName("e-quantity-plus icon-plus");
+        for (var i = 0; i < plusbtns.length; i++) {
+            plusbtns[i].removeEventListener("click", quantityPlusClick);
+        }
+    }
 
     function profileTab() {
         return (
             <div className="e-dashboardlayout-container e-profile-dashboardlayout-container">
-
                 <React.Suspense fallback="Loading">
                     <Profile currentDate={state.datePickerDate}
                         maxDate={maxDate}
@@ -2553,7 +2664,6 @@ function Tab() {
                         profileStats={profileStats}
                         onProfileEdit={onProfileEdit}
                         onProfileDateChange={onProfileDateChange}></Profile>
-
                 </React.Suspense>
             </div>
         )
@@ -2623,8 +2733,8 @@ function Tab() {
                     quantityPlusClick={quantityPlusClick}
                     quantityMinusClick={quantityMinusClick}
                     onMenuCardSelect={onMenuCardSelect}
-                    dialogOpen={dialogOpen}>
-                </DietDialog>
+                    dialogOpen={dialogOpen}
+                    dialogClose={dialogClose} />
                 <Diet isSmallDevice={state.isSmallDevice}
                     pieData={state.pieData}
                     isToday={isToday}
@@ -2687,7 +2797,7 @@ function Tab() {
                 </FastingDialog>
                 <Fasting isSmallDevice={state.isSmallDevice}
                     consumedWaterCount={state.consumedWaterCount}
-                    consumedWaterAmount={state.consumedWaterAmount}
+                    consumedWaterAmount={state.consumedWaterAmount} todayActivitiemenu
                     expectedWaterAmount={state.expectedWaterAmount}
                     weightChartData={state.weightChartData}
                     datePickerDate={state.datePickerDate}
@@ -2708,7 +2818,8 @@ function Tab() {
                     quantityPlusClick={quantityPlusClick}
                     quantityMinusClick={quantityMinusClick}
                     onMenuCardSelect={onMenuCardSelect}
-                    chartCreated={chartCreated}>
+                    chartCreated={chartCreated}
+                    fastingGaugeLoaded={fastingGaugeLoaded}>
                 </Fasting>
             </React.Suspense>
         )
