@@ -27,9 +27,11 @@ var getInitial = true;
 let activityChartWeekData = {};
 let activityChartMonthData = {};
 let pieData = [];
+
 function Tab() {
     let innerWidth = window.innerWidth;
     let x;
+    let profileStats = { name: 'John Watson', age: 24, location: 'India', weight: 70, height: 165, goal: 65, email: 'john.watson@gmail.com', weightMes: 'kg', goalMes: 'kg', heightMes: 'cm' };
     let countStartDate;
     let countDownDate;
     let fastStartTime;
@@ -57,9 +59,9 @@ function Tab() {
     var theme = 'Tailwind';
     let gauge;
     let dlgButtons = [{ click: menuCancelBtnClick.bind(this), buttonModel: { content: 'CANCEL', cssClass: 'e-menu-cancel' } }, { click: menuDlgBtnClick.bind(this), buttonModel: { content: 'ADD MENU', cssClass: 'e-menu-add' } }];
+    let profiledlgButtons = [{ click: profileDialogCancelBtnClick.bind(this), buttonModel: { content: 'CANCEL', cssClass: 'e-menu-cancel' } }, { click: profileDialogBtnClick.bind(this), buttonModel: { content: 'UPDATE PROFILE', cssClass: 'e-menu-add' } }];
     let minimumDate = new Date(new Date().setHours(0, 0, 0));
     let maximumDate = new Date(new Date(new Date().setDate(minimumDate.getDate() + 1)).setHours(24, 0, 0));
-    var profileStats = { name: 'John Watson', age: 24, location: 'India', weight: 70, height: 165, goal: 65, email: 'john.watson@gmail.com', weightMes: 'kg', goalMes: 'kg', heightMes: 'cm' };
     let currentWtUnit = 'KG';
     let currentHtUnit = 'CM';
     let weightSliderLimit = { enabled: true, minStart: currentWtUnit === 'KG' ? 10 : 20 };
@@ -431,87 +433,7 @@ function Tab() {
             ],
         },
     ];
-    let weightGaugePointers = [{
-        animation: { enable: false }, value: profileStats.weight, radius: '85%', color: '#F43F5E',
-        pointerWidth: 12,
-        cap: { radius: 12, color: '#F0D9BC' }
-    }];
-
-    let rangeLinearGradient = {
-        startValue: '0%',
-        endValue: '100%',
-        colorStop: [
-            { color: '#4075F2', offset: '0%' },
-            { color: '#FB9906', offset: '35%' },
-            { color: '#F9623A', offset: '70%' },
-            { color: '#C24287', offset: '100%' },
-        ]
-    };
-    let weightGaugeRanges = [{
-        start: 0, end: profileStats.weight, startWidth: 18, endWidth: 18, color: '#F43F5E',
-        linearGradient: rangeLinearGradient,
-        roundedCornerRadius: 10
-    }];
-
-    let heightGaugePointerLinearGradient = {
-        startValue: '0%',
-        endValue: '100%',
-        colorStop: [
-            { color: '#B2CFE0', offset: '0%', opacity: 0.5 },
-        ],
-    };
-
-    let heightGaugeAxes = [
-        {
-            minimum: 0,
-            maximum: 230,
-            line: {
-                offset: -60,
-                color: '#7D96A6'
-            },
-            opposedPosition: true,
-            majorTicks: {
-                interval: 20,
-                color: '#7D96A6'
-            },
-            minorTicks: {
-                interval: 5,
-                color: '#7D96A6'
-            },
-            pointers: [
-                {
-                    type: 'Bar',
-                    value: profileStats.height,
-                    width: 80,
-                    linearGradient: heightGaugePointerLinearGradient,
-                },
-                {
-                    type: 'Bar',
-                    height: 390,
-                    width: 5,
-                    value: 230,
-                    color: '#7D96A6',
-                    offset: -25,
-                    roundedCornerRadius: 0
-                }
-            ],
-        },
-    ];
-
-    let heightGaugeAnnotation = [{
-        content: '<div class="e-height-gauge-annotation">' + profileStats.height + profileStats.heightMes + '</div>',
-        axisIndex: 0,
-        axisValue: profileStats.height,
-        x: -50,
-        y: 0, zIndex: '1'
-    }
-    ];
-
-    let weightGaugeAnnotaions = [{
-        content: '<div class="e-weight-gauge-annotation">' +
-            profileStats.weight + profileStats.weightMes + '</div>',
-        radius: '85%', angle: 180, zIndex: '1'
-    }];
+    
 
     let modifyHeaderTitle = "Change Your Weight";
     let modifyBtnGroup = ['KG', 'LB'];
@@ -588,6 +510,7 @@ function Tab() {
         currentSnack2Menu: currentSnack2Menu,
         currentLunchMenu: currentLunchMenu,
         currentDinnerMenu: currentDinnerMenu,
+        profileStats : profileStats,
         hidden: false,
         profileHidden: false,
     });
@@ -2641,22 +2564,24 @@ function Tab() {
         }
     }
 
-    function onNameChange() {
-
+    function onNameChange(args) {
+        profileStats.name = args.value;
     }
 
     function ageMinusClick() {
-
+        profileStats.age = state.profileStats.age > 0 ? (state.profileStats.age - 1) : 0;
+        profileDialogInstance.element.getElementsByClassName('e-age-count')[0].innerText = profileStats.age;
     }
 
     function agePlusClick() {
-
+        if (state.profileStats.age < 100) {
+            profileStats.age += 1;
+        }
+        profileDialogInstance.element.getElementsByClassName('e-age-count')[0].innerText = profileStats.age;
     }
     let isGoalEdit = false;
 
     function changeWeight() {
-        weightGauge = document.getElementById('weightgauge').ej2_instances[0];
-        weightSlider = document.getElementById('weightrange').ej2_instances[0];
         if (document.querySelector('.e-weight-text') && !document.querySelector('.e-weight-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-weight-text').classList.add('e-edit-color');
         }
@@ -2666,7 +2591,7 @@ function Tab() {
         if (document.querySelector('.e-height-text') && document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-height-text').classList.remove('e-edit-color');
         }
-        currentWtUnit = profileStats.weightMes.toUpperCase();
+        currentWtUnit = state.profileStats.weightMes.toUpperCase();
         isGoalEdit = false;
         showWeight();
         updateWeightGauge(false);
@@ -2674,7 +2599,7 @@ function Tab() {
 
     function showWeight() {
         modifyHeaderTitle = "Change Your Weight";
-        if(profileDialogInstance) {
+        if (profileDialogInstance) {
             profileDialogInstance.element.getElementsByClassName('e-modify-title')[0].innerText = modifyHeaderTitle;
         }
         modifyBtnGroup = ['KG', 'LB'];
@@ -2695,13 +2620,13 @@ function Tab() {
         }
         weightSlider.refresh();
         if (!isGoalEdit) {
-            if (profileStats.weightMes.toUpperCase() === 'KG' && document.querySelector('.e-weight-modify-btn-group #KG')) {
+            if (state.profileStats.weightMes.toUpperCase() === 'KG' && document.querySelector('.e-weight-modify-btn-group #KG')) {
                 (document.querySelector('.e-weight-modify-btn-group #KG')).checked = true;
             } else if (document.querySelector('.e-weight-modify-btn-group #LB')) {
                 (document.querySelector('.e-weight-modify-btn-group #LB')).checked = true;
             }
         } else {
-            if (profileStats.goalMes.toUpperCase() === 'KG' && document.querySelector('.e-weight-modify-btn-group #KG')) {
+            if (state.profileStats.goalMes.toUpperCase() === 'KG' && document.querySelector('.e-weight-modify-btn-group #KG')) {
                 (document.querySelector('.e-weight-modify-btn-group #KG')).checked = true;
             } else if (document.querySelector('.e-weight-modify-btn-group #LB')) {
                 (document.querySelector('.e-weight-modify-btn-group #LB')).checked = true;
@@ -2710,8 +2635,8 @@ function Tab() {
     }
 
     function updateWeightGauge(isGoal) {
-        currentWtUnit = isGoal ? profileStats.goalMes.toUpperCase() : profileStats.weightMes.toUpperCase();
-        let value = isGoal ? profileStats.goal : profileStats.weight;
+        currentWtUnit = isGoal ? state.profileStats.goalMes.toUpperCase() : state.profileStats.weightMes.toUpperCase();
+        let value = isGoal ? state.profileStats.goal : state.profileStats.weight;
         weightGauge.axes[0].maximum = currentWtUnit === 'KG' ? 150 : 330;
         weightSlider.max = currentWtUnit === 'KG' ? 150 : 330;
         weightGauge.axes[0].annotations[0].content = '<div class="e-weight-gauge-annotation">' + value + currentWtUnit + '</div>';
@@ -2731,7 +2656,7 @@ function Tab() {
         if (document.querySelector('.e-height-text') && document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-height-text').classList.remove('e-edit-color');
         }
-        currentWtUnit = profileStats.goalMes.toUpperCase();
+        currentWtUnit = state.profileStats.goalMes.toUpperCase();
         isGoalEdit = true;
         showWeight();
         updateWeightGauge(true);
@@ -2740,8 +2665,6 @@ function Tab() {
 
 
     function changeHeight() {
-        heightGauge = document.getElementById('heightgauge').ej2_instances[0];
-        heightSlider = document.getElementById('heightrange').ej2_instances[0];
         if (document.querySelector('.e-weight-text') && document.querySelector('.e-weight-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-weight-text').classList.remove('e-edit-color');
         }
@@ -2751,7 +2674,7 @@ function Tab() {
         if (document.querySelector('.e-height-text') && !document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-height-text').classList.add('e-edit-color');
         }
-        currentHtUnit = profileStats.heightMes;
+        currentHtUnit = state.profileStats.heightMes;
         modifyHeaderTitle = "Change Your Height";
         profileDialogInstance.element.getElementsByClassName('e-modify-title')[0].innerText = modifyHeaderTitle;
         modifyBtnGroup = ['CM', 'FT'];
@@ -2772,8 +2695,9 @@ function Tab() {
         }
         updateHeightGauge();
         sliderHeightChange();
+        heightGauge.refresh();
         heightSlider.refresh();
-        if (profileStats.heightMes.toUpperCase() === 'CM' && document.querySelector('.e-height-modify-btn-group #CM')) {
+        if (state.profileStats.heightMes.toUpperCase() === 'CM' && document.querySelector('.e-height-modify-btn-group #CM')) {
             (document.querySelector('.e-height-modify-btn-group #CM')).checked = true;
         } else if (document.querySelector('.e-height-modify-btn-group #CM')) {
             (document.querySelector('.e-height-modify-btn-group #FT')).checked = true;
@@ -2782,35 +2706,35 @@ function Tab() {
     }
 
     function updateHeightGauge() {
-        currentHtUnit = profileStats.heightMes.toUpperCase();
+        currentHtUnit = state.profileStats.heightMes.toUpperCase();
         heightGauge.axes[0].maximum = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.max = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.limits.minStart = currentHtUnit === 'CM' ? 30 : 1;
         heightSlider.step = currentHtUnit === 'CM' ? 1 : 0.1;
         heightSlider.ticks.format = currentHtUnit === 'CM' ? 'N0' : '#.00';
-        heightSlider.value = profileStats.height;
-        heightGauge.annotations[0].axisValue = profileStats.height;
-        heightGauge.annotations[0].content = '<div class="e-height-gauge-annotation">' + profileStats.height + currentHtUnit + '</div>';
-        heightGauge.axes[0].pointers[0].value = profileStats.height;
+        heightSlider.value = state.profileStats.height;
+        heightGauge.annotations[0].axisValue = state.profileStats.height;
+        heightGauge.annotations[0].content = '<div class="e-height-gauge-annotation">' + state.profileStats.height + currentHtUnit + '</div>';
+        heightGauge.axes[0].pointers[0].value = state.profileStats.height;
         heightGauge.axes[0].majorTicks.interval = currentHtUnit === 'CM' ? 20 : 1;
         heightGauge.axes[0].minorTicks.interval = currentHtUnit === 'CM' ? 5 : 0.1;
-        //(document.querySelectorAll('#height-svg')[0]).style.height = (profileStats.height * (currentHtUnit === 'CM' ? 1.7 : 52)) + 'px';
+        (document.querySelectorAll('#height-svg')[0]).style.height = (state.profileStats.height * (currentHtUnit === 'CM' ? 1.7 : 52)) + 'px';
     }
 
     function sliderHeightChange() {
         heightGauge.axes[0].pointers[0].value = heightSlider.value;
-        //(document.querySelectorAll('#height-svg')[0]).style.height = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 1.7 : 52)) + 'px';
+        (document.querySelectorAll('#height-svg')[0]).style.height = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 1.7 : 52)) + 'px';
         (document.querySelector('.e-profile-height-label')).innerHTML = (heightSlider.value) + '<span>' + ' ' + currentHtUnit + '</span>';
         (document.querySelector('.e-profile-height-label')).style.bottom = (document.querySelectorAll('#height-svg')[0]).style.height;
         (document.querySelector('.e-profile-height-label')).style.left = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 0.1 : 3.5)) + 'px';
     }
 
-    function onLocationChange() {
-
+    function onLocationChange(args) {
+        profileStats.location = args.value;
     }
 
-    function onEmailChange() {
-
+    function onEmailChange(args) {
+        profileStats.email = args.value;
     }
 
     function changeHandler() {
@@ -2820,6 +2744,7 @@ function Tab() {
     function updateHeight() {
         profileStats.heightMes = currentHtUnit.toLowerCase();
         profileStats.height = heightGauge.axes[0].pointers[0].value;
+        document.getElementById('textbox_3').value = profileStats.height + ' ' + profileStats.heightMes;
         cancelHeight();
     }
 
@@ -2830,24 +2755,34 @@ function Tab() {
     }
 
     function updateWeight() {
-
+        if (isGoalEdit) {
+            profileStats.goalMes = currentWtUnit.toLowerCase();
+            profileStats.goal = weightGauge.axes[0].pointers[0].value;
+            document.getElementById('textbox_2').value = profileStats.goal + ' ' + profileStats.goal;
+        } else {
+            profileStats.weightMes = currentWtUnit.toLowerCase();
+            profileStats.weight = weightGauge.axes[0].pointers[0].value;
+            document.getElementById('textbox_1').value = profileStats.weight + ' ' + profileStats.weightMes;
+        }
+        isGoalEdit = false;
+        cancelHeight();
     }
 
     function cancelWeight() {
-
+        isGoalEdit = false;
+        cancelHeight();
     }
 
     function handleChange() {
-
+        console.log("Handle changed");
     }
 
     function sliderChange() {
-       
+        weightGauge.axes[0].annotations[0].content = '<div class="e-weight-gauge-annotation">' + (weightSlider.value) + currentWtUnit + '</div>';
+        weightGauge.axes[0].ranges[0].end = weightSlider.value;
+        weightGauge.axes[0].pointers[0].value = weightSlider.value;
     }
-    function sliderHeightChange() {
 
-    }
-   
     function profileDialogOpen(args) {
         profileDialogInstance = this;
         let heightbtns = document.getElementsByClassName("e-height-change-btn");
@@ -2866,11 +2801,87 @@ function Tab() {
         for (var i = 0; i < updateHeightbtns.length; i++) {
             updateHeightbtns[i].addEventListener("click", updateHeight);
         }
+        let updateWeightbtns = document.getElementsByClassName("e-update-weight");
+        for (var i = 0; i < updateWeightbtns.length; i++) {
+            updateWeightbtns[i].addEventListener("click", updateWeight);
+        }
+        let updateWeightCancelbtns = document.getElementsByClassName("e-update-weight-cancel");
+        for (var i = 0; i < updateWeightCancelbtns.length; i++) {
+            updateWeightCancelbtns[i].addEventListener("click", cancelWeight);
+        }
+        let updateHeightCancelbtns = document.getElementsByClassName("e-update-height-cancel");
+        for (var i = 0; i < updateHeightCancelbtns.length; i++) {
+            updateHeightCancelbtns[i].addEventListener("click", cancelHeight);
+        }
+
+        let changeButton = document.querySelectorAll(".e-weight-modify-btn-group #KG,.e-weight-modify-btn-group #LB");
+        for (var i = 0; i < changeButton.length; i++) {
+            changeButton[i].addEventListener("propertychange", handleChange);
+        }
+
+        let profileCloseBtn = document.getElementsByClassName("e-profile-back");
+        for (var i = 0; i < profileCloseBtn.length; i++) {
+            profileCloseBtn[i].addEventListener("click", closeEditDialog);
+        }
+
+        let minusbtns = document.getElementsByClassName("e-age-minus icon-minus");
+        for (var i = 0; i < minusbtns.length; i++) {
+            minusbtns[i].addEventListener("click", ageMinusClick);
+        }
+        let plusbtns = document.getElementsByClassName("e-age-plus icon-plus");
+        for (var i = 0; i < plusbtns.length; i++) {
+            plusbtns[i].addEventListener("click", agePlusClick);
+        }
+        
+        args.preventFocus = true;
+        currentWtUnit = '';
+        weightSlider.value = state.profileStats.weight;
+        heightSlider.value = state.profileStats.height;
+        updateWeightGauge(false);
+        sliderChange();
+        weightGauge.refresh();
+        weightSlider.refresh();
+        if (document.querySelector('.e-weight-text') && !document.querySelector('.e-weight-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-weight-text').classList.add('e-edit-color');
+        }
+        if (document.querySelector('.e-goal-text') && document.querySelector('.e-goal-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-goal-text').classList.remove('e-edit-color');
+        }
+        if (document.querySelector('.e-height-text') && document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-height-text').classList.remove('e-edit-color');
+        }
+    }
+
+    function closeEditDialog() {
+        document.getElementsByClassName('e-profile-edit-dialog')[0].ej2_instances[0].hide();
+    }
+
+    function profileDialogBtnClick() {
+        profileDialogCancelBtnClick();
+        setState(prevState => {
+            return {
+                ...prevState,
+                profileStats : profileStats
+            }
+        })
+    }
+
+    function profileDialogCancelBtnClick() {
+        document.getElementsByClassName('e-profile-edit-dialog')[0].ej2_instances[0].hide();
     }
 
     function profileDialogBeforeOpen() {
-        ////changeWeight();
-       
+        //changeWeight();
+        heightGauge = document.getElementById('heightgauge').ej2_instances[0];
+        heightSlider = document.getElementById('heightrange').ej2_instances[0];
+        weightGauge = document.getElementById('weightgauge').ej2_instances[0];
+        weightSlider = document.getElementById('weightrange').ej2_instances[0];
+        changeWeight();
+        if (state.profileStats.weightMes.toUpperCase() === 'KG' && document.querySelector('.e-weight-modify-btn-group #KG')) {
+            (document.querySelector('.e-weight-modify-btn-group #KG')).checked = true;
+        } else if (document.querySelector('.e-weight-modify-btn-group #LB')) {
+            (document.querySelector('.e-weight-modify-btn-group #LB')).checked = true;
+        }
     }
 
     function profileDialogClose() {
@@ -2889,6 +2900,35 @@ function Tab() {
         let updateHeightbtns = document.getElementsByClassName("e-update-height");
         for (var i = 0; i < updateHeightbtns.length; i++) {
             updateHeightbtns[i].removeEventListener("click", updateHeight);
+        }
+        let updateWeightbtns = document.getElementsByClassName("e-update-weight");
+        for (var i = 0; i < updateWeightbtns.length; i++) {
+            updateWeightbtns[i].removeEventListener("click", updateWeight);
+        }
+        let updateWeightCancelbtns = document.getElementsByClassName("e-update-weight-cancel");
+        for (var i = 0; i < updateWeightCancelbtns.length; i++) {
+            updateWeightCancelbtns[i].removeEventListener("click", cancelWeight);
+        }
+        let updateHeightCancelbtns = document.getElementsByClassName("e-update-height-cancel");
+        for (var i = 0; i < updateHeightCancelbtns.length; i++) {
+            updateHeightCancelbtns[i].removeEventListener("click", cancelHeight);
+        }
+        let changeButton = document.querySelectorAll(".e-weight-modify-btn-group #KG,.e-weight-modify-btn-group #LB");
+        for (var i = 0; i < changeButton.length; i++) {
+            changeButton[i].removeEventListener("propertychange", handleChange);
+        }
+
+        let profileCloseBtn = document.getElementsByClassName("e-profile-back");
+        for (var i = 0; i < profileCloseBtn.length; i++) {
+            profileCloseBtn[i].removeEventListener("click", closeEditDialog);
+        }
+        let minusbtns = document.getElementsByClassName("e-age-minus icon-minus");
+        for (var i = 0; i < minusbtns.length; i++) {
+            minusbtns[i].removeEventListener("click", ageMinusClick);
+        }
+        let plusbtns = document.getElementsByClassName("e-age-plus icon-plus");
+        for (var i = 0; i < plusbtns.length; i++) {
+            plusbtns[i].removeEventListener("click", agePlusClick);
         }
     }
     let menudialogInstance;
@@ -2930,7 +2970,7 @@ function Tab() {
                     <Profile currentDate={state.datePickerDate}
                         maxDate={maxDate}
                         activities={state.todayActivities}
-                        profileStats={profileStats}
+                        profileStats={state.profileStats}
                         onProfileEdit={onProfileEdit}
                         onProfileDateChange={onProfileDateChange}></Profile>
                 </React.Suspense>
@@ -2941,8 +2981,8 @@ function Tab() {
         return (
             <React.Suspense fallback="Loading">
                 <ProfileDialog hidden={state.profileHidden}
-                    profileStats={profileStats}
-                    name={profileStats.name}
+                    profileStats={state.profileStats}
+                    name={state.profileStats.name}
                     onNameChange={onNameChange}
                     ageMinusClick={ageMinusClick}
                     agePlusClick={agePlusClick}
@@ -2957,19 +2997,16 @@ function Tab() {
                     updateWeight={updateWeight}
                     cancelWeight={cancelWeight}
                     handleChange={handleChange}
-                    weightGaugeRanges={weightGaugeRanges}
-                    weightGaugePointers={weightGaugePointers}
-                    weightGaugeAnnotaions={weightGaugeAnnotaions}
+                    closeEditDialog={closeEditDialog}
                     weightSliderLimit={weightSliderLimit}
                     heightSliderLimit={heightSliderLimit}
                     sliderChange={sliderChange}
                     sliderHeightChange={sliderHeightChange}
-                    heightGaugeAxes={heightGaugeAxes}
-                    heightGaugeAnnotation={heightGaugeAnnotation}
                     modifyHeaderTitle={modifyHeaderTitle}
                     profileDialogOpen={profileDialogOpen}
                     profileDialogClose={profileDialogClose}
                     profileDialogBeforeOpen={profileDialogBeforeOpen}
+                    profiledlgButtons={profiledlgButtons}
                 >
                 </ProfileDialog>
                 <Activities isSmallDevice={state.isSmallDevice}
@@ -2991,7 +3028,7 @@ function Tab() {
                     gridData={state.gridData}
                     customiseCell={customiseCell}
                     todayActivities={state.todayActivities}
-                    profileStats={profileStats}
+                    profileStats={state.profileStats}
                     onProfileEdit={onProfileEdit}
                     onProfileDateChange={onProfileDateChange}></Activities>
             </React.Suspense>
@@ -3051,7 +3088,7 @@ function Tab() {
                     datePickerWidth={datePickerWidth}
                     maxDate={maxDate}
                     todayActivities={state.todayActivities}
-                    profileStats={profileStats}
+                    profileStats={state.profileStats}
                     onProfileDateChange={onProfileDateChange}
                     onProfileEdit={onProfileEdit}
                     addBtnClick={addBtnClick}>
@@ -3091,7 +3128,7 @@ function Tab() {
                     waterGaugeAnnotation={state.waterGaugeAnnotation}
                     waterGaugeAxes={state.waterGaugeAxes}
                     todayActivities={state.todayActivities}
-                    profileStats={profileStats}
+                    profileStats={state.profileStats}
                     onProfileDateChange={onProfileDateChange}
                     onProfileEdit={onProfileEdit}
                     clearFasting={clearFasting}
