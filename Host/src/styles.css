@@ -1930,6 +1930,8 @@ body {
 .e-profile-input {
   background-color: #F4F5F7 !important;
   border: none !important;
+  width: 65% !important;
+  margin-right: 40px;
 }
 
 .e-profile-input>input {

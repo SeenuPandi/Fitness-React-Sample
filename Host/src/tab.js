@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Browser } from '@syncfusion/ej2-base';
 import FastingDialog from "./FastingDialog";
 import DietDialog from "./DietDialog";
@@ -60,6 +60,10 @@ function Tab() {
     let minimumDate = new Date(new Date().setHours(0, 0, 0));
     let maximumDate = new Date(new Date(new Date().setDate(minimumDate.getDate() + 1)).setHours(24, 0, 0));
     var profileStats = { name: 'John Watson', age: 24, location: 'India', weight: 70, height: 165, goal: 65, email: 'john.watson@gmail.com', weightMes: 'kg', goalMes: 'kg', heightMes: 'cm' };
+    let currentWtUnit = 'KG';
+    let currentHtUnit = 'CM';
+    let weightSliderLimit = { enabled: true, minStart: currentWtUnit === 'KG' ? 10 : 20 };
+    let heightSliderLimit = { enabled: true, minStart: currentHtUnit === 'CM' ? 30 : 1 };
     var breakfastMenu = [
         { item: 'Banana', cal: 105, fat: 0.4, carbs: 27, proteins: 1.3, sodium: 0.0012, iron: 0.00031, calcium: 0.005 },
         { item: 'Bread', cal: 77, fat: 1, carbs: 14, proteins: 2.6, sodium: 0.142, iron: 0.0036, calcium: 0.260 },
@@ -510,6 +514,12 @@ function Tab() {
     }];
 
     let modifyHeaderTitle = "Change Your Weight";
+    let modifyBtnGroup = ['KG', 'LB'];
+    let profileDialogInstance;
+    let heightGauge;
+    let heightSlider;
+    let weightGauge;
+    let weightSlider;
     var [state, setState] = useState({
         heartRate: Math.round(Math.random() * (100 - 70) + 70),
         steps: Math.round(Math.random() * (3000 - 1000) + 1000),
@@ -683,16 +693,16 @@ function Tab() {
         currentTotalSodium = 0;
         consumedCalories = 0;
         currentBreakFastMenu = currentBreakFastMenu.length > 0 ? currentBreakFastMenu : state.currentBreakFastMenu;
-        currentSnack1Menu = currentSnack1Menu.length > 0 ? currentSnack1Menu: state.currentSnack1Menu;
-        currentLunchMenu = currentLunchMenu.length > 0 ? currentLunchMenu: state.currentLunchMenu;
+        currentSnack1Menu = currentSnack1Menu.length > 0 ? currentSnack1Menu : state.currentSnack1Menu;
+        currentLunchMenu = currentLunchMenu.length > 0 ? currentLunchMenu : state.currentLunchMenu;
         isBreakFastMenuAdded = state.isBreakFastMenuAdded;
-        isSnack1MenuAdded =  state.isSnack1MenuAdded;
+        isSnack1MenuAdded = state.isSnack1MenuAdded;
         isLunchMenuAdded = state.isLunchMenuAdded;
-        if(state.isSnack2MenuAdded) {
+        if (state.isSnack2MenuAdded) {
             currentSnack2Menu = currentSnack2Menu.length > 0 ? currentSnack2Menu : state.currentSnack2Menu;
             isSnack2MenuAdded = state.isSnack2MenuAdded;
         }
-        if(state.isDinnerMenuAdded) {
+        if (state.isDinnerMenuAdded) {
             currentDinnerMenu = currentDinnerMenu.length > 0 ? currentDinnerMenu : state.currentDinnerMenu;
             isDinnerMenuAdded = state.isDinnerMenuAdded;
         }
@@ -709,7 +719,7 @@ function Tab() {
             //currentBreakFastCalories = currentBreakFastMenu.reduce((a, b) => +a + +b.cal, 0);
             currentBreakFastCalories = 0;
             for (var i = 0; i < currentBreakFastMenu.length; i++) {
-                if(currentBreakFastMenu[i].quantity) {
+                if (currentBreakFastMenu[i].quantity) {
                     currentBreakFastCalories += (currentBreakFastMenu[i].cal * currentBreakFastMenu[i].quantity);
                 }
                 else {
@@ -731,7 +741,7 @@ function Tab() {
             //currentSnack1Calories = currentSnack1Menu.reduce((a, b) => +a + +b.cal, 0);
             currentSnack1Calories = 0;
             for (var i = 0; i < currentSnack1Menu.length; i++) {
-                if(currentSnack1Menu[i].quantity) {
+                if (currentSnack1Menu[i].quantity) {
                     currentSnack1Calories += (currentSnack1Menu[i].cal * currentSnack1Menu[i].quantity);
                 }
                 else {
@@ -753,7 +763,7 @@ function Tab() {
             //currentLunchCalories = currentLunchMenu.reduce((a, b) => +a + +b.cal, 0);
             currentLunchCalories = 0;
             for (var i = 0; i < currentLunchMenu.length; i++) {
-                if(currentLunchMenu[i].quantity) {
+                if (currentLunchMenu[i].quantity) {
                     currentLunchCalories += (currentLunchMenu[i].cal * currentLunchMenu[i].quantity);
                 }
                 else {
@@ -775,7 +785,7 @@ function Tab() {
             //currentSnack2Calories = currentSnack2Menu.reduce((a, b) => +a + +b.cal, 0);
             currentSnack2Calories = 0;
             for (var i = 0; i < currentSnack2Menu.length; i++) {
-                if(currentSnack2Menu[i].quantity) {
+                if (currentSnack2Menu[i].quantity) {
                     currentSnack2Calories += (currentSnack2Menu[i].cal * currentSnack2Menu[i].quantity);
                 }
                 else {
@@ -797,7 +807,7 @@ function Tab() {
             //currentDinnerCalories = currentDinnerMenu.reduce((a, b) => +a + +b.cal, 0);
             currentDinnerCalories = 0;
             for (var i = 0; i < currentDinnerMenu.length; i++) {
-                if(currentDinnerMenu[i].quantity) {
+                if (currentDinnerMenu[i].quantity) {
                     currentDinnerCalories += (currentDinnerMenu[i].cal * currentDinnerMenu[i].quantity);
                 }
                 else {
@@ -2255,7 +2265,7 @@ function Tab() {
             } else {
                 isSnack1MenuAdded = false;
             }
-            let activity = { name: 'Snack1', activity: 'Snack', amount: currentSnack1MenuText, percentage: ((currentSnack1Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })};
+            let activity = { name: 'Snack1', activity: 'Snack', amount: currentSnack1MenuText, percentage: ((currentSnack1Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) };
             for (let i = 0; i < todayActivities.length; i++) {
                 if (todayActivities[i].name === 'Snack1') {
                     if (currentSnack1MenuText !== '') {
@@ -2359,7 +2369,7 @@ function Tab() {
             } else {
                 isSnack2MenuAdded = false;
             }
-            let activity = { name: 'Snack2', activity: 'Snack', amount: currentSnack2MenuText, percentage: ((currentSnack2Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })};
+            let activity = { name: 'Snack2', activity: 'Snack', amount: currentSnack2MenuText, percentage: ((currentSnack2Calories / state.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: menuTimePicker.value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) };
             for (let i = 0; i < todayActivities.length; i++) {
                 if (todayActivities[i].name === 'Snack2') {
                     if (currentSnack2MenuText !== '') {
@@ -2493,12 +2503,12 @@ function Tab() {
     }
 
     function onProfileEdit() {
-        
+
         // setState(prevState => {
         //     return {
         //         ...prevState,
         //         profileHidden: true,
-            
+
         //     }
         // })
         document.getElementsByClassName('e-profile-edit-dialog')[0].ej2_instances[0].show();
@@ -2608,7 +2618,7 @@ function Tab() {
                 currentAddedMenu: currentAddedMenu
             }
         })
-    }updateTotalCal
+    } updateTotalCal
 
     function updateCurrentMenu(menu) {
         for (let i = 0; i < menu.length; i++) {
@@ -2642,17 +2652,157 @@ function Tab() {
     function agePlusClick() {
 
     }
+    let isGoalEdit = false;
 
     function changeWeight() {
-
+        weightGauge = document.getElementById('weightgauge').ej2_instances[0];
+        weightSlider = document.getElementById('weightrange').ej2_instances[0];
+        if (document.querySelector('.e-weight-text') && !document.querySelector('.e-weight-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-weight-text').classList.add('e-edit-color');
+        }
+        if (document.querySelector('.e-goal-text') && document.querySelector('.e-goal-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-goal-text').classList.remove('e-edit-color');
+        }
+        if (document.querySelector('.e-height-text') && document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-height-text').classList.remove('e-edit-color');
+        }
+        currentWtUnit = profileStats.weightMes.toUpperCase();
+        isGoalEdit = false;
+        showWeight();
+        updateWeightGauge(false);
     }
+
+    function showWeight() {
+        modifyHeaderTitle = "Change Your Weight";
+        if(profileDialogInstance) {
+            profileDialogInstance.element.getElementsByClassName('e-modify-title')[0].innerText = modifyHeaderTitle;
+        }
+        modifyBtnGroup = ['KG', 'LB'];
+        if (document.querySelector('.e-modify-container') && document.querySelector('.e-modify-container').classList.contains('e-hidden')) {
+            document.querySelector('.e-modify-container').classList.remove('e-hidden');
+        }
+        if (document.querySelector('.e-weight-gauge-container') && document.querySelector('.e-weight-gauge-container').classList.contains('e-hidden')) {
+            document.querySelector('.e-weight-gauge-container').classList.remove('e-hidden');
+        }
+        if (document.querySelector('.e-height-gauge-container') && !document.querySelector('.e-height-gauge-container').classList.contains('e-hidden')) {
+            document.querySelector('.e-height-gauge-container').classList.add('e-hidden');
+        }
+        if (document.querySelector('.e-height-modify-btn-group') && !document.querySelector('.e-height-modify-btn-group').classList.contains('e-hidden')) {
+            document.querySelector('.e-height-modify-btn-group').classList.add('e-hidden');
+        }
+        if (document.querySelector('.e-weight-modify-btn-group') && document.querySelector('.e-weight-modify-btn-group').classList.contains('e-hidden')) {
+            document.querySelector('.e-weight-modify-btn-group').classList.remove('e-hidden');
+        }
+        weightSlider.refresh();
+        if (!isGoalEdit) {
+            if (profileStats.weightMes.toUpperCase() === 'KG' && document.querySelector('.e-weight-modify-btn-group #KG')) {
+                (document.querySelector('.e-weight-modify-btn-group #KG')).checked = true;
+            } else if (document.querySelector('.e-weight-modify-btn-group #LB')) {
+                (document.querySelector('.e-weight-modify-btn-group #LB')).checked = true;
+            }
+        } else {
+            if (profileStats.goalMes.toUpperCase() === 'KG' && document.querySelector('.e-weight-modify-btn-group #KG')) {
+                (document.querySelector('.e-weight-modify-btn-group #KG')).checked = true;
+            } else if (document.querySelector('.e-weight-modify-btn-group #LB')) {
+                (document.querySelector('.e-weight-modify-btn-group #LB')).checked = true;
+            }
+        }
+    }
+
+    function updateWeightGauge(isGoal) {
+        currentWtUnit = isGoal ? profileStats.goalMes.toUpperCase() : profileStats.weightMes.toUpperCase();
+        let value = isGoal ? profileStats.goal : profileStats.weight;
+        weightGauge.axes[0].maximum = currentWtUnit === 'KG' ? 150 : 330;
+        weightSlider.max = currentWtUnit === 'KG' ? 150 : 330;
+        weightGauge.axes[0].annotations[0].content = '<div class="e-weight-gauge-annotation">' + value + currentWtUnit + '</div>';
+        weightGauge.axes[0].ranges[0].end = value;
+        weightGauge.axes[0].pointers[0].value = value;
+        weightSlider.value = value;
+    }
+
 
     function changeGoal() {
-
+        if (document.querySelector('.e-weight-text') && document.querySelector('.e-weight-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-weight-text').classList.remove('e-edit-color');
+        }
+        if (document.querySelector('.e-goal-text') && !document.querySelector('.e-goal-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-goal-text').classList.add('e-edit-color');
+        }
+        if (document.querySelector('.e-height-text') && document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-height-text').classList.remove('e-edit-color');
+        }
+        currentWtUnit = profileStats.goalMes.toUpperCase();
+        isGoalEdit = true;
+        showWeight();
+        updateWeightGauge(true);
+        weightGauge.refresh();
     }
 
-    function changeHeight() {
 
+    function changeHeight() {
+        heightGauge = document.getElementById('heightgauge').ej2_instances[0];
+        heightSlider = document.getElementById('heightrange').ej2_instances[0];
+        if (document.querySelector('.e-weight-text') && document.querySelector('.e-weight-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-weight-text').classList.remove('e-edit-color');
+        }
+        if (document.querySelector('.e-goal-text') && document.querySelector('.e-goal-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-goal-text').classList.remove('e-edit-color');
+        }
+        if (document.querySelector('.e-height-text') && !document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
+            document.querySelector('.e-height-text').classList.add('e-edit-color');
+        }
+        currentHtUnit = profileStats.heightMes;
+        modifyHeaderTitle = "Change Your Height";
+        profileDialogInstance.element.getElementsByClassName('e-modify-title')[0].innerText = modifyHeaderTitle;
+        modifyBtnGroup = ['CM', 'FT'];
+        if (document.querySelector('.e-modify-container') && document.querySelector('.e-modify-container').classList.contains('e-hidden')) {
+            document.querySelector('.e-modify-container').classList.remove('e-hidden');
+        }
+        if (document.querySelector('.e-weight-gauge-container') && !document.querySelector('.e-weight-gauge-container').classList.contains('e-hidden')) {
+            document.querySelector('.e-weight-gauge-container').classList.add('e-hidden');
+        }
+        if (document.querySelector('.e-height-gauge-container') && document.querySelector('.e-height-gauge-container').classList.contains('e-hidden')) {
+            document.querySelector('.e-height-gauge-container').classList.remove('e-hidden');
+        }
+        if (document.querySelector('.e-weight-modify-btn-group') && !document.querySelector('.e-weight-modify-btn-group').classList.contains('e-hidden')) {
+            document.querySelector('.e-weight-modify-btn-group').classList.add('e-hidden');
+        }
+        if (document.querySelector('.e-height-modify-btn-group') && document.querySelector('.e-height-modify-btn-group').classList.contains('e-hidden')) {
+            document.querySelector('.e-height-modify-btn-group').classList.remove('e-hidden');
+        }
+        updateHeightGauge();
+        sliderHeightChange();
+        heightSlider.refresh();
+        if (profileStats.heightMes.toUpperCase() === 'CM' && document.querySelector('.e-height-modify-btn-group #CM')) {
+            (document.querySelector('.e-height-modify-btn-group #CM')).checked = true;
+        } else if (document.querySelector('.e-height-modify-btn-group #CM')) {
+            (document.querySelector('.e-height-modify-btn-group #FT')).checked = true;
+        }
+        //heightGauge.refresh();
+    }
+
+    function updateHeightGauge() {
+        currentHtUnit = profileStats.heightMes.toUpperCase();
+        heightGauge.axes[0].maximum = currentHtUnit === 'CM' ? 230 : 7.5;
+        heightSlider.max = currentHtUnit === 'CM' ? 230 : 7.5;
+        heightSlider.limits.minStart = currentHtUnit === 'CM' ? 30 : 1;
+        heightSlider.step = currentHtUnit === 'CM' ? 1 : 0.1;
+        heightSlider.ticks.format = currentHtUnit === 'CM' ? 'N0' : '#.00';
+        heightSlider.value = profileStats.height;
+        heightGauge.annotations[0].axisValue = profileStats.height;
+        heightGauge.annotations[0].content = '<div class="e-height-gauge-annotation">' + profileStats.height + currentHtUnit + '</div>';
+        heightGauge.axes[0].pointers[0].value = profileStats.height;
+        heightGauge.axes[0].majorTicks.interval = currentHtUnit === 'CM' ? 20 : 1;
+        heightGauge.axes[0].minorTicks.interval = currentHtUnit === 'CM' ? 5 : 0.1;
+        //(document.querySelectorAll('#height-svg')[0]).style.height = (profileStats.height * (currentHtUnit === 'CM' ? 1.7 : 52)) + 'px';
+    }
+
+    function sliderHeightChange() {
+        heightGauge.axes[0].pointers[0].value = heightSlider.value;
+        //(document.querySelectorAll('#height-svg')[0]).style.height = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 1.7 : 52)) + 'px';
+        (document.querySelector('.e-profile-height-label')).innerHTML = (heightSlider.value) + '<span>' + ' ' + currentHtUnit + '</span>';
+        (document.querySelector('.e-profile-height-label')).style.bottom = (document.querySelectorAll('#height-svg')[0]).style.height;
+        (document.querySelector('.e-profile-height-label')).style.left = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 0.1 : 3.5)) + 'px';
     }
 
     function onLocationChange() {
@@ -2668,11 +2818,15 @@ function Tab() {
     }
 
     function updateHeight() {
-
+        profileStats.heightMes = currentHtUnit.toLowerCase();
+        profileStats.height = heightGauge.axes[0].pointers[0].value;
+        cancelHeight();
     }
 
     function cancelHeight() {
-
+        if (document.querySelector('.e-modify-container') && !document.querySelector('.e-modify-container').classList.contains('e-hidden')) {
+            document.querySelector('.e-modify-container').classList.add('e-hidden');
+        }
     }
 
     function updateWeight() {
@@ -2688,7 +2842,54 @@ function Tab() {
     }
 
     function sliderChange() {
+       
+    }
+    function sliderHeightChange() {
 
+    }
+   
+    function profileDialogOpen(args) {
+        profileDialogInstance = this;
+        let heightbtns = document.getElementsByClassName("e-height-change-btn");
+        for (var i = 0; i < heightbtns.length; i++) {
+            heightbtns[i].addEventListener("click", changeHeight);
+        }
+        let weightbtns = document.getElementsByClassName("e-weight-change-btn");
+        for (var i = 0; i < weightbtns.length; i++) {
+            weightbtns[i].addEventListener("click", changeWeight);
+        }
+        let changeGoalbtns = document.getElementsByClassName("e-goal-change-btn");
+        for (var i = 0; i < changeGoalbtns.length; i++) {
+            changeGoalbtns[i].addEventListener("click", changeGoal);
+        }
+        let updateHeightbtns = document.getElementsByClassName("e-update-height");
+        for (var i = 0; i < updateHeightbtns.length; i++) {
+            updateHeightbtns[i].addEventListener("click", updateHeight);
+        }
+    }
+
+    function profileDialogBeforeOpen() {
+        ////changeWeight();
+       
+    }
+
+    function profileDialogClose() {
+        let heightbtns = document.getElementsByClassName("e-height-change-btn");
+        for (var i = 0; i < heightbtns.length; i++) {
+            heightbtns[i].removeEventListener("click", changeHeight);
+        }
+        let weightbtns = document.getElementsByClassName("e-weight-change-btn");
+        for (var i = 0; i < weightbtns.length; i++) {
+            weightbtns[i].removeEventListener("click", changeWeight);
+        }
+        let changeGoalbtns = document.getElementsByClassName("e-goal-change-btn");
+        for (var i = 0; i < changeGoalbtns.length; i++) {
+            changeGoalbtns[i].removeEventListener("click", changeGoal);
+        }
+        let updateHeightbtns = document.getElementsByClassName("e-update-height");
+        for (var i = 0; i < updateHeightbtns.length; i++) {
+            updateHeightbtns[i].removeEventListener("click", updateHeight);
+        }
     }
     let menudialogInstance;
     function dialogOpen() {
@@ -2759,11 +2960,17 @@ function Tab() {
                     weightGaugeRanges={weightGaugeRanges}
                     weightGaugePointers={weightGaugePointers}
                     weightGaugeAnnotaions={weightGaugeAnnotaions}
+                    weightSliderLimit={weightSliderLimit}
+                    heightSliderLimit={heightSliderLimit}
                     sliderChange={sliderChange}
+                    sliderHeightChange={sliderHeightChange}
                     heightGaugeAxes={heightGaugeAxes}
                     heightGaugeAnnotation={heightGaugeAnnotation}
                     modifyHeaderTitle={modifyHeaderTitle}
-                   >
+                    profileDialogOpen={profileDialogOpen}
+                    profileDialogClose={profileDialogClose}
+                    profileDialogBeforeOpen={profileDialogBeforeOpen}
+                >
                 </ProfileDialog>
                 <Activities isSmallDevice={state.isSmallDevice}
                     maxDate={maxDate}
