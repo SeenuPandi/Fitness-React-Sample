@@ -31,7 +31,7 @@ let pieData = [];
 function Tab() {
     let innerWidth = window.innerWidth;
     let x;
-    let profileStats = { name: 'John Watson', age: 24, location: 'India', weight: 70, height: 165, goal: 65, email: 'john.watson@gmail.com', weightMes: 'kg', goalMes: 'kg', heightMes: 'cm' };
+    
     let countStartDate;
     let countDownDate;
     let fastStartTime;
@@ -57,6 +57,8 @@ function Tab() {
     var burnedCalories = 0;
     var todaysWorkoutPercent = 80;
     var theme = 'Tailwind';
+    let profileStats = { name: 'John Watson', age: 24, location: 'India', weight: 70, height: 165, goal: 65, email: 'john.watson@gmail.com', weightMes: 'kg', goalMes: 'kg', heightMes: 'cm' };
+    let weightGaugeBackground = '#FFF7EC';
     let gauge;
     let dlgButtons = [{ click: menuCancelBtnClick.bind(this), buttonModel: { content: 'CANCEL', cssClass: 'e-menu-cancel' } }, { click: menuDlgBtnClick.bind(this), buttonModel: { content: 'ADD MENU', cssClass: 'e-menu-add' } }];
     let profiledlgButtons = [{ click: profileDialogCancelBtnClick.bind(this), buttonModel: { content: 'CANCEL', cssClass: 'e-menu-cancel' } }, { click: profileDialogBtnClick.bind(this), buttonModel: { content: 'UPDATE PROFILE', cssClass: 'e-menu-add' } }];
@@ -96,6 +98,7 @@ function Tab() {
         { item: 'Chicken Curry', cal: 243, fat: 11, carbs: 7.5, proteins: 28, sodium: 0.073, iron: 0.0008, calcium: 0.023 }
     ];
     let isDevice = Browser.isDevice;
+    
     let waterGaugeAnnotation = isDevice ? [
         {
             content:
@@ -511,6 +514,8 @@ function Tab() {
         currentLunchMenu: currentLunchMenu,
         currentDinnerMenu: currentDinnerMenu,
         profileStats : profileStats,
+        weightGaugeBackground : weightGaugeBackground,
+        theme : theme,
         hidden: false,
         profileHidden: false,
     });
@@ -2636,7 +2641,13 @@ function Tab() {
 
     function updateWeightGauge(isGoal) {
         currentWtUnit = isGoal ? state.profileStats.goalMes.toUpperCase() : state.profileStats.weightMes.toUpperCase();
-        let value = isGoal ? state.profileStats.goal : state.profileStats.weight;
+        let goalValuearray = [];
+        let weightValuearray = [];
+        let goalvalue =document.getElementById('profile-value-goal').innerText;
+        goalValuearray=goalvalue.split(' ');
+        let weightValue = document.getElementById('profile-value-weight').innerText;
+        weightValuearray=weightValue.split(' ');
+        let value = isGoal ? goalValuearray[0] : weightValuearray[0] ;
         weightGauge.axes[0].maximum = currentWtUnit === 'KG' ? 150 : 330;
         weightSlider.max = currentWtUnit === 'KG' ? 150 : 330;
         weightGauge.axes[0].annotations[0].content = '<div class="e-weight-gauge-annotation">' + value + currentWtUnit + '</div>';
@@ -2707,18 +2718,22 @@ function Tab() {
 
     function updateHeightGauge() {
         currentHtUnit = state.profileStats.heightMes.toUpperCase();
+        let heightValuearray = [];
+        let heightValue = document.getElementById('profile-value-height').innerText;
+        heightValuearray=heightValue.split(' ');
+        let value = heightValuearray[0] ;
         heightGauge.axes[0].maximum = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.max = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.limits.minStart = currentHtUnit === 'CM' ? 30 : 1;
         heightSlider.step = currentHtUnit === 'CM' ? 1 : 0.1;
         heightSlider.ticks.format = currentHtUnit === 'CM' ? 'N0' : '#.00';
-        heightSlider.value = state.profileStats.height;
-        heightGauge.annotations[0].axisValue = state.profileStats.height;
-        heightGauge.annotations[0].content = '<div class="e-height-gauge-annotation">' + state.profileStats.height + currentHtUnit + '</div>';
-        heightGauge.axes[0].pointers[0].value = state.profileStats.height;
+        heightSlider.value = value;
+        heightGauge.annotations[0].axisValue = value;
+        heightGauge.annotations[0].content = '<div class="e-height-gauge-annotation">' + value + currentHtUnit + '</div>';
+        heightGauge.axes[0].pointers[0].value = value;
         heightGauge.axes[0].majorTicks.interval = currentHtUnit === 'CM' ? 20 : 1;
         heightGauge.axes[0].minorTicks.interval = currentHtUnit === 'CM' ? 5 : 0.1;
-        (document.querySelectorAll('#height-svg')[0]).style.height = (state.profileStats.height * (currentHtUnit === 'CM' ? 1.7 : 52)) + 'px';
+        (document.querySelectorAll('#height-svg')[0]).style.height = (value * (currentHtUnit === 'CM' ? 1.7 : 52)) + 'px';
     }
 
     function sliderHeightChange() {
@@ -2736,11 +2751,10 @@ function Tab() {
     function onEmailChange(args) {
         profileStats.email = args.value;
     }
-
-    function changeHandler() {
-
+    let  currentTheme;
+    function changeHandler(args) {
+        currentTheme = args.value;
     }
-
     function updateHeight() {
         profileStats.heightMes = currentHtUnit.toLowerCase();
         profileStats.height = heightGauge.axes[0].pointers[0].value;
@@ -2758,7 +2772,7 @@ function Tab() {
         if (isGoalEdit) {
             profileStats.goalMes = currentWtUnit.toLowerCase();
             profileStats.goal = weightGauge.axes[0].pointers[0].value;
-            document.getElementById('textbox_2').value = profileStats.goal + ' ' + profileStats.goal;
+            document.getElementById('textbox_2').value = profileStats.goal + ' ' + profileStats.goalMes;
         } else {
             profileStats.weightMes = currentWtUnit.toLowerCase();
             profileStats.weight = weightGauge.axes[0].pointers[0].value;
@@ -2813,17 +2827,14 @@ function Tab() {
         for (var i = 0; i < updateHeightCancelbtns.length; i++) {
             updateHeightCancelbtns[i].addEventListener("click", cancelHeight);
         }
-
         let changeButton = document.querySelectorAll(".e-weight-modify-btn-group #KG,.e-weight-modify-btn-group #LB");
         for (var i = 0; i < changeButton.length; i++) {
             changeButton[i].addEventListener("propertychange", handleChange);
         }
-
         let profileCloseBtn = document.getElementsByClassName("e-profile-back");
         for (var i = 0; i < profileCloseBtn.length; i++) {
             profileCloseBtn[i].addEventListener("click", closeEditDialog);
         }
-
         let minusbtns = document.getElementsByClassName("e-age-minus icon-minus");
         for (var i = 0; i < minusbtns.length; i++) {
             minusbtns[i].addEventListener("click", ageMinusClick);
@@ -2832,11 +2843,17 @@ function Tab() {
         for (var i = 0; i < plusbtns.length; i++) {
             plusbtns[i].addEventListener("click", agePlusClick);
         }
-        
         args.preventFocus = true;
         currentWtUnit = '';
-        weightSlider.value = state.profileStats.weight;
-        heightSlider.value = state.profileStats.height;
+        if (!document.body.classList.contains('e-dark')) {
+            weightGauge.axes[0].background =  '#FFF7EC';
+            document.getElementsByClassName("e-age-plus icon-plus")
+        }
+        else {
+            weightGauge.axes[0].background = '#414255';
+        }
+        weightSlider.value = document.getElementById('profile-value-weight').innerText;
+        heightSlider.value = document.getElementById('profile-value-height').innerText;
         updateWeightGauge(false);
         sliderChange();
         weightGauge.refresh();
@@ -2850,6 +2867,9 @@ function Tab() {
         if (document.querySelector('.e-height-text') && document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-height-text').classList.remove('e-edit-color');
         }
+        document.getElementById('textbox_1').value = document.getElementById('profile-value-weight').innerText;
+        document.getElementById('textbox_2').value = document.getElementById('profile-value-goal').innerText;
+        document.getElementById('textbox_3').value = document.getElementById('profile-value-height').innerText;
     }
 
     function closeEditDialog() {
@@ -2857,13 +2877,72 @@ function Tab() {
     }
 
     function profileDialogBtnClick() {
+        let findlink = document.getElementById("appcssid");
+        if (currentTheme === 'Light') {
+          findlink.href = "https://cdn.syncfusion.com/ej2/20.2.45/tailwind.css";
+          if (document.body.classList.contains('e-dark')) {
+            document.body.classList.remove('e-dark');
+          }
+          theme = 'Tailwind';
+          weightGaugeBackground = '#FFF7EC';
+        //   heightGauge.refresh();
+        //   weightGauge.refresh();
+          // this.circulargauge.refresh();
+        //   if(document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0]) {
+        //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].theme = 'Tailwind';
+        //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].refresh();
+        //   }
+        //   if (document.getElementsByClassName('e-fasting-chart')[0]) {
+        //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].theme = 'Tailwind';
+        //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
+        //   }
+        //   if (document.getElementById('piecontainer').ej2_instances[0]) {
+        //     document.getElementById('piecontainer').ej2_instances[0].theme = 'Tailwind';
+        //     document.getElementById('piecontainer').ej2_instances[0].refresh();
+        //   }
+        } else if (currentTheme === 'Dark') {
+          findlink.href = "https://cdn.syncfusion.com/ej2/20.2.45/tailwind-dark.css";
+          if (!document.body.classList.contains('e-dark')) {
+            document.body.classList.add('e-dark');
+          }
+          theme = 'TailwindDark';
+          weightGaugeBackground = '#414255';
+            // heightGauge.refresh();
+            // weightGauge.refresh();
+        //   if(document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0]) {
+        //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].theme = 'TailwindDark';
+        //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].refresh();
+        //   }
+        //   if (document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0]) {
+        //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].theme = 'TailwindDark';
+        //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
+        //   }
+        // if (document.getElementById('piecontainer').ej2_instances[0]) {
+        //     //document.getElementById('piecontainer').ej2_instances[0].series[0].dataLabel.font.color = '#303343';
+        // //     document.getElementById('piecontainer').ej2_instances[0].theme = 'TailwindDark';
+        // //     document.getElementById('piecontainer').ej2_instances[0].refresh();
+        //  }
+          
+        }
+       
+        console.log("Brfore state");
+        console.log(state.weightGaugeBackground);
+        console.log(state.profileStats);
+        console.log(state.theme);
+
         profileDialogCancelBtnClick();
         setState(prevState => {
             return {
                 ...prevState,
-                profileStats : profileStats
+                profileStats : profileStats,
+                theme : theme,
+                weightGaugeBackground : weightGaugeBackground
             }
         })
+        console.log("set state");
+        console.log(state.weightGaugeBackground);
+        console.log(state.profileStats);
+        console.log(state.theme);
     }
 
     function profileDialogCancelBtnClick() {
@@ -2981,6 +3060,7 @@ function Tab() {
         return (
             <React.Suspense fallback="Loading">
                 <ProfileDialog hidden={state.profileHidden}
+                    theme = {state.theme}
                     profileStats={state.profileStats}
                     name={state.profileStats.name}
                     onNameChange={onNameChange}
@@ -3007,9 +3087,11 @@ function Tab() {
                     profileDialogClose={profileDialogClose}
                     profileDialogBeforeOpen={profileDialogBeforeOpen}
                     profiledlgButtons={profiledlgButtons}
+                    weightGaugeBackground={state.weightGaugeBackground}
                 >
                 </ProfileDialog>
                 <Activities isSmallDevice={state.isSmallDevice}
+                    theme = {state.theme}
                     maxDate={maxDate}
                     datePickerDate={state.datePickerDate}
                     datePickerWidth={datePickerWidth}
@@ -3052,6 +3134,7 @@ function Tab() {
                     dialogClose={dialogClose} />
                 <Diet isSmallDevice={state.isSmallDevice}
                     pieData={state.pieData}
+                    theme = {state.theme}
                     isToday={isToday}
                     editMenu={editMenu}
                     isBreakFastMenuAdded={state.isBreakFastMenuAdded}
@@ -3112,6 +3195,7 @@ function Tab() {
                 >
                 </FastingDialog>
                 <Fasting isSmallDevice={state.isSmallDevice}
+                    theme = {state.theme}
                     consumedWaterCount={state.consumedWaterCount}
                     consumedWaterAmount={state.consumedWaterAmount} todayActivitiemenu
                     expectedWaterAmount={state.expectedWaterAmount}

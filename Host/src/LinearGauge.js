@@ -3,7 +3,6 @@ import { Browser } from '@syncfusion/ej2-base';
 import { LinearGaugeComponent, Inject, Gradient } from '@syncfusion/ej2-react-lineargauge';
 
 function LinearGauge(props) {
-    let theme = 'Tailwind';
     let orientation = 'Vertical';
     let heightGaugeContainer = {
         width: 80,
@@ -23,7 +22,7 @@ function LinearGauge(props) {
         axes={props.heightGaugeAxes}
         width="100px"
         height="400px"
-        theme={theme}>
+        theme={props.theme}>
         <Inject services={[Gradient]} />
         </LinearGaugeComponent>
     )

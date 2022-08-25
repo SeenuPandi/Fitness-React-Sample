@@ -11,7 +11,6 @@ const Profile = React.lazy(() =>
 )
 
 function Activities(props) {
-    var theme = 'Tailwind';
     let chartArea = {
         border: {
             width: 0,
@@ -160,7 +159,7 @@ function Activities(props) {
                                     primaryYAxis={primaryYAxis}
                                     height={activityChartHeight}
                                     legendSettings={legendSettings}
-                                    theme={theme}
+                                    theme={props.theme}
                                     tooltip={tooltip}
                                     crosshair={crosshair}
                                     legendClick={props.legendClick}

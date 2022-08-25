@@ -24,7 +24,6 @@ function Diet(props) {
         shapeHeight: 20, shapeWidth: 20
     };
     let pieTooltip = { enable: true };
-    let theme = 'Tailwind';
     let pieChartWidth = '100%';
     let pieChartHeight = isDevice ? '80%' : '80%';
     let center = isDevice ? { x: '50%', y: '50%' } : { x: '50%', y: '50%' };
@@ -264,7 +263,7 @@ function Diet(props) {
                                     <div className="e-diet-chart-panel-container e-panel-content">
                                         <div className="e-chart-parent-div">
                                             <div className="e-pie-chart-container">
-                                                <AccumulationChartComponent id='pie-chart' legendSettings={pieLegendSettings} tooltip={pieTooltip} theme={theme}
+                                                <AccumulationChartComponent id='piecontainer' legendSettings={pieLegendSettings} tooltip={pieTooltip} theme={props.theme}
                                                     height={pieChartHeight} width={pieChartWidth} center={center} textRender={onTextRender}
                                                     enableSmartLabels="true">
                                                     <Inject services={[AccumulationLegend, PieSeries, AccumulationTooltip, AccumulationDataLabel]} />

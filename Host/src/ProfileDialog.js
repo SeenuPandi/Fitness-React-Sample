@@ -1,15 +1,17 @@
 import React from "react";
 import { Browser } from '@syncfusion/ej2-base';
-import ProfilePicture from './assets/Profile/02.png';
 import LightHuman from './assets/Profile/LightHuman.svg';
+import ProfilePicture from './assets/Profile/02.png';
 import { DialogComponent } from '@syncfusion/ej2-react-popups';
 import { ButtonComponent, RadioButtonComponent } from '@syncfusion/ej2-react-buttons';
 import { TextBoxComponent, SliderComponent } from '@syncfusion/ej2-react-inputs';
 import { CircularGaugeComponent, AxesDirective, Gradient, AxisDirective, Inject, Annotations } from '@syncfusion/ej2-react-circulargauge';
 import LinearGauge from "./LinearGauge";
 function ProfileDialog(props) {
+    let weightGaugeBackground =  props.theme == 'Tailwind' ? '#FFF7EC' : '#414255';
+    // console.log("weightGaugeBackground");
+    // console.log(weightGaugeBackground);
     let animationSettings = { effect: 'Zoom' };
-    let theme = 'Tailwind';
     let target = 'body';
     let isDevice = Browser.isDevice;
     let editDialogWidth = isDevice ? '100%' : '1000px';
@@ -30,7 +32,7 @@ function ProfileDialog(props) {
     let weightGaugeLineStyle = {
         width: 0
     };
-    let weightGaugeBackground = '#FFF7EC';
+    
     let weightGaugeStartAngle = 210;
     let weightGaugeEndangle = 150;
     let weightGaugeMinimum = 0;
@@ -135,6 +137,11 @@ function ProfileDialog(props) {
     let heightSliderMax = 200;
     let orientation = 'Vertical';
 
+    function weightGaugeLoaded() {
+        // console.log("weightGaugeLoaded")
+        // console.log(this.axes[0].background);
+    }
+
     function profileHeader() {
         return (
             <div className="e-profile-edit-icon-container">
@@ -231,15 +238,17 @@ function ProfileDialog(props) {
                             <input type="radio" id="FT" name="modifyunit" value="FT" onChange={props.handleChange} />
                             <label className="e-btn">FT</label>
                         </div>
+
                         <div className="e-weight-gauge-container">
                             <CircularGaugeComponent
                                 id='weightgauge'
                                 style={{ display: 'block' }}
-                                theme={theme}
+                                theme={props.theme}
                                 width='100%'
                                 height='300px'
                                 centerX={weightGaugeCenterX}
                                 centerY={weightGaugeCenterY}
+                                loaded={weightGaugeLoaded}
                             >
                                 <Inject services={[Annotations, Gradient]} />
                                 <AxesDirective>
@@ -286,7 +295,7 @@ function ProfileDialog(props) {
                                     <img id="height-svg" src={LightHuman} alt="Height" />
                                 </div>
                                 <LinearGauge heightGaugeAxes={heightGaugeAxes}
-                                    heightGaugeAnnotation={heightGaugeAnnotation}></LinearGauge>
+                                    heightGaugeAnnotation={heightGaugeAnnotation} theme={props.theme}></LinearGauge>
                                 <div className="slider-container" style={{height: "390px", width: "50px", marginTop: "5px"}}>
                                 <SliderComponent id="heightrange"
                                 value={props.profileStats.height}
