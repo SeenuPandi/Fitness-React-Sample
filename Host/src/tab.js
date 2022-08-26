@@ -2194,7 +2194,7 @@ function Tab() {
                     pieData: pieData
                 }
             })
-            if(masterDataExsist) {
+            if (masterDataExsist) {
                 masterData[masterIndex].diet.breakFastMenu = currentBreakFastMenu;
                 masterData[masterIndex].diet.breakFastText = currentBreakFastMenuText;
                 masterData[masterIndex].diet.breakFastCalories = currentBreakFastCalories;
@@ -2260,7 +2260,7 @@ function Tab() {
                     pieData: pieData
                 }
             })
-            if(masterDataExsist) {
+            if (masterDataExsist) {
                 masterData[masterIndex].diet.snack1Menu = currentSnack1Menu;
                 masterData[masterIndex].diet.snack1Text = currentSnack1MenuText;
                 masterData[masterIndex].diet.snack1Calories = currentSnack1Calories;
@@ -2326,7 +2326,7 @@ function Tab() {
                     pieData: pieData
                 }
             })
-            if(masterDataExsist) {
+            if (masterDataExsist) {
                 masterData[masterIndex].diet.lunchMenu = currentLunchMenu;
                 masterData[masterIndex].diet.lunchText = currentLunchMenuText;
                 masterData[masterIndex].diet.lunchCalories = currentLunchCalories;
@@ -2392,7 +2392,7 @@ function Tab() {
                     pieData: pieData
                 }
             })
-            if(masterDataExsist) {
+            if (masterDataExsist) {
                 masterData[masterIndex].diet.snack2Menu = currentSnack2Menu;
                 masterData[masterIndex].diet.snack2Text = currentSnack2MenuText;
                 masterData[masterIndex].diet.snack2Calories = currentSnack2Calories;
@@ -2458,7 +2458,7 @@ function Tab() {
                     pieData: pieData
                 }
             })
-            if(masterDataExsist) {
+            if (masterDataExsist) {
                 masterData[masterIndex].diet.dinnerMenu = currentDinnerMenu;
                 masterData[masterIndex].diet.dinnerText = currentDinnerMenuText;
                 masterData[masterIndex].diet.dinnerCalories = currentDinnerCalories;
@@ -3147,15 +3147,25 @@ function Tab() {
 
     function profileTab() {
         return (
-            <div className="e-dashboardlayout-container e-profile-dashboardlayout-container">
-                <React.Suspense fallback="Loading">
-                    <Profile currentDate={state.datePickerDate}
-                        maxDate={maxDate}
-                        activities={state.todayActivities}
-                        profileStats={state.profileStats}
-                        onProfileEdit={onProfileEdit}
-                        onProfileDateChange={onProfileDateChange}></Profile>
-                </React.Suspense>
+            <div>
+                {state.isSmallDevice &&
+                    <div className="e-tab-header-mobile-icon-container">
+                        <div className="e-tab-header-icon-div">
+                            <span className="e-tab-header-icon icon-Logo"></span>
+                        </div>
+                        <div className="e-tab-title">GO<span>FIT</span></div>
+                    </div>}
+                {state.isSmallDevice && <div className="separator-div"></div>}
+                <div className="e-dashboardlayout-container e-profile-dashboardlayout-container">
+                    <React.Suspense fallback="Loading">
+                        <Profile currentDate={state.datePickerDate}
+                            maxDate={maxDate}
+                            activities={state.todayActivities}
+                            profileStats={state.profileStats}
+                            onProfileEdit={onProfileEdit}
+                            onProfileDateChange={onProfileDateChange}></Profile>
+                    </React.Suspense>
+                </div>
             </div>
         )
     }
@@ -3235,8 +3245,8 @@ function Tab() {
                     quantityMinusClick={quantityMinusClick}
                     onMenuCardSelect={onMenuCardSelect}
                     dialogOpen={dialogOpen}
-                    dialogClose={dialogClose} 
-                    dietOverLayCLick={dietOverLayCLick}/>
+                    dialogClose={dialogClose}
+                    dietOverLayCLick={dietOverLayCLick} />
                 <Diet isSmallDevice={state.isSmallDevice}
                     pieData={state.pieData}
                     theme={state.theme}
@@ -3332,14 +3342,16 @@ function Tab() {
     }
 
     return (
-        <TabComponent created={created} iconPosition='top' headerPlacement="headerPlacement" selecting={tabSelecting} selected={tabSelected}>
-            <TabItemsDirective>
-                <TabItemDirective header={headerText[0]} content={contentActivities}></TabItemDirective>
-                <TabItemDirective header={headerText[1]} content={dietTab}></TabItemDirective>
-                <TabItemDirective header={headerText[2]} content={fastingTab}></TabItemDirective>
-                {state.isSmallDevice && <TabItemDirective header={headerText[3]} content={profileTab}></TabItemDirective>}
-            </TabItemsDirective>
-        </TabComponent>
+        <div>
+            <TabComponent created={created} iconPosition='top' headerPlacement={headerPlacement} selecting={tabSelecting} selected={tabSelected}>
+                <TabItemsDirective>
+                    <TabItemDirective header={headerText[0]} content={contentActivities}></TabItemDirective>
+                    <TabItemDirective header={headerText[1]} content={dietTab}></TabItemDirective>
+                    <TabItemDirective header={headerText[2]} content={fastingTab}></TabItemDirective>
+                    {state.isSmallDevice && <TabItemDirective header={headerText[3]} content={profileTab}></TabItemDirective>}
+                </TabItemsDirective>
+            </TabComponent>
+        </div>
     );
 }
 
