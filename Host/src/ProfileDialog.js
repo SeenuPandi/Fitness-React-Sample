@@ -168,6 +168,7 @@ function ProfileDialog(props) {
             open={props.profileDialogOpen}
             beforeOpen={props.profileDialogBeforeOpen}
             close={props.profileDialogClose}
+            overlayClick= {props.profileOverLayCLick}
             showCloseIcon={false}>
             <div>
                 <div className="e-edit-dialog-container col-md-12 col-sm-12">
@@ -218,8 +219,8 @@ function ProfileDialog(props) {
                                 </div>
                                 <div className="e-profile-label">Theme</div>
                                 <div className="e-profile-value e-radio-container">
-                                    <RadioButtonComponent cssClass="e-light-radio" label="Light" name="dashboard-theme" value="Light" checked={true} change={props.changeHandler}></RadioButtonComponent>
-                                    <RadioButtonComponent cssClass="e-dark-radio" label="Dark" name="dashboard-theme" value="Dark" change={props.changeHandler}></RadioButtonComponent>
+                                    <RadioButtonComponent id="light-theme" cssClass="e-light-radio" label="Light" name="dashboard-theme" value="Light" checked={true} change={props.changeHandler}></RadioButtonComponent>
+                                    <RadioButtonComponent id="dark-theme" cssClass="e-dark-radio" label="Dark" name="dashboard-theme" value="Dark" change={props.changeHandler}></RadioButtonComponent>
                                 </div>
                             </div>
                         </div>

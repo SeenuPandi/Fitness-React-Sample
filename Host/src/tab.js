@@ -31,7 +31,7 @@ let pieData = [];
 function Tab() {
     let innerWidth = window.innerWidth;
     let x;
-    
+
     let countStartDate;
     let countDownDate;
     let fastStartTime;
@@ -98,7 +98,7 @@ function Tab() {
         { item: 'Chicken Curry', cal: 243, fat: 11, carbs: 7.5, proteins: 28, sodium: 0.073, iron: 0.0008, calcium: 0.023 }
     ];
     let isDevice = Browser.isDevice;
-    
+
     let waterGaugeAnnotation = isDevice ? [
         {
             content:
@@ -436,7 +436,7 @@ function Tab() {
             ],
         },
     ];
-    
+
 
     let modifyHeaderTitle = "Change Your Weight";
     let modifyBtnGroup = ['KG', 'LB'];
@@ -445,6 +445,8 @@ function Tab() {
     let heightSlider;
     let weightGauge;
     let weightSlider;
+    let lightRadio;
+    let darkRadio;
     var [state, setState] = useState({
         heartRate: Math.round(Math.random() * (100 - 70) + 70),
         steps: Math.round(Math.random() * (3000 - 1000) + 1000),
@@ -513,9 +515,9 @@ function Tab() {
         currentSnack2Menu: currentSnack2Menu,
         currentLunchMenu: currentLunchMenu,
         currentDinnerMenu: currentDinnerMenu,
-        profileStats : profileStats,
-        weightGaugeBackground : weightGaugeBackground,
-        theme : theme,
+        profileStats: profileStats,
+        weightGaugeBackground: weightGaugeBackground,
+        theme: theme,
         hidden: false,
         profileHidden: false,
     });
@@ -1996,7 +1998,10 @@ function Tab() {
         iconDiv.appendChild(iconSpan);
         let titleDiv = document.createElement('div');
         titleDiv.className = 'e-tab-title';
-        titleDiv.innerText = "GOFIT";
+        titleDiv.innerText = "GO";
+        let titleSpan = document.createElement('span');
+        titleSpan.innerText = "FIT";
+        titleDiv.appendChild(titleSpan);
         let containerDiv = document.createElement('div');
         containerDiv.className = 'e-tab-header-icon-container';
         containerDiv.appendChild(iconDiv);
@@ -2123,6 +2128,17 @@ function Tab() {
     }
 
     function menuDlgBtnClick() {
+        let data;
+        let masterDataExsist = false;
+        let masterIndex;
+        for (let i = 0; i < masterData.length; i++) {
+            if (masterData[i].date === state.currentDate.toLocaleDateString()) {
+                // data = masterData[i];
+                masterIndex = i;
+                masterDataExsist = true;
+            }
+        }
+        console.log(data);
         let isExist = false;
         let menuTimePicker = document.getElementById('quantity-datepicker').ej2_instances[0];
         let todayActivities = state.todayActivities;
@@ -2178,6 +2194,20 @@ function Tab() {
                     pieData: pieData
                 }
             })
+            if(masterDataExsist) {
+                masterData[masterIndex].diet.breakFastMenu = currentBreakFastMenu;
+                masterData[masterIndex].diet.breakFastText = currentBreakFastMenuText;
+                masterData[masterIndex].diet.breakFastCalories = currentBreakFastCalories;
+                masterData[masterIndex].diet.isBreakFastMenuAdded = isBreakFastMenuAdded;
+                masterData[masterIndex].diet.proteins = currentTotalProteins;
+                masterData[masterIndex].diet.fat = currentTotalFat;
+                masterData[masterIndex].diet.carbs = currentTotalCarbs;
+                masterData[masterIndex].diet.calcium = currentTotalCalcium;
+                masterData[masterIndex].diet.sodium = currentTotalSodium;
+                masterData[masterIndex].diet.iron = currentTotalIron;
+                masterData[masterIndex].diet.consumedCalories = consumedCalories;
+                masterData[masterIndex].diet.pieData = pieData
+            }
         } else if (state.currentAddedMenu === 'Snack 1') {
             currentSnack1Menu = [];
             currentSnack1Calories = 0;
@@ -2230,6 +2260,20 @@ function Tab() {
                     pieData: pieData
                 }
             })
+            if(masterDataExsist) {
+                masterData[masterIndex].diet.snack1Menu = currentSnack1Menu;
+                masterData[masterIndex].diet.snack1Text = currentSnack1MenuText;
+                masterData[masterIndex].diet.snack1Calories = currentSnack1Calories;
+                masterData[masterIndex].diet.isSnack1MenuAdded = isSnack1MenuAdded;
+                masterData[masterIndex].diet.proteins = currentTotalProteins;
+                masterData[masterIndex].diet.fat = currentTotalFat;
+                masterData[masterIndex].diet.carbs = currentTotalCarbs;
+                masterData[masterIndex].diet.calcium = currentTotalCalcium;
+                masterData[masterIndex].diet.sodium = currentTotalSodium;
+                masterData[masterIndex].diet.iron = currentTotalIron;
+                masterData[masterIndex].diet.consumedCalories = consumedCalories;
+                masterData[masterIndex].diet.pieData = pieData
+            }
         } else if (state.currentAddedMenu === 'Lunch') {
             currentLunchMenu = [];
             currentLunchCalories = 0;
@@ -2282,6 +2326,20 @@ function Tab() {
                     pieData: pieData
                 }
             })
+            if(masterDataExsist) {
+                masterData[masterIndex].diet.lunchMenu = currentLunchMenu;
+                masterData[masterIndex].diet.lunchText = currentLunchMenuText;
+                masterData[masterIndex].diet.lunchCalories = currentLunchCalories;
+                masterData[masterIndex].diet.isLunchAdded = isLunchMenuAdded;
+                masterData[masterIndex].diet.proteins = currentTotalProteins;
+                masterData[masterIndex].diet.fat = currentTotalFat;
+                masterData[masterIndex].diet.carbs = currentTotalCarbs;
+                masterData[masterIndex].diet.calcium = currentTotalCalcium;
+                masterData[masterIndex].diet.sodium = currentTotalSodium;
+                masterData[masterIndex].diet.iron = currentTotalIron;
+                masterData[masterIndex].diet.consumedCalories = consumedCalories;
+                masterData[masterIndex].diet.pieData = pieData
+            }
         } else if (state.currentAddedMenu === 'Snack 2') {
             currentSnack2Menu = [];
             currentSnack2Calories = 0;
@@ -2334,6 +2392,20 @@ function Tab() {
                     pieData: pieData
                 }
             })
+            if(masterDataExsist) {
+                masterData[masterIndex].diet.snack2Menu = currentSnack2Menu;
+                masterData[masterIndex].diet.snack2Text = currentSnack2MenuText;
+                masterData[masterIndex].diet.snack2Calories = currentSnack2Calories;
+                masterData[masterIndex].diet.isSnack2Added = isSnack2MenuAdded;
+                masterData[masterIndex].diet.proteins = currentTotalProteins;
+                masterData[masterIndex].diet.fat = currentTotalFat;
+                masterData[masterIndex].diet.carbs = currentTotalCarbs;
+                masterData[masterIndex].diet.calcium = currentTotalCalcium;
+                masterData[masterIndex].diet.sodium = currentTotalSodium;
+                masterData[masterIndex].diet.iron = currentTotalIron;
+                masterData[masterIndex].diet.consumedCalories = consumedCalories;
+                masterData[masterIndex].diet.pieData = pieData
+            }
         } else if (state.currentAddedMenu === 'Dinner') {
             currentDinnerMenu = [];
             currentDinnerCalories = 0;
@@ -2386,6 +2458,20 @@ function Tab() {
                     pieData: pieData
                 }
             })
+            if(masterDataExsist) {
+                masterData[masterIndex].diet.dinnerMenu = currentDinnerMenu;
+                masterData[masterIndex].diet.dinnerText = currentDinnerMenuText;
+                masterData[masterIndex].diet.dinnerCalories = currentDinnerCalories;
+                masterData[masterIndex].diet.isDinnerAdded = isDinnerMenuAdded;
+                masterData[masterIndex].diet.proteins = currentTotalProteins;
+                masterData[masterIndex].diet.fat = currentTotalFat;
+                masterData[masterIndex].diet.carbs = currentTotalCarbs;
+                masterData[masterIndex].diet.calcium = currentTotalCalcium;
+                masterData[masterIndex].diet.sodium = currentTotalSodium;
+                masterData[masterIndex].diet.iron = currentTotalIron;
+                masterData[masterIndex].diet.consumedCalories = consumedCalories;
+                masterData[masterIndex].diet.pieData = pieData
+            }
         }
     }
 
@@ -2503,10 +2589,16 @@ function Tab() {
     }
 
     function editMenu(args) {
+        let masterIndex;
+        for (let i = 0; i < masterData.length; i++) {
+            if (masterData[i].date === state.currentDate.toLocaleDateString()) {
+                masterIndex = i;
+            }
+        }
         if (args.currentTarget.classList.contains('e-breakfast-edit')) {
             currentMenuHeader = " Add Breakfast Menu";
             currentMenu = JSON.parse(JSON.stringify(breakfastMenu));
-            updateCurrentMenu(state.currentBreakFastMenu);
+            updateCurrentMenu(masterData[masterIndex].diet.breakFastMenu);
             currentRecom = breakFastRecom;
             currentAddedMenu = 'Breakfast';
         } else if (args.currentTarget.classList.contains('e-snack1-edit') || args.currentTarget.classList.contains('e-snack2-edit')) {
@@ -2515,22 +2607,22 @@ function Tab() {
             if (args.currentTarget.classList.contains('e-snack1-edit')) {
                 currentRecom = snack1Recom;
                 currentAddedMenu = 'Snack 1';
-                updateCurrentMenu(state.currentSnack1Menu);
+                updateCurrentMenu(masterData[masterIndex].diet.snack1Menu);
             } else {
                 currentRecom = snack2Recom;
                 currentAddedMenu = 'Snack 2';
-                updateCurrentMenu(state.currentSnack2Menu);
+                updateCurrentMenu(masterData[masterIndex].diet.snack2Menu);
             }
         } else if (args.currentTarget.classList.contains('e-lunch-edit')) {
             currentMenuHeader = "Add Lunch Menu";
             currentMenu = JSON.parse(JSON.stringify(lunchMenu));
-            updateCurrentMenu(state.currentLunchMenu);
+            updateCurrentMenu(masterData[masterIndex].diet.lunchMenu);
             currentRecom = lunchRecom;
             currentAddedMenu = 'Lunch';
         } else if (args.currentTarget.classList.contains('e-dinner-edit')) {
             currentMenuHeader = "Add Dinner Menu";
             currentMenu = JSON.parse(JSON.stringify(lunchMenu));
-            updateCurrentMenu(state.currentDinnerMenu);
+            updateCurrentMenu(masterData[masterIndex].diet.dinnerMenu);
             currentRecom = dinnerRecom;
             currentAddedMenu = 'Dinner';
         }
@@ -2546,7 +2638,7 @@ function Tab() {
                 currentAddedMenu: currentAddedMenu
             }
         })
-    } updateTotalCal
+    }
 
     function updateCurrentMenu(menu) {
         for (let i = 0; i < menu.length; i++) {
@@ -2585,7 +2677,6 @@ function Tab() {
         profileDialogInstance.element.getElementsByClassName('e-age-count')[0].innerText = profileStats.age;
     }
     let isGoalEdit = false;
-
     function changeWeight() {
         if (document.querySelector('.e-weight-text') && !document.querySelector('.e-weight-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-weight-text').classList.add('e-edit-color');
@@ -2643,11 +2734,11 @@ function Tab() {
         currentWtUnit = isGoal ? state.profileStats.goalMes.toUpperCase() : state.profileStats.weightMes.toUpperCase();
         let goalValuearray = [];
         let weightValuearray = [];
-        let goalvalue =document.getElementById('profile-value-goal').innerText;
-        goalValuearray=goalvalue.split(' ');
+        let goalvalue = document.getElementById('profile-value-goal').innerText;
+        goalValuearray = goalvalue.split(' ');
         let weightValue = document.getElementById('profile-value-weight').innerText;
-        weightValuearray=weightValue.split(' ');
-        let value = isGoal ? goalValuearray[0] : weightValuearray[0] ;
+        weightValuearray = weightValue.split(' ');
+        let value = isGoal ? goalValuearray[0] : weightValuearray[0];
         weightGauge.axes[0].maximum = currentWtUnit === 'KG' ? 150 : 330;
         weightSlider.max = currentWtUnit === 'KG' ? 150 : 330;
         weightGauge.axes[0].annotations[0].content = '<div class="e-weight-gauge-annotation">' + value + currentWtUnit + '</div>';
@@ -2720,8 +2811,8 @@ function Tab() {
         currentHtUnit = state.profileStats.heightMes.toUpperCase();
         let heightValuearray = [];
         let heightValue = document.getElementById('profile-value-height').innerText;
-        heightValuearray=heightValue.split(' ');
-        let value = heightValuearray[0] ;
+        heightValuearray = heightValue.split(' ');
+        let value = heightValuearray[0];
         heightGauge.axes[0].maximum = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.max = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.limits.minStart = currentHtUnit === 'CM' ? 30 : 1;
@@ -2751,7 +2842,7 @@ function Tab() {
     function onEmailChange(args) {
         profileStats.email = args.value;
     }
-    let  currentTheme;
+    let currentTheme;
     function changeHandler(args) {
         currentTheme = args.value;
     }
@@ -2846,7 +2937,7 @@ function Tab() {
         args.preventFocus = true;
         currentWtUnit = '';
         if (!document.body.classList.contains('e-dark')) {
-            weightGauge.axes[0].background =  '#FFF7EC';
+            weightGauge.axes[0].background = '#FFF7EC';
             document.getElementsByClassName("e-age-plus icon-plus")
         }
         else {
@@ -2879,52 +2970,52 @@ function Tab() {
     function profileDialogBtnClick() {
         let findlink = document.getElementById("appcssid");
         if (currentTheme === 'Light') {
-          findlink.href = "https://cdn.syncfusion.com/ej2/20.2.45/tailwind.css";
-          if (document.body.classList.contains('e-dark')) {
-            document.body.classList.remove('e-dark');
-          }
-          theme = 'Tailwind';
-          weightGaugeBackground = '#FFF7EC';
-        //   heightGauge.refresh();
-        //   weightGauge.refresh();
-          // this.circulargauge.refresh();
-        //   if(document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0]) {
-        //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].theme = 'Tailwind';
-        //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].refresh();
-        //   }
-        //   if (document.getElementsByClassName('e-fasting-chart')[0]) {
-        //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].theme = 'Tailwind';
-        //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
-        //   }
-        //   if (document.getElementById('piecontainer').ej2_instances[0]) {
-        //     document.getElementById('piecontainer').ej2_instances[0].theme = 'Tailwind';
-        //     document.getElementById('piecontainer').ej2_instances[0].refresh();
-        //   }
+            findlink.href = "https://cdn.syncfusion.com/ej2/20.2.45/tailwind.css";
+            if (document.body.classList.contains('e-dark')) {
+                document.body.classList.remove('e-dark');
+            }
+            theme = 'Tailwind';
+            weightGaugeBackground = '#FFF7EC';
+            //   heightGauge.refresh();
+            //   weightGauge.refresh();
+            // this.circulargauge.refresh();
+            //   if(document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0]) {
+            //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].theme = 'Tailwind';
+            //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].refresh();
+            //   }
+            //   if (document.getElementsByClassName('e-fasting-chart')[0]) {
+            //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].theme = 'Tailwind';
+            //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
+            //   }
+            //   if (document.getElementById('piecontainer').ej2_instances[0]) {
+            //     document.getElementById('piecontainer').ej2_instances[0].theme = 'Tailwind';
+            //     document.getElementById('piecontainer').ej2_instances[0].refresh();
+            //   }
         } else if (currentTheme === 'Dark') {
-          findlink.href = "https://cdn.syncfusion.com/ej2/20.2.45/tailwind-dark.css";
-          if (!document.body.classList.contains('e-dark')) {
-            document.body.classList.add('e-dark');
-          }
-          theme = 'TailwindDark';
-          weightGaugeBackground = '#414255';
+            findlink.href = "https://cdn.syncfusion.com/ej2/20.2.45/tailwind-dark.css";
+            if (!document.body.classList.contains('e-dark')) {
+                document.body.classList.add('e-dark');
+            }
+            theme = 'TailwindDark';
+            weightGaugeBackground = '#414255';
             // heightGauge.refresh();
             // weightGauge.refresh();
-        //   if(document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0]) {
-        //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].theme = 'TailwindDark';
-        //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].refresh();
-        //   }
-        //   if (document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0]) {
-        //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].theme = 'TailwindDark';
-        //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
-        //   }
-        // if (document.getElementById('piecontainer').ej2_instances[0]) {
-        //     //document.getElementById('piecontainer').ej2_instances[0].series[0].dataLabel.font.color = '#303343';
-        // //     document.getElementById('piecontainer').ej2_instances[0].theme = 'TailwindDark';
-        // //     document.getElementById('piecontainer').ej2_instances[0].refresh();
-        //  }
-          
+            //   if(document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0]) {
+            //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].theme = 'TailwindDark';
+            //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].refresh();
+            //   }
+            //   if (document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0]) {
+            //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].theme = 'TailwindDark';
+            //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
+            //   }
+            // if (document.getElementById('piecontainer').ej2_instances[0]) {
+            //     //document.getElementById('piecontainer').ej2_instances[0].series[0].dataLabel.font.color = '#303343';
+            // //     document.getElementById('piecontainer').ej2_instances[0].theme = 'TailwindDark';
+            // //     document.getElementById('piecontainer').ej2_instances[0].refresh();
+            //  }
+
         }
-       
+
         console.log("Brfore state");
         console.log(state.weightGaugeBackground);
         console.log(state.profileStats);
@@ -2934,9 +3025,9 @@ function Tab() {
         setState(prevState => {
             return {
                 ...prevState,
-                profileStats : profileStats,
-                theme : theme,
-                weightGaugeBackground : weightGaugeBackground
+                profileStats: profileStats,
+                theme: theme,
+                weightGaugeBackground: weightGaugeBackground
             }
         })
         console.log("set state");
@@ -2955,12 +3046,16 @@ function Tab() {
         heightSlider = document.getElementById('heightrange').ej2_instances[0];
         weightGauge = document.getElementById('weightgauge').ej2_instances[0];
         weightSlider = document.getElementById('weightrange').ej2_instances[0];
+        lightRadio = document.getElementById('light-theme').ej2_instances[0];
+        darkRadio = document.getElementById('dark-theme').ej2_instances[0];
         changeWeight();
         if (state.profileStats.weightMes.toUpperCase() === 'KG' && document.querySelector('.e-weight-modify-btn-group #KG')) {
             (document.querySelector('.e-weight-modify-btn-group #KG')).checked = true;
         } else if (document.querySelector('.e-weight-modify-btn-group #LB')) {
             (document.querySelector('.e-weight-modify-btn-group #LB')).checked = true;
         }
+        lightRadio.refresh();
+        darkRadio.refresh();
     }
 
     function profileDialogClose() {
@@ -3042,6 +3137,14 @@ function Tab() {
         }
     }
 
+    function profileOverLayCLick() {
+        this.hide();
+    }
+
+    function dietOverLayCLick() {
+        this.hide();
+    }
+
     function profileTab() {
         return (
             <div className="e-dashboardlayout-container e-profile-dashboardlayout-container">
@@ -3060,7 +3163,7 @@ function Tab() {
         return (
             <React.Suspense fallback="Loading">
                 <ProfileDialog hidden={state.profileHidden}
-                    theme = {state.theme}
+                    theme={state.theme}
                     profileStats={state.profileStats}
                     name={state.profileStats.name}
                     onNameChange={onNameChange}
@@ -3088,10 +3191,11 @@ function Tab() {
                     profileDialogBeforeOpen={profileDialogBeforeOpen}
                     profiledlgButtons={profiledlgButtons}
                     weightGaugeBackground={state.weightGaugeBackground}
+                    profileOverLayCLick={profileOverLayCLick}
                 >
                 </ProfileDialog>
                 <Activities isSmallDevice={state.isSmallDevice}
-                    theme = {state.theme}
+                    theme={state.theme}
                     maxDate={maxDate}
                     datePickerDate={state.datePickerDate}
                     datePickerWidth={datePickerWidth}
@@ -3131,10 +3235,11 @@ function Tab() {
                     quantityMinusClick={quantityMinusClick}
                     onMenuCardSelect={onMenuCardSelect}
                     dialogOpen={dialogOpen}
-                    dialogClose={dialogClose} />
+                    dialogClose={dialogClose} 
+                    dietOverLayCLick={dietOverLayCLick}/>
                 <Diet isSmallDevice={state.isSmallDevice}
                     pieData={state.pieData}
-                    theme = {state.theme}
+                    theme={state.theme}
                     isToday={isToday}
                     editMenu={editMenu}
                     isBreakFastMenuAdded={state.isBreakFastMenuAdded}
@@ -3195,7 +3300,7 @@ function Tab() {
                 >
                 </FastingDialog>
                 <Fasting isSmallDevice={state.isSmallDevice}
-                    theme = {state.theme}
+                    theme={state.theme}
                     consumedWaterCount={state.consumedWaterCount}
                     consumedWaterAmount={state.consumedWaterAmount} todayActivitiemenu
                     expectedWaterAmount={state.expectedWaterAmount}
