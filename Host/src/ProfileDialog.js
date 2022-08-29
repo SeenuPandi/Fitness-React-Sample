@@ -1,6 +1,7 @@
 import React from "react";
 import { Browser } from '@syncfusion/ej2-base';
 import LightHuman from './assets/Profile/LightHuman.svg';
+import DarkHuman from './assets/Profile/DarkHuman.svg';
 import ProfilePicture from './assets/Profile/02.png';
 import { DialogComponent } from '@syncfusion/ej2-react-popups';
 import { ButtonComponent, RadioButtonComponent } from '@syncfusion/ej2-react-buttons';
@@ -9,8 +10,7 @@ import { CircularGaugeComponent, AxesDirective, Gradient, AxisDirective, Inject,
 import LinearGauge from "./LinearGauge";
 function ProfileDialog(props) {
     let weightGaugeBackground =  props.theme == 'Tailwind' ? '#FFF7EC' : '#414255';
-    // console.log("weightGaugeBackground");
-    // console.log(weightGaugeBackground);
+    let humanImage = props.theme == 'Tailwind' ? LightHuman : DarkHuman;
     let animationSettings = { effect: 'Zoom' };
     let target = 'body';
     let isDevice = Browser.isDevice;
@@ -136,12 +136,6 @@ function ProfileDialog(props) {
     let heightSliderMin = 0;
     let heightSliderMax = 200;
     let orientation = 'Vertical';
-
-    function weightGaugeLoaded() {
-        // console.log("weightGaugeLoaded")
-        // console.log(this.axes[0].background);
-    }
-
     function profileHeader() {
         return (
             <div className="e-profile-edit-icon-container">
@@ -249,7 +243,6 @@ function ProfileDialog(props) {
                                 height='300px'
                                 centerX={weightGaugeCenterX}
                                 centerY={weightGaugeCenterY}
-                                loaded={weightGaugeLoaded}
                             >
                                 <Inject services={[Annotations, Gradient]} />
                                 <AxesDirective>
@@ -293,7 +286,7 @@ function ProfileDialog(props) {
                                 <div className="e-height-img-container">
                                     <div className="e-age-edit e-profile-height-label">{props.profileStats.height}
                                         <span>{props.profileStats.heightMes}</span></div>
-                                    <img id="height-svg" src={LightHuman} alt="Height" />
+                                    <img id="height-svg" src={humanImage} alt="Height" />
                                 </div>
                                 <LinearGauge heightGaugeAxes={heightGaugeAxes}
                                     heightGaugeAnnotation={heightGaugeAnnotation} theme={props.theme}></LinearGauge>

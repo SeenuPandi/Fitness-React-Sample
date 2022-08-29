@@ -9,9 +9,6 @@ const Profile = React.lazy(() =>
 
 function Diet(props) {
 
-    console.log("diet props");
-    console.log(props);
-
     let innerStyle = false;
     if (props.innerWidth < 450) {
         innerStyle = true;
@@ -51,14 +48,14 @@ function Diet(props) {
     }
     return (
         <div>
-            {props.isSmallDevice &&
+            {/* {props.isSmallDevice &&
                 <div className="e-tab-header-mobile-icon-container">
                     <div className="e-tab-header-icon-div">
                         <span className="e-tab-header-icon icon-Logo"></span>
                     </div>
                     <div className="e-tab-title">GO<span>FIT</span></div>
                 </div>}
-                {props.isSmallDevice && <div className="separator-div"></div>}
+                {props.isSmallDevice && <div className="separator-div"></div>} */}
                 <div className="e-dashboardlayout-container e-diet-dashboardlayout-container">
                     <div className="col-md-9 e-dashboard-content">
                         <div className="col-md-12 col-sm-12">

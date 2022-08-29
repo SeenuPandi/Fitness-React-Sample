@@ -3,6 +3,7 @@ import { Browser } from '@syncfusion/ej2-base';
 import FastingDialog from "./FastingDialog";
 import DietDialog from "./DietDialog";
 import ProfileDialog from "./ProfileDialog";
+import { showSpinner } from '@syncfusion/ej2-react-popups'
 import { TabComponent, TabItemDirective, TabItemsDirective } from '@syncfusion/ej2-react-navigations';
 
 const Activities = React.lazy(() =>
@@ -27,11 +28,11 @@ var getInitial = true;
 let activityChartWeekData = {};
 let activityChartMonthData = {};
 let pieData = [];
+let x;
 
 function Tab() {
     let innerWidth = window.innerWidth;
-    let x;
-
+    
     let countStartDate;
     let countDownDate;
     let fastStartTime;
@@ -1394,7 +1395,7 @@ function Tab() {
                 }
             })
         } else {
-            state.consumedCalories = 0;
+            consumedCalories = 0;
             isBreakFastMenuAdded = false;
             isSnack1MenuAdded = false;
             isLunchMenuAdded = false;
@@ -1504,6 +1505,7 @@ function Tab() {
         }
     }
     function endFasting() {
+       
         clearInterval(x);
         sliderValue = "Completed";
         changeTimeBtnText = "START FASTING";
@@ -2060,6 +2062,8 @@ function Tab() {
         clearInterval(x);
         x = setInterval(intervalFn, 1000);
         calculatingFastingStartEndTime();
+        console.log("circulargauge");
+        console.log(circulargauge);
         document.getElementsByClassName('e-add-fasting-dialog')[0].ej2_instances[0].hide();
         changeTimeBtnText = "CHANGE TIME";
         setState(prevState => {
@@ -2096,6 +2100,8 @@ function Tab() {
         let now = new Date();
         countStartDate = state.countStartDate;
         countDownDate = state.countDownDate;
+        // clearInterval(x);
+        // x = setInterval(intervalFn, 1000);
         let distance = now.getTime() - countStartDate.getTime();
         if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0 || (document.querySelector('.e-fast-completed') && document.querySelector('.e-fast-completed').innerText === 'Completed')) {
             if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
@@ -2128,7 +2134,6 @@ function Tab() {
     }
 
     function menuDlgBtnClick() {
-        let data;
         let masterDataExsist = false;
         let masterIndex;
         for (let i = 0; i < masterData.length; i++) {
@@ -2138,7 +2143,6 @@ function Tab() {
                 masterDataExsist = true;
             }
         }
-        console.log(data);
         let isExist = false;
         let menuTimePicker = document.getElementById('quantity-datepicker').ej2_instances[0];
         let todayActivities = state.todayActivities;
@@ -2397,6 +2401,7 @@ function Tab() {
                 masterData[masterIndex].diet.snack2Text = currentSnack2MenuText;
                 masterData[masterIndex].diet.snack2Calories = currentSnack2Calories;
                 masterData[masterIndex].diet.isSnack2Added = isSnack2MenuAdded;
+                masterData[masterIndex].diet.isSnack2MenuAdded = isSnack2MenuAdded;
                 masterData[masterIndex].diet.proteins = currentTotalProteins;
                 masterData[masterIndex].diet.fat = currentTotalFat;
                 masterData[masterIndex].diet.carbs = currentTotalCarbs;
@@ -2406,6 +2411,8 @@ function Tab() {
                 masterData[masterIndex].diet.consumedCalories = consumedCalories;
                 masterData[masterIndex].diet.pieData = pieData
             }
+            console.log("After loop master data");
+            console.log(masterData);
         } else if (state.currentAddedMenu === 'Dinner') {
             currentDinnerMenu = [];
             currentDinnerCalories = 0;
@@ -2473,6 +2480,8 @@ function Tab() {
                 masterData[masterIndex].diet.pieData = pieData
             }
         }
+        console.log("After loop master data");
+        console.log(masterData);
     }
 
     function addBtnClick(args) {
@@ -2549,7 +2558,7 @@ function Tab() {
             }
         }
         updateTotalCal();
-        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal;
+        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal + ' ' + 'kcal';
     }
 
     function updateTotalCal() {
@@ -2572,7 +2581,7 @@ function Tab() {
         }
         updateTotalCal();
         menudialogInstance.element.getElementsByClassName('e-quantity-count')[0].innerText = currentQuantity;
-        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal;
+        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal + ' ' + 'kcal';
     }
 
     function quantityMinusClick() {
@@ -2585,7 +2594,7 @@ function Tab() {
         }
         updateTotalCal();
         menudialogInstance.element.getElementsByClassName('e-quantity-count')[0].innerText = currentQuantity;
-        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal;
+        menudialogInstance.element.getElementsByClassName('e-quantity-total')[0].innerText = currentTotalCal + ' ' + 'kcal';
     }
 
     function editMenu(args) {
@@ -3016,11 +3025,6 @@ function Tab() {
 
         }
 
-        console.log("Brfore state");
-        console.log(state.weightGaugeBackground);
-        console.log(state.profileStats);
-        console.log(state.theme);
-
         profileDialogCancelBtnClick();
         setState(prevState => {
             return {
@@ -3030,10 +3034,6 @@ function Tab() {
                 weightGaugeBackground: weightGaugeBackground
             }
         })
-        console.log("set state");
-        console.log(state.weightGaugeBackground);
-        console.log(state.profileStats);
-        console.log(state.theme);
     }
 
     function profileDialogCancelBtnClick() {
@@ -3145,19 +3145,16 @@ function Tab() {
         this.hide();
     }
 
+    function spinnerShow() {
+        showSpinner();
+    }
+
     function profileTab() {
         return (
             <div>
-                {state.isSmallDevice &&
-                    <div className="e-tab-header-mobile-icon-container">
-                        <div className="e-tab-header-icon-div">
-                            <span className="e-tab-header-icon icon-Logo"></span>
-                        </div>
-                        <div className="e-tab-title">GO<span>FIT</span></div>
-                    </div>}
-                {state.isSmallDevice && <div className="separator-div"></div>}
+             
                 <div className="e-dashboardlayout-container e-profile-dashboardlayout-container">
-                    <React.Suspense fallback="Loading">
+                    <React.Suspense fallback={spinnerShow}>
                         <Profile currentDate={state.datePickerDate}
                             maxDate={maxDate}
                             activities={state.todayActivities}
@@ -3171,7 +3168,7 @@ function Tab() {
     }
     function contentActivities() {
         return (
-            <React.Suspense fallback="Loading">
+            <React.Suspense fallback={spinnerShow}>
                 <ProfileDialog hidden={state.profileHidden}
                     theme={state.theme}
                     profileStats={state.profileStats}
@@ -3232,7 +3229,7 @@ function Tab() {
     }
     function dietTab() {
         return (
-            <React.Suspense fallback="Loading">
+            <React.Suspense fallback={spinnerShow}>
                 <DietDialog currentMenuHeader={state.currentMenuHeader}
                     currentMenu={state.currentMenu}
                     dlgButtons={dlgButtons}
@@ -3297,7 +3294,7 @@ function Tab() {
 
     function fastingTab() {
         return (
-            <React.Suspense fallback="Loading">
+            <React.Suspense fallback={spinnerShow}>
                 <FastingDialog hidden={hidden}
                     countStartDate={state.countStartDate}
                     countDownDate={state.countDownDate}
@@ -3343,6 +3340,14 @@ function Tab() {
 
     return (
         <div>
+               {state.isSmallDevice &&
+                    <div className="e-tab-header-mobile-icon-container">
+                        <div className="e-tab-header-icon-div">
+                            <span className="e-tab-header-icon icon-Logo"></span>
+                        </div>
+                        <div className="e-tab-title">GO<span>FIT</span></div>
+                    </div>}
+                {state.isSmallDevice && <div className="separator-div"></div>}
             <TabComponent created={created} iconPosition='top' headerPlacement={headerPlacement} selecting={tabSelecting} selected={tabSelected}>
                 <TabItemsDirective>
                     <TabItemDirective header={headerText[0]} content={contentActivities}></TabItemDirective>

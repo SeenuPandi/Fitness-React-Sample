@@ -10,14 +10,14 @@ const Profile = React.lazy(() =>
 function Fasting(props) {
     return (
         <div>
-            {props.isSmallDevice &&
+            {/* {props.isSmallDevice &&
                 <div className="e-tab-header-mobile-icon-container">
                     <div className="e-tab-header-icon-div">
                         <span className="e-tab-header-icon icon-Logo"></span>
                     </div>
                     <div className="e-tab-title">GO<span>FIT</span></div>
                 </div>}
-            {props.isSmallDevice && <div className="separator-div"></div>}
+            {props.isSmallDevice && <div className="separator-div"></div>} */}
             <div className="e-dashboardlayout-container e-fasting-dashboardlayout-container">
                 <div className="col-md-9 e-fasting-gauge-container  e-dashboard-content">
                     <div className="e-fasting-header">Fasting</div>
