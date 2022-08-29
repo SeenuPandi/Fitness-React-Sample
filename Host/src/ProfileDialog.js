@@ -9,7 +9,7 @@ import { TextBoxComponent, SliderComponent } from '@syncfusion/ej2-react-inputs'
 import { CircularGaugeComponent, AxesDirective, Gradient, AxisDirective, Inject, Annotations } from '@syncfusion/ej2-react-circulargauge';
 import LinearGauge from "./LinearGauge";
 function ProfileDialog(props) {
-    let weightGaugeBackground =  props.theme == 'Tailwind' ? '#FFF7EC' : '#414255';
+    let weightGaugeBackground = props.theme == 'Tailwind' ? '#FFF7EC' : '#414255';
     let humanImage = props.theme == 'Tailwind' ? LightHuman : DarkHuman;
     let animationSettings = { effect: 'Zoom' };
     let target = 'body';
@@ -32,7 +32,7 @@ function ProfileDialog(props) {
     let weightGaugeLineStyle = {
         width: 0
     };
-    
+
     let weightGaugeStartAngle = 210;
     let weightGaugeEndangle = 150;
     let weightGaugeMinimum = 0;
@@ -129,10 +129,6 @@ function ProfileDialog(props) {
     let mintype = 'MinRange';
     let weightSliderMin = 0;
     let weightSliderMax = 120;
-    // let currentWtUnit = 'KG';
-    // let currentHtUnit = 'CM';
-    // let weightSliderLimit = { enabled: true, minStart: currentWtUnit === 'KG' ? 10 : 20 };
-    // let heightSliderLimit = { enabled: true, minStart: currentHtUnit === 'CM' ? 30 : 1 };
     let heightSliderMin = 0;
     let heightSliderMax = 200;
     let orientation = 'Vertical';
@@ -144,11 +140,11 @@ function ProfileDialog(props) {
     function profileHeader() {
         return (
             <div className="e-profile-edit-icon-container">
-            <div className="e-profile-edit-icon-div">
-              <span className="e-profile-edit-icon icon-Logo"></span>
+                <div className="e-profile-edit-icon-div">
+                    <span className="e-profile-edit-icon icon-Logo"></span>
+                </div>
+                <div className="e-profile-edit-title">GO<span>FIT</span></div>
             </div>
-            <div className="e-profile-edit-title">GO<span>FIT</span></div>
-          </div>
         )
     }
 
@@ -167,7 +163,7 @@ function ProfileDialog(props) {
             open={props.profileDialogOpen}
             beforeOpen={props.profileDialogBeforeOpen}
             close={props.profileDialogClose}
-            overlayClick= {props.profileOverLayCLick}
+            overlayClick={props.profileOverLayCLick}
             showCloseIcon={false}>
             <div>
                 <div className="e-edit-dialog-container col-md-12 col-sm-12">
@@ -227,22 +223,13 @@ function ProfileDialog(props) {
                     <div className="e-modify-container col-md-6 col-sm-6">
                         <div className="e-modify-title">{props.modifyHeaderTitle}</div>
                         <div className='e-weight-modify-btn-group e-btn-group e-outline'>
-                        <ButtonComponent cssClass="e-custom" className="e-input-kg-btn">KG</ButtonComponent>
-                        <ButtonComponent className="e-input-lb-btn">LB</ButtonComponent>
-                            {/* <input className="input-kg" type="radio" id="KG" name="modifyunit" value="KG" checked={true} onChange={handleChange} />
-                            <label className="e-btn" >KG</label>
-                            <input className="input-lb" type="radio" id="LB" name="modifyunit" value="LB" onChange={handleChange} />
-                            <label className="e-btn" >LB</label> */}
+                            <ButtonComponent cssClass="e-custom" className="e-input-kg-btn">KG</ButtonComponent>
+                            <ButtonComponent className="e-input-lb-btn">LB</ButtonComponent>
                         </div>
                         <div className='e-height-modify-btn-group e-btn-group e-outline e-hidden'>
-                        <ButtonComponent cssClass="e-custom" className="e-input-cm-btn"><span>CM</span></ButtonComponent>
-                        <ButtonComponent className="e-input-ft-btn"><span>FT</span></ButtonComponent>
-                            {/* <input type="radio" id="CM" name="modifyunit" value="CM" checked={true} onChange={handleChange} />
-                            <label className="e-btn">CM</label>
-                            <input type="radio" id="FT" name="modifyunit" value="FT" onChange={handleChange} />
-                            <label className="e-btn">FT</label> */}
+                            <ButtonComponent cssClass="e-custom" className="e-input-cm-btn"><span>CM</span></ButtonComponent>
+                            <ButtonComponent className="e-input-ft-btn"><span>FT</span></ButtonComponent>
                         </div>
-
                         <div className="e-weight-gauge-container">
                             <CircularGaugeComponent
                                 id='weightgauge'
@@ -272,7 +259,7 @@ function ProfileDialog(props) {
                                 </AxesDirective>
                             </CircularGaugeComponent>
                             <div className="slider-container" >
-                                <SliderComponent id="weightrange" 
+                                <SliderComponent id="weightrange"
                                     value={props.profileStats.weight}
                                     type={mintype}
                                     width="50%"
@@ -299,19 +286,19 @@ function ProfileDialog(props) {
                                 </div>
                                 <LinearGauge heightGaugeAxes={heightGaugeAxes}
                                     heightGaugeAnnotation={heightGaugeAnnotation} theme={props.theme}></LinearGauge>
-                                <div className="slider-container" style={{height: "390px", width: "50px", marginTop: "5px"}}>
-                                <SliderComponent id="heightrange"
-                                value={props.profileStats.height}
-                                    type={mintype}
-                                    width='100px'
-                                    height='300px'
-                                    min={heightSliderMin}
-                                    max={heightSliderMax}
-                                    orientation={orientation}
-                                    change={props.sliderHeightChange}
-                                    cssClass="height-slider-container"
-                                    limits={props.heightSliderLimit}>
-                                </SliderComponent>
+                                <div className="slider-container" style={{ height: "390px", width: "50px", marginTop: "5px" }}>
+                                    <SliderComponent id="heightrange"
+                                        value={props.profileStats.height}
+                                        type={mintype}
+                                        width='100px'
+                                        height='300px'
+                                        min={heightSliderMin}
+                                        max={heightSliderMax}
+                                        orientation={orientation}
+                                        change={props.sliderHeightChange}
+                                        cssClass="height-slider-container"
+                                        limits={props.heightSliderLimit}>
+                                    </SliderComponent>
                                 </div>
                             </div>
                             <div className="e-add-height">

@@ -61,22 +61,13 @@ function Activities(props) {
     };
     let crosshair = { enable: true, lineType: 'Vertical', dashArray: "10,5", line: { color: '#EE4769' } };
     let marker = { visible: true, height: 10, width: 10 };
-    
+
     let gridInstance;
     let dropDownInstance;
     let chartInstance;
 
 
     return (
-        <div>
-        {/* {props.isSmallDevice && 
-        <div  className="e-tab-header-mobile-icon-container">
-        <div className="e-tab-header-icon-div">
-          <span className="e-tab-header-icon icon-Logo"></span>
-        </div>
-        <div className="e-tab-title">GO<span>FIT</span></div>
-        </div>}
-        {props.isSmallDevice && <div className="separator-div"></div>} */}
         <div className="e-dashboardlayout-container  e-activity-dashboardlayout-container">
             <div className="col-md-9 e-dashboard-content">
                 <div className="col-md-12 col-sm-12">
@@ -85,11 +76,11 @@ function Activities(props) {
                             <div className="e-panel-header col-md-12 col-sm-12 col-xs-12 col-lg-12">
                                 <div className="col-md-3 col-sm-6 col-xs-6 col-lg-3 e-my-activities-header">My Activities</div>
                                 <div className="col-md-3 col-sm-6 col-xs-6 col-lg-3 e-my-activities-date">
-                                    <DatePickerComponent id="datepicker" value = {props.datePickerDate} max={props.maxDate} width={props.datePickerWidth} change={props.onDateChange} />
+                                    <DatePickerComponent id="datepicker" value={props.datePickerDate} max={props.maxDate} width={props.datePickerWidth} change={props.onDateChange} />
                                 </div>
                             </div>
                             <div className="e-panel-content e-activity-card-container">
-                                <div tabIndex={0} className="e-card e-heart-rate-card" style={{backgroundImage: "url(" + HeartRateBg + ")"}}>
+                                <div tabIndex={0} className="e-card e-heart-rate-card" style={{ backgroundImage: "url(" + HeartRateBg + ")" }}>
                                     <div className="e-card-header" style={{ width: "100%" }}>
                                         <div className="e-card-header-image icon-Heart e-card-corner"></div>
                                         <div className="e-card-header-caption" style={{ width: "100%" }}>
@@ -103,7 +94,7 @@ function Activities(props) {
                                         <div className="e-progress-annotation"> <img src={HeartRate} alt="HeartRate" /></div>
                                     </div>
                                 </div>
-                                <div tabIndex={0} className="e-card e-steps-card" style={{backgroundImage: "url(" + StepsBg + ")"}}>
+                                <div tabIndex={0} className="e-card e-steps-card" style={{ backgroundImage: "url(" + StepsBg + ")" }}>
                                     <div className="e-card-header" style={{ width: "100%" }}>
                                         <div className="e-card-header-image icon-Steps e-card-corner"></div>
                                         <div className="e-card-header-caption">
@@ -115,7 +106,7 @@ function Activities(props) {
                                         <div className="e-activity-goal">6000</div>
                                     </div>
                                 </div>
-                                <div tabIndex={0} className="e-card e-calories-card" style={{backgroundImage: "url(" + CaloriesBg + ")"}}>
+                                <div tabIndex={0} className="e-card e-calories-card" style={{ backgroundImage: "url(" + CaloriesBg + ")" }}>
                                     <div className="e-card-header" style={{ width: "100%" }}>
                                         <div className="e-card-header-image icon-Calories e-card-corner"></div>
                                         <div className="e-card-header-caption">
@@ -129,7 +120,7 @@ function Activities(props) {
                                         <div className="e-activity-goal">{props.expectedCalories} kcal</div>
                                     </div>
                                 </div>
-                                <div tabIndex={0} className="e-card e-sleep-card" style={{backgroundImage: "url(" + SleepBg + ")"}}>
+                                <div tabIndex={0} className="e-card e-sleep-card" style={{ backgroundImage: "url(" + SleepBg + ")" }}>
                                     <div className="e-card-header" style={{ width: "100%" }}>
                                         <div className="e-card-header-image icon-Sleep e-card-corner"></div>
                                         <div className="e-card-header-caption">
@@ -235,16 +226,14 @@ function Activities(props) {
                 </div>
             </div>
             {!props.isSmallDevice &&
-                  <div className="col-md-3">
-                  <React.Suspense fallback="Loading">
-                      <Profile currentDate={props.datePickerDate} maxDate={props.maxDate} activities = {props.todayActivities} profileStats = {props.profileStats} onProfileDateChange={props.onProfileDateChange} onProfileEdit={props.onProfileEdit}></Profile>
-                  </React.Suspense>
-              </div>
+                <div className="col-md-3">
+                    <React.Suspense fallback="Loading">
+                        <Profile currentDate={props.datePickerDate} maxDate={props.maxDate} activities={props.todayActivities} profileStats={props.profileStats} onProfileDateChange={props.onProfileDateChange} onProfileEdit={props.onProfileEdit}></Profile>
+                    </React.Suspense>
+                </div>
             }
         </div>
-        </div>
     )
-
 }
 
 export default Activities;

@@ -9,7 +9,7 @@ function Profile(props) {
     let profileStats = props.profileStats;
     let maxDate = props.maxDate;
 
-    function getFullDetails(activity,index) {
+    function getFullDetails(activity, index) {
         let distance = activity.distance;
         return (
             <div key={index} tabIndex={0} className="e-card e-diet-card" >
@@ -21,8 +21,8 @@ function Profile(props) {
                                 {activity.amount ? (activity.amount + ' | ') : ''}
                                 {activity.duration ? (activity.duration + ' | ') : ''}
                                 {activity.distance ? (activity.distance + ' | ') : ''}
-                                { distance && <span className="e-activity-highlight">{activity.percentage}</span>}
-                                { !distance && <span className="e-meals-highlight">{activity.percentage}</span>}
+                                {distance && <span className="e-activity-highlight">{activity.percentage}</span>}
+                                {!distance && <span className="e-meals-highlight">{activity.percentage}</span>}
                             </div>
                             <div className="e-card-header-sub-title" style={{ float: "right" }}>{activity.time}</div>
                         </div>
@@ -32,7 +32,7 @@ function Profile(props) {
         )
     }
     return (
-       
+
         <div id="activity-profile-panel-id" className="e-panel e-activity-profile-panel">
             <div className="e-panel-container">
                 <div>

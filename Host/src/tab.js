@@ -28,11 +28,12 @@ var getInitial = true;
 let activityChartWeekData = {};
 let activityChartMonthData = {};
 let pieData = [];
+let x;
 let isFastEnd = false;
 
 function Tab() {
     let innerWidth = window.innerWidth;
-    let x;
+
     let countStartDate;
     let countDownDate;
     let fastStartTime;
@@ -545,26 +546,6 @@ function Tab() {
         getInitialData();
     }
 
-    // function onResize() {
-    //     if (innerWidth !== window.innerWidth) {
-    //         innerWidth = window.innerWidth;
-    //         if (innerWidth <= 820 && !state.isSmallDevice) {
-    //           setState((prevState)=>{
-    //             return{
-    //                 ...prevState,
-    //                 isSmallDevice : true,
-    //             }
-    //           })
-    //         } else if(state.isSmallDevice) {
-    //             setState((prevState)=>{
-    //                 return{
-    //                     ...prevState,
-    //                     isSmallDevice : false,
-    //                 }
-    //               })
-    //         }
-    //       }
-    // }
     function getWeightChartData() {
         let count = 12;
         let sampleData = [];
@@ -713,7 +694,6 @@ function Tab() {
             currentTotalCalcium = Number((currentTotalCalcium + currentSnack2Menu.reduce((a, b) => +a + +b.calcium, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalIron = Number((currentTotalIron + currentSnack2Menu.reduce((a, b) => +a + +b.iron, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalSodium = Number((currentTotalSodium + currentSnack2Menu.reduce((a, b) => +a + +b.sodium, 0)).toFixed(2).replace(/[.,]00$/, ""));
-            //currentSnack2Calories = currentSnack2Menu.reduce((a, b) => +a + +b.cal, 0);
             currentSnack2Calories = 0;
             for (var i = 0; i < currentSnack2Menu.length; i++) {
                 if (currentSnack2Menu[i].quantity) {
@@ -735,7 +715,6 @@ function Tab() {
             currentTotalCalcium = Number((currentTotalCalcium + currentDinnerMenu.reduce((a, b) => +a + +b.calcium, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalIron = Number((currentTotalIron + currentDinnerMenu.reduce((a, b) => +a + +b.iron, 0)).toFixed(2).replace(/[.,]00$/, ""));
             currentTotalSodium = Number((currentTotalSodium + currentDinnerMenu.reduce((a, b) => +a + +b.sodium, 0)).toFixed(2).replace(/[.,]00$/, ""));
-            //currentDinnerCalories = currentDinnerMenu.reduce((a, b) => +a + +b.cal, 0);
             currentDinnerCalories = 0;
             for (var i = 0; i < currentDinnerMenu.length; i++) {
                 if (currentDinnerMenu[i].quantity) {
@@ -1475,7 +1454,6 @@ function Tab() {
         fastStartTime = (isToday ? 'Today ' : 'Yesterday ') + countStartDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
         isToday = countDownDate.toDateString() == now.toDateString();
         fastEndTime = (isToday ? 'Today ' : 'Tomorrow ') + countDownDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        //calculatingFastingStartEndTime();
         let percent = Math.round(((now - countStartDate) / (countDownDate - countStartDate)) * 100);
         percent = percent > 100 ? 100 : percent;
         let left = countDownDate.getTime() - now.getTime();
@@ -1505,7 +1483,7 @@ function Tab() {
         }
     }
     function endFasting() {
-        isFastEnd =  true;
+        isFastEnd = true;
         clearInterval(x);
         sliderValue = "Completed";
         changeTimeBtnText = "START FASTING";
@@ -2100,8 +2078,6 @@ function Tab() {
         let now = new Date();
         countStartDate = state.countStartDate;
         countDownDate = state.countDownDate;
-        // clearInterval(x);
-        // x = setInterval(intervalFn, 1000);
         let distance = now.getTime() - countStartDate.getTime();
         if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0 || (document.querySelector('.e-fast-completed') && document.querySelector('.e-fast-completed').innerText === 'Completed')) {
             if (document.querySelector('.e-fast-time-btn') && !document.querySelector('.e-fast-time-btn').classList.contains('e-fast-reset')) {
@@ -2138,7 +2114,6 @@ function Tab() {
         let masterIndex;
         for (let i = 0; i < masterData.length; i++) {
             if (masterData[i].date === state.currentDate.toLocaleDateString()) {
-                // data = masterData[i];
                 masterIndex = i;
                 masterDataExsist = true;
             }
@@ -2749,10 +2724,10 @@ function Tab() {
         let value = isGoal ? goalValuearray[0] : weightValuearray[0];
         let wtUnit = isGoal ? goalValuearray[1] : weightValuearray[1];
         currentWtUnit = wtUnit === 'kg' ? 'KG' : 'LB';
-        if(currentWtUnit == 'KG') {
+        if (currentWtUnit == 'KG') {
             document.querySelector('.e-input-lb-btn').classList.remove('e-custom');
             document.querySelector('.e-input-kg-btn').classList.add('e-custom');
-        } else if(currentWtUnit == 'LB') {
+        } else if (currentWtUnit == 'LB') {
             document.querySelector('.e-input-kg-btn').classList.remove('e-custom');
             document.querySelector('.e-input-lb-btn').classList.add('e-custom');
         }
@@ -2793,7 +2768,7 @@ function Tab() {
         if (document.querySelector('.e-height-text') && !document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-height-text').classList.add('e-edit-color');
         }
-      
+
         // currentHtUnit = state.profileStats.heightMes;
         modifyHeaderTitle = "Change Your Height";
         profileDialogInstance.element.getElementsByClassName('e-modify-title')[0].innerText = modifyHeaderTitle;
@@ -2822,17 +2797,23 @@ function Tab() {
         } else if (document.querySelector('.e-height-modify-btn-group #CM')) {
             (document.querySelector('.e-height-modify-btn-group #FT')).checked = true;
         }
-        //heightGauge.refresh();
     }
 
     function updateHeightGauge() {
-        //currentHtUnit = state.profileStats.heightMes.toUpperCase();
         let heightValuearray = [];
         let heightValue = document.getElementById('profile-value-height').innerText;
         heightValuearray = heightValue.split(' ');
         let value = heightValuearray[0];
         let htUnit = heightValuearray[1];
         currentHtUnit = htUnit === 'cm' ? 'CM' : 'FT';
+        if (currentHtUnit === 'CM') {
+            document.querySelector('.e-input-ft-btn').classList.remove('e-custom');
+            document.querySelector('.e-input-cm-btn').classList.add('e-custom');
+        }
+        else if (currentHtUnit === 'FT') {
+            document.querySelector('.e-input-cm-btn').classList.remove('e-custom');
+            document.querySelector('.e-input-ft-btn').classList.add('e-custom');
+        }
         heightGauge.axes[0].maximum = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.max = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.limits.minStart = currentHtUnit === 'CM' ? 30 : 1;
@@ -2848,7 +2829,7 @@ function Tab() {
     }
 
     function sliderHeightChange() {
-        if(heightGauge) {
+        if (heightGauge) {
             heightGauge.axes[0].pointers[0].value = heightSlider.value;
             (document.querySelectorAll('#height-svg')[0]).style.height = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 1.7 : 52)) + 'px';
             (document.querySelector('.e-profile-height-label')).innerHTML = (heightSlider.value) + '<span>' + ' ' + currentHtUnit + '</span>';
@@ -3003,28 +2984,6 @@ function Tab() {
         for (var i = 0; i < ftBtns.length; i++) {
             ftBtns[i].addEventListener("click", handleChange);
         }
-
-        // let changeButton = document.querySelectorAll(".e-weight-modify-btn-group #KG,.e-weight-modify-btn-group #LB");
-        // //changeButton[0].addEventListener("onchange", handleChange);
-        // changeButton[0].onchange = () => {console.log("kg changed")};
-        // changeButton[1].onchange = () => {console.log("lb changed")};
-        // for (var i = 0; i < changeButton.length; i++) {
-        //     changeButton[i].addEventListener("propertychange", handleChange);
-        // }
-
-        // let changeButton =  document.getElementsByClassName("input-kg");
-        // // for (var i = 0; i < changeButton.length; i++) {
-        //     changeButton[0].addEventListener("onChange", handleChange);
-        //     changeButton['KG'].addEventListener("onChange", handleChange);
-        //     changeButton['modifyunit'].addEventListener("onChange", handleChange);
-        // // }
-        // let changeButton1 =  document.getElementsByClassName("input-lb");
-        // // for (var i = 0; i < changeButton1.length; i++) {
-        //     changeButton1[0].addEventListener("onChange", handleChange);
-        //     changeButton1['LB'].addEventListener("onChange", handleChange);
-        //     changeButton1['modifyunit'].addEventListener("onChange", handleChange);
-        // // }
-
         let profileCloseBtn = document.getElementsByClassName("e-profile-back");
         for (var i = 0; i < profileCloseBtn.length; i++) {
             profileCloseBtn[i].addEventListener("click", closeEditDialog);
@@ -3078,21 +3037,6 @@ function Tab() {
             }
             theme = 'Tailwind';
             weightGaugeBackground = '#FFF7EC';
-            //   heightGauge.refresh();
-            //   weightGauge.refresh();
-            // this.circulargauge.refresh();
-            //   if(document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0]) {
-            //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].theme = 'Tailwind';
-            //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].refresh();
-            //   }
-            //   if (document.getElementsByClassName('e-fasting-chart')[0]) {
-            //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].theme = 'Tailwind';
-            //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
-            //   }
-            //   if (document.getElementById('piecontainer').ej2_instances[0]) {
-            //     document.getElementById('piecontainer').ej2_instances[0].theme = 'Tailwind';
-            //     document.getElementById('piecontainer').ej2_instances[0].refresh();
-            //   }
         } else if (currentTheme === 'Dark') {
             findlink.href = "https://cdn.syncfusion.com/ej2/20.2.45/tailwind-dark.css";
             if (!document.body.classList.contains('e-dark')) {
@@ -3100,24 +3044,7 @@ function Tab() {
             }
             theme = 'TailwindDark';
             weightGaugeBackground = '#414255';
-            // heightGauge.refresh();
-            // weightGauge.refresh();
-            //   if(document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0]) {
-            //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].theme = 'TailwindDark';
-            //     document.getElementsByClassName('e-activity-chart')[0].ej2_instances[0].refresh();
-            //   }
-            //   if (document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0]) {
-            //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].theme = 'TailwindDark';
-            //     document.getElementsByClassName('e-fasting-chart')[0].ej2_instances[0].refresh();
-            //   }
-            // if (document.getElementById('piecontainer').ej2_instances[0]) {
-            //     //document.getElementById('piecontainer').ej2_instances[0].series[0].dataLabel.font.color = '#303343';
-            // //     document.getElementById('piecontainer').ej2_instances[0].theme = 'TailwindDark';
-            // //     document.getElementById('piecontainer').ej2_instances[0].refresh();
-            //  }
-
         }
-
         profileDialogCancelBtnClick();
         setState(prevState => {
             return {
@@ -3134,7 +3061,6 @@ function Tab() {
     }
 
     function profileDialogBeforeOpen() {
-        //changeWeight();
         heightGauge = document.getElementById('heightgauge').ej2_instances[0];
         heightSlider = document.getElementById('heightrange').ej2_instances[0];
         weightGauge = document.getElementById('weightgauge').ej2_instances[0];
@@ -3184,7 +3110,6 @@ function Tab() {
         for (var i = 0; i < changeButton.length; i++) {
             changeButton[i].removeEventListener("propertychange", handleChange);
         }
-
         let profileCloseBtn = document.getElementsByClassName("e-profile-back");
         for (var i = 0; i < profileCloseBtn.length; i++) {
             profileCloseBtn[i].removeEventListener("click", closeEditDialog);
@@ -3197,6 +3122,23 @@ function Tab() {
         for (var i = 0; i < plusbtns.length; i++) {
             plusbtns[i].removeEventListener("click", agePlusClick);
         }
+        let kgBtns = document.getElementsByClassName("e-input-kg-btn");
+        for (var i = 0; i < kgBtns.length; i++) {
+            kgBtns[i].removeEventListener("click", handleChange);
+        }
+        let lbBtns = document.getElementsByClassName("e-input-lb-btn");
+        for (var i = 0; i < lbBtns.length; i++) {
+            lbBtns[i].removeEventListener("click", handleChange);
+        }
+        let cmBtns = document.getElementsByClassName("e-input-cm-btn");
+        for (var i = 0; i < cmBtns.length; i++) {
+            cmBtns[i].removeEventListener("click", handleChange);
+        }
+        let ftBtns = document.getElementsByClassName("e-input-ft-btn");
+        for (var i = 0; i < ftBtns.length; i++) {
+            ftBtns[i].removeEventListener("click", handleChange);
+        }
+
     }
     let menudialogInstance;
     function dialogOpen() {
