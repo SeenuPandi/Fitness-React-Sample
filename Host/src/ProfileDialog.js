@@ -136,6 +136,11 @@ function ProfileDialog(props) {
     let heightSliderMin = 0;
     let heightSliderMax = 200;
     let orientation = 'Vertical';
+
+    function handleChange() {
+        console.log("HAndle changed");
+    }
+
     function profileHeader() {
         return (
             <div className="e-profile-edit-icon-container">
@@ -222,16 +227,20 @@ function ProfileDialog(props) {
                     <div className="e-modify-container col-md-6 col-sm-6">
                         <div className="e-modify-title">{props.modifyHeaderTitle}</div>
                         <div className='e-weight-modify-btn-group e-btn-group e-outline'>
-                            <input type="radio" id="KG" name="modifyunit" value="KG" checked={true} onChange={props.handleChange} />
+                        <ButtonComponent cssClass="e-custom" className="e-input-kg-btn">KG</ButtonComponent>
+                        <ButtonComponent className="e-input-lb-btn">LB</ButtonComponent>
+                            {/* <input className="input-kg" type="radio" id="KG" name="modifyunit" value="KG" checked={true} onChange={handleChange} />
                             <label className="e-btn" >KG</label>
-                            <input type="radio" id="LB" name="modifyunit" value="LB" onChange={props.handleChange} />
-                            <label className="e-btn" >LB</label>
+                            <input className="input-lb" type="radio" id="LB" name="modifyunit" value="LB" onChange={handleChange} />
+                            <label className="e-btn" >LB</label> */}
                         </div>
                         <div className='e-height-modify-btn-group e-btn-group e-outline e-hidden'>
-                            <input type="radio" id="CM" name="modifyunit" value="CM" checked={true} onChange={props.handleChange} />
+                        <ButtonComponent cssClass="e-custom" className="e-input-cm-btn"><span>CM</span></ButtonComponent>
+                        <ButtonComponent className="e-input-ft-btn"><span>FT</span></ButtonComponent>
+                            {/* <input type="radio" id="CM" name="modifyunit" value="CM" checked={true} onChange={handleChange} />
                             <label className="e-btn">CM</label>
-                            <input type="radio" id="FT" name="modifyunit" value="FT" onChange={props.handleChange} />
-                            <label className="e-btn">FT</label>
+                            <input type="radio" id="FT" name="modifyunit" value="FT" onChange={handleChange} />
+                            <label className="e-btn">FT</label> */}
                         </div>
 
                         <div className="e-weight-gauge-container">

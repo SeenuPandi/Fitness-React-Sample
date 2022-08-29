@@ -1630,6 +1630,19 @@ body {
   text-align: center;
 }
 
+.e-custom {
+  border-radius: 0;
+  height: 30px;
+  background-color: #ff6e40;
+  color: #fff;
+}
+
+.e-custom.e-btn:focus {
+  background-color: #ff6e40;
+  color: #fff;
+  box-shadow: none;
+}
+
 .e-water-minus,
 .e-water-plus {
   background: #FFEAE3;

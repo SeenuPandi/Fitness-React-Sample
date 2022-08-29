@@ -28,11 +28,11 @@ var getInitial = true;
 let activityChartWeekData = {};
 let activityChartMonthData = {};
 let pieData = [];
-let x;
+let isFastEnd = false;
 
 function Tab() {
     let innerWidth = window.innerWidth;
-    
+    let x;
     let countStartDate;
     let countDownDate;
     let fastStartTime;
@@ -1489,7 +1489,7 @@ function Tab() {
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
         sliderValue = hours.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + minutes.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) + " : " + seconds.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
         let fastingGauge = document.getElementById('range-container') ? document.getElementById('range-container').ej2_instances[0] : undefined;
-        if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0) {
+        if (distance > (countDownDate.getTime() - countStartDate.getTime()) || distance < 0 || isFastEnd) {
             endFasting();
         } else if (fastingGauge) {
             fastingGauge.axes[0].ranges[1].end = percent;
@@ -1505,7 +1505,7 @@ function Tab() {
         }
     }
     function endFasting() {
-       
+        isFastEnd =  true;
         clearInterval(x);
         sliderValue = "Completed";
         changeTimeBtnText = "START FASTING";
@@ -2057,6 +2057,7 @@ function Tab() {
     }
 
     function fastingDlgBtnClick(args) {
+        isFastEnd = false;
         countStartDate = fasStartValue ? fasStartValue : state.countStartDate;
         countDownDate = fasEndValue ? fasEndValue : state.countDownDate;
         clearInterval(x);
@@ -2088,7 +2089,6 @@ function Tab() {
             setState(prevState => {
                 return {
                     ...prevState,
-                    isFastEnd: true,
                     circulargauge: circulargauge,
                     changeTimeBtnText: changeTimeBtnText,
                     hidden: false
@@ -2740,7 +2740,6 @@ function Tab() {
     }
 
     function updateWeightGauge(isGoal) {
-        currentWtUnit = isGoal ? state.profileStats.goalMes.toUpperCase() : state.profileStats.weightMes.toUpperCase();
         let goalValuearray = [];
         let weightValuearray = [];
         let goalvalue = document.getElementById('profile-value-goal').innerText;
@@ -2748,6 +2747,15 @@ function Tab() {
         let weightValue = document.getElementById('profile-value-weight').innerText;
         weightValuearray = weightValue.split(' ');
         let value = isGoal ? goalValuearray[0] : weightValuearray[0];
+        let wtUnit = isGoal ? goalValuearray[1] : weightValuearray[1];
+        currentWtUnit = wtUnit === 'kg' ? 'KG' : 'LB';
+        if(currentWtUnit == 'KG') {
+            document.querySelector('.e-input-lb-btn').classList.remove('e-custom');
+            document.querySelector('.e-input-kg-btn').classList.add('e-custom');
+        } else if(currentWtUnit == 'LB') {
+            document.querySelector('.e-input-kg-btn').classList.remove('e-custom');
+            document.querySelector('.e-input-lb-btn').classList.add('e-custom');
+        }
         weightGauge.axes[0].maximum = currentWtUnit === 'KG' ? 150 : 330;
         weightSlider.max = currentWtUnit === 'KG' ? 150 : 330;
         weightGauge.axes[0].annotations[0].content = '<div class="e-weight-gauge-annotation">' + value + currentWtUnit + '</div>';
@@ -2785,7 +2793,8 @@ function Tab() {
         if (document.querySelector('.e-height-text') && !document.querySelector('.e-height-text').classList.contains('e-edit-color')) {
             document.querySelector('.e-height-text').classList.add('e-edit-color');
         }
-        currentHtUnit = state.profileStats.heightMes;
+      
+        // currentHtUnit = state.profileStats.heightMes;
         modifyHeaderTitle = "Change Your Height";
         profileDialogInstance.element.getElementsByClassName('e-modify-title')[0].innerText = modifyHeaderTitle;
         modifyBtnGroup = ['CM', 'FT'];
@@ -2817,11 +2826,13 @@ function Tab() {
     }
 
     function updateHeightGauge() {
-        currentHtUnit = state.profileStats.heightMes.toUpperCase();
+        //currentHtUnit = state.profileStats.heightMes.toUpperCase();
         let heightValuearray = [];
         let heightValue = document.getElementById('profile-value-height').innerText;
         heightValuearray = heightValue.split(' ');
         let value = heightValuearray[0];
+        let htUnit = heightValuearray[1];
+        currentHtUnit = htUnit === 'cm' ? 'CM' : 'FT';
         heightGauge.axes[0].maximum = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.max = currentHtUnit === 'CM' ? 230 : 7.5;
         heightSlider.limits.minStart = currentHtUnit === 'CM' ? 30 : 1;
@@ -2837,11 +2848,13 @@ function Tab() {
     }
 
     function sliderHeightChange() {
-        heightGauge.axes[0].pointers[0].value = heightSlider.value;
-        (document.querySelectorAll('#height-svg')[0]).style.height = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 1.7 : 52)) + 'px';
-        (document.querySelector('.e-profile-height-label')).innerHTML = (heightSlider.value) + '<span>' + ' ' + currentHtUnit + '</span>';
-        (document.querySelector('.e-profile-height-label')).style.bottom = (document.querySelectorAll('#height-svg')[0]).style.height;
-        (document.querySelector('.e-profile-height-label')).style.left = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 0.1 : 3.5)) + 'px';
+        if(heightGauge) {
+            heightGauge.axes[0].pointers[0].value = heightSlider.value;
+            (document.querySelectorAll('#height-svg')[0]).style.height = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 1.7 : 52)) + 'px';
+            (document.querySelector('.e-profile-height-label')).innerHTML = (heightSlider.value) + '<span>' + ' ' + currentHtUnit + '</span>';
+            (document.querySelector('.e-profile-height-label')).style.bottom = (document.querySelectorAll('#height-svg')[0]).style.height;
+            (document.querySelector('.e-profile-height-label')).style.left = ((heightSlider.value) * (currentHtUnit.toUpperCase() === 'CM' ? 0.1 : 3.5)) + 'px';
+        }
     }
 
     function onLocationChange(args) {
@@ -2887,8 +2900,55 @@ function Tab() {
         cancelHeight();
     }
 
-    function handleChange() {
-        console.log("Handle changed");
+    function handleChange(args) {
+        let unit;
+        if (args.currentTarget.classList.contains('e-input-kg-btn')) {
+            document.querySelector('.e-input-lb-btn').classList.remove('e-custom');
+            document.querySelector('.e-input-kg-btn').classList.add('e-custom');
+            unit = 'KG';
+        }
+        else if (args.currentTarget.classList.contains('e-input-lb-btn')) {
+            document.querySelector('.e-input-kg-btn').classList.remove('e-custom');
+            document.querySelector('.e-input-lb-btn').classList.add('e-custom');
+            unit = 'LB';
+        }
+        else if (args.currentTarget.classList.contains('e-input-cm-btn')) {
+            document.querySelector('.e-input-ft-btn').classList.remove('e-custom');
+            document.querySelector('.e-input-cm-btn').classList.add('e-custom');
+            unit = 'CM';
+        }
+        else if (args.currentTarget.classList.contains('e-input-ft-btn')) {
+            document.querySelector('.e-input-cm-btn').classList.remove('e-custom');
+            document.querySelector('.e-input-ft-btn').classList.add('e-custom');
+            unit = 'FT';
+        }
+
+        if (['KG', 'LB'].includes(unit) && this.currentWtUnit !== unit) {
+            currentWtUnit = unit;
+            weightGauge.axes[0].maximum = unit === 'KG' ? 150 : 330;
+            weightSlider.max = unit === 'KG' ? 150 : 330;
+            weightSlider.limits.minStart = unit === 'KG' ? 10 : 20;
+            let value = unit === 'KG' ? Math.round(weightSlider.value / 2.205) : Math.round(weightSlider.value * 2.205);
+            weightGauge.axes[0].annotations[0].content = '<div class="e-weight-gauge-annotation">' + value + currentWtUnit + '</div>';
+            weightGauge.axes[0].ranges[0].end = value;
+            weightGauge.axes[0].pointers[0].value = value;
+            weightSlider.value = value;
+        } else if (['CM', 'FT'].includes(unit) && currentHtUnit !== unit) {
+            currentHtUnit = unit;
+            heightGauge.axes[0].maximum = unit === 'CM' ? 230 : 7.5;
+            heightSlider.max = unit === 'CM' ? 230 : 7.5;
+            heightSlider.limits.minStart = unit === 'CM' ? 30 : 1;
+            heightSlider.step = unit === 'CM' ? 1 : 0.1;
+            heightSlider.ticks.format = unit === 'CM' ? 'N0' : '#.00';
+            let value = unit === 'CM' ? Math.round(heightSlider.value * 30.48) : Number((heightSlider.value / 30.48).toFixed(2).replace(/[.,]00$/, ""));
+            heightGauge.annotations[0].axisValue = value;
+            heightGauge.annotations[0].content = '<div class="e-height-gauge-annotation">' + value + this.currentHtUnit + '</div>';
+            heightGauge.axes[0].pointers[0].value = value;
+            heightGauge.axes[0].majorTicks.interval = unit === 'CM' ? 20 : 1;
+            heightGauge.axes[0].minorTicks.interval = unit === 'CM' ? 5 : 0.1;
+            (document.querySelectorAll('#height-svg')[0]).style.height = (value * (unit === 'CM' ? 1.7 : 52)) + 'px';
+            heightSlider.value = value;
+        }
     }
 
     function sliderChange() {
@@ -2927,10 +2987,44 @@ function Tab() {
         for (var i = 0; i < updateHeightCancelbtns.length; i++) {
             updateHeightCancelbtns[i].addEventListener("click", cancelHeight);
         }
-        let changeButton = document.querySelectorAll(".e-weight-modify-btn-group #KG,.e-weight-modify-btn-group #LB");
-        for (var i = 0; i < changeButton.length; i++) {
-            changeButton[i].addEventListener("propertychange", handleChange);
+        let kgBtns = document.getElementsByClassName("e-input-kg-btn");
+        for (var i = 0; i < kgBtns.length; i++) {
+            kgBtns[i].addEventListener("click", handleChange);
         }
+        let lbBtns = document.getElementsByClassName("e-input-lb-btn");
+        for (var i = 0; i < lbBtns.length; i++) {
+            lbBtns[i].addEventListener("click", handleChange);
+        }
+        let cmBtns = document.getElementsByClassName("e-input-cm-btn");
+        for (var i = 0; i < cmBtns.length; i++) {
+            cmBtns[i].addEventListener("click", handleChange);
+        }
+        let ftBtns = document.getElementsByClassName("e-input-ft-btn");
+        for (var i = 0; i < ftBtns.length; i++) {
+            ftBtns[i].addEventListener("click", handleChange);
+        }
+
+        // let changeButton = document.querySelectorAll(".e-weight-modify-btn-group #KG,.e-weight-modify-btn-group #LB");
+        // //changeButton[0].addEventListener("onchange", handleChange);
+        // changeButton[0].onchange = () => {console.log("kg changed")};
+        // changeButton[1].onchange = () => {console.log("lb changed")};
+        // for (var i = 0; i < changeButton.length; i++) {
+        //     changeButton[i].addEventListener("propertychange", handleChange);
+        // }
+
+        // let changeButton =  document.getElementsByClassName("input-kg");
+        // // for (var i = 0; i < changeButton.length; i++) {
+        //     changeButton[0].addEventListener("onChange", handleChange);
+        //     changeButton['KG'].addEventListener("onChange", handleChange);
+        //     changeButton['modifyunit'].addEventListener("onChange", handleChange);
+        // // }
+        // let changeButton1 =  document.getElementsByClassName("input-lb");
+        // // for (var i = 0; i < changeButton1.length; i++) {
+        //     changeButton1[0].addEventListener("onChange", handleChange);
+        //     changeButton1['LB'].addEventListener("onChange", handleChange);
+        //     changeButton1['modifyunit'].addEventListener("onChange", handleChange);
+        // // }
+
         let profileCloseBtn = document.getElementsByClassName("e-profile-back");
         for (var i = 0; i < profileCloseBtn.length; i++) {
             profileCloseBtn[i].addEventListener("click", closeEditDialog);
@@ -2947,7 +3041,6 @@ function Tab() {
         currentWtUnit = '';
         if (!document.body.classList.contains('e-dark')) {
             weightGauge.axes[0].background = '#FFF7EC';
-            document.getElementsByClassName("e-age-plus icon-plus")
         }
         else {
             weightGauge.axes[0].background = '#414255';
@@ -3152,7 +3245,6 @@ function Tab() {
     function profileTab() {
         return (
             <div>
-             
                 <div className="e-dashboardlayout-container e-profile-dashboardlayout-container">
                     <React.Suspense fallback={spinnerShow}>
                         <Profile currentDate={state.datePickerDate}
@@ -3340,14 +3432,14 @@ function Tab() {
 
     return (
         <div>
-               {state.isSmallDevice &&
-                    <div className="e-tab-header-mobile-icon-container">
-                        <div className="e-tab-header-icon-div">
-                            <span className="e-tab-header-icon icon-Logo"></span>
-                        </div>
-                        <div className="e-tab-title">GO<span>FIT</span></div>
-                    </div>}
-                {state.isSmallDevice && <div className="separator-div"></div>}
+            {state.isSmallDevice &&
+                <div className="e-tab-header-mobile-icon-container">
+                    <div className="e-tab-header-icon-div">
+                        <span className="e-tab-header-icon icon-Logo"></span>
+                    </div>
+                    <div className="e-tab-title">GO<span>FIT</span></div>
+                </div>}
+            {state.isSmallDevice && <div className="separator-div"></div>}
             <TabComponent created={created} iconPosition='top' headerPlacement={headerPlacement} selecting={tabSelecting} selected={tabSelected}>
                 <TabItemsDirective>
                     <TabItemDirective header={headerText[0]} content={contentActivities}></TabItemDirective>
